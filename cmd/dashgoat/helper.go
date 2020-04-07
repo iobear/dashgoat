@@ -16,6 +16,21 @@ func indexOf(slice []string, item string) int {
 	return -1
 }
 
+//add2url add url path root url
+func add2url(path string, route string) string {
+	var result strings.Builder
+
+	if path == "/" {
+		path = ""
+	}
+
+	result.WriteString(path)
+	result.WriteString(route)
+
+	return result.String()
+}
+
+//validate and enrich input from POST
 func validateUpdate() {
 
 	msglength := len(fromPost.Message)

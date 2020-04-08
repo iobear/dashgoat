@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"strings"
+	"time"
+)
 
 //indexOf - does the value exist, and where
 func indexOf(slice []string, item string) int {
@@ -31,7 +34,15 @@ func add2url(path string, route string) string {
 }
 
 //validate and enrich input from POST
-func validateUpdate() {
+func validateUpdate() bool {
+
+	if fromPost.UpdateKey == updatekey {
+		fromPost.UpdateKey = "valid"
+	} else {
+		return false
+	}
+
+	fromPost.Seen = time.Now().Unix()
 
 	msglength := len(fromPost.Message)
 	if msglength > 254 {
@@ -62,4 +73,5 @@ func validateUpdate() {
 
 	}
 
+	return true
 }

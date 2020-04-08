@@ -1,7 +1,8 @@
 FROM alpine:3.11
 
-ENV webpath "/"
-ENV weblog = "off"
+ENV WEBPATH "/"
+ENV WEBLOG = "off"
+ENV UPDATEKEY = "changeme"
 
 COPY dashgoat /app/dashgoat
 COPY web/ /web/
@@ -9,4 +10,4 @@ COPY web/ /web/
 
 EXPOSE 1323
 
-CMD ["sh", "-c", "/app/dashgoat -webpath ${webpath}  -weblog ${weblog}"]
+CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY}"]

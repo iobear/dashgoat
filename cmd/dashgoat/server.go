@@ -19,6 +19,7 @@ type (
 		Tags          []string `json:"tags" validate:"max=20"`
 		Seen          int64    `json:"seen"`
 		Change        int64    `json:"change"`
+		UpdateKey     string
 	}
 )
 
@@ -33,15 +34,15 @@ var (
 func updateStatus(c echo.Context) error {
 	var result = map[string]string{}
 
-	fromPost = &serviceState{
-		Seen: time.Now().Unix(),
-	}
+	fromPost = &serviceState{}
 
 	if err := c.Bind(fromPost); err != nil {
 		return err
 	}
 
-	validateUpdate()
+	if validateUpdate() == false {
+		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
+	}
 
 	if err := validator.Validate(fromPost); err != nil {
 		return c.JSON(http.StatusBadRequest, fromPost)

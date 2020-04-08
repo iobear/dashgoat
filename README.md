@@ -2,13 +2,11 @@
 
 Dashgoat - A simple dashboard, easy to deploy.
 
-## Installation
-
-Set IP and PORT in main.go, for example IP 127.0.0.1 and PORT 1323 
-
-`./dashgoat`
-
 ## Hello world
+
+```go build  ./cmd/dashgoat```
+
+```./dashgoat -updatekey my-precious!```
 
 curl API example;
 
@@ -20,7 +18,8 @@ curl --request POST \
 	"host": "myhost01",
 	"service": "HTTP",
 	"status": "ok",
-	"message": "Hello World"
+	"message": "Hello World",
+	"updatekey": "my-precious!"
 }'
 ```
 
@@ -37,7 +36,8 @@ curl --request POST \
 	"host": "myhost01",
 	"service": "HTTP",
 	"status": "error",
-	"message": "Hello World"
+	"message": "Hello World",
+	"updatekey": "my-precious!"
 }'
 ```
 Check web page again.

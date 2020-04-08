@@ -8,14 +8,17 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
+var updatekey string
+
 func main() {
 	var ipport string
 	var webpath string
 	var weblog string
 
 	flag.StringVar(&ipport, "ipport", ":1323", "Specify <ip>:<port>")
-	flag.StringVar(&weblog, "weblog", "off", "Specify <ip>:<port>")
+	flag.StringVar(&weblog, "weblog", "off", "HTTP log <on/off>")
 	flag.StringVar(&webpath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
+	flag.StringVar(&updatekey, "updatekey", "changeme", "Specify key to API update")
 	flag.Parse()
 
 	pathStartsWith := strings.HasPrefix(webpath, "/")

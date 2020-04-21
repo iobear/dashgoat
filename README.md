@@ -2,7 +2,7 @@
 
 Dashgoat - A simple dashboard, easy to deploy.
 
-## Hello world
+## Golang Hello world
 
 ```go build  ./cmd/dashgoat```
 
@@ -41,3 +41,7 @@ curl --request POST \
 }'
 ```
 Check web page again.
+
+##Docker
+
+```docker run -e "UPDATEKEY=my-precious!" -p 1323:1323 --rm --name=dashgoat analogbear/dashgoat```

@@ -42,6 +42,6 @@ curl --request POST \
 ```
 Check web page again.
 
-##Docker
+## Docker Hello world
 
 ```docker run -e "UPDATEKEY=my-precious!" -p 1323:1323 --rm --name=dashgoat analogbear/dashgoat```

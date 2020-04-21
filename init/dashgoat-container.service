@@ -1,0 +1,16 @@
+[Unit]
+Description=DashGoat container
+After=network.target
+
+[Service]
+User=<user>
+Group=<group>
+Type=simple
+TimeoutStartSec=10
+Restart=always
+ExecStart=/usr/bin/podman start -a dashgoat_prod
+ExecStop=/usr/bin/podman stop -t 2 dashgoat_prod
+RestartSec=30
+
+[Install]
+WantedBy=local.target

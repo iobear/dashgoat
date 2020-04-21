@@ -1,8 +1,8 @@
 FROM alpine:3.11
 
 ENV WEBPATH "/"
-ENV WEBLOG = "off"
-ENV UPDATEKEY = "changeme"
+ENV WEBLOG "off"
+ENV UPDATEKEY "changeme"
 
 COPY dashgoat /app/dashgoat
 COPY web/ /web/

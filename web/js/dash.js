@@ -21,17 +21,28 @@ function createHeader() {
 }
 
 
-function createRows(rows, classname) {
+function createRows(startrow) {
 	let cell = document.createElement("tbody");
 	dashtable.appendChild(cell).id = "dashbody";
 
-	for (let c = 0; c < rows; c++) {
+	for (let c = startrow; c < rows; c++) {
 
 		rowid = `row${c}`;
 		let cell = document.createElement("tr");
 
 		dashbody.appendChild(cell).id = rowid;
 		createColumns(rowid);
+	}
+
+}
+
+
+function removeRows(startrow) {
+
+	for (let c = startrow; c < oldrows; c++) {
+
+		rowid = `row${c}`;
+		document.getElementById(rowid).remove();
 	}
 
 }
@@ -52,17 +63,17 @@ function createColumns(rowid) {
 
 
 function updateRows() {
-	//console.log(printList);
 
-	var rowcount = 0;
+	let rowcount = 0;
 	count = 0;
 	
-	for (var service of printList) {
+	for (let service of printList) {
 
 		for (let item of dashItems) {
 			let toUpdate = "row" + count + item;
 
 			let container = document.getElementById(toUpdate);
+			container.innerText = "";
 
 			if (item == 'change' || item == 'seen') {
 
@@ -98,6 +109,26 @@ function changeRowColor(rowid, status) {
 	
 }
 
+function changeRowAmount(rows) {
+	const rowdiff = rows - oldrows;
+
+	if (rowdiff > 0) { //add rows
+		console.log('Add rows');
+		console.log(rowdiff);
+		createRows(oldrows);
+		oldrows = rows;
+		return true
+	}
+
+	if (rowdiff < 0) { //remove rows
+		console.log('Remove rows');
+		console.log(rowdiff);
+		removeRows(rows);
+		oldrows = rows;
+		return true
+	}
+}
+
 
 function prepareData(data) {
 	printList = [];
@@ -120,7 +151,7 @@ function prepareData(data) {
 
 		}
 	}
-	
+
 	//check for error status
 	for (var value of keys) {
 
@@ -128,11 +159,8 @@ function prepareData(data) {
 		printData[status][value] = data[value];
 
 	}
-	
-	if (oldrows == 0){
-		createRows(rows);
-		oldrows = rows;
-	}	
+
+	changeRowAmount(rows);
 	updateRows();
 }
 

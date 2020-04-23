@@ -134,6 +134,9 @@ function prepareData(data) {
 
 	//create status objects
 	for (var value of keys) {
+		if (value == "") {
+			value = "empty-key";
+		}
 
 		var status = data[value].status;
 		printData[status] = {};

@@ -134,21 +134,22 @@ function prepareData(data) {
 
 	//create status objects
 	for (var value of keys) {
-		if (value == "") {
-			value = "empty-key";
+		if (value) {
+			var status = data[value].status;
+			printData[status] = {};
+
+			//sort arr
+			if (status == 'ok') {
+				printList.push(data[value]);
+
+			} else { //non status ok on top..
+				printList.unshift(data[value]);
+
+			}
+		} else {
+			rows = rows - 1;
 		}
 
-		var status = data[value].status;
-		printData[status] = {};
-
-		//sort arr
-		if (status == 'ok') {
-			printList.push(data[value]);
-
-		} else { //non status ok on top..
-			printList.unshift(data[value]);
-
-		}
 	}
 
 	//check for error status

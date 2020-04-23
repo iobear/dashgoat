@@ -113,16 +113,12 @@ function changeRowAmount(rows) {
 	const rowdiff = rows - oldrows;
 
 	if (rowdiff > 0) { //add rows
-		console.log('Add rows');
-		console.log(rowdiff);
 		createRows(oldrows);
 		oldrows = rows;
 		return true
 	}
 
 	if (rowdiff < 0) { //remove rows
-		console.log('Remove rows');
-		console.log(rowdiff);
 		removeRows(rows);
 		oldrows = rows;
 		return true

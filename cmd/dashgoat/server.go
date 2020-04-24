@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/labstack/echo"
@@ -20,6 +21,7 @@ type (
 		Seen          int64    `json:"seen"`
 		Change        int64    `json:"change"`
 		UpdateKey     string
+		mutex         sync.RWMutex
 	}
 )
 
@@ -33,8 +35,10 @@ var (
 //updateStatus - service update
 func updateStatus(c echo.Context) error {
 	var result = map[string]string{}
-
 	fromPost = &serviceState{}
+
+	fromPost.mutex.Lock()
+	defer fromPost.mutex.Unlock()
 
 	if err := c.Bind(fromPost); err != nil {
 		return err

@@ -132,11 +132,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &appHealth{}
 
-	if err := c.Bind(appHealthResult); err != nil {
-		return err
-	}
-
-	appHealthResult.APIVersion = "1.0.5"
+	appHealthResult.APIVersion = "1.0.6"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

@@ -23,6 +23,10 @@ type (
 		UpdateKey     string
 		mutex         sync.RWMutex
 	}
+
+	appHealth struct {
+		APIVersion string `json:"apiversion"`
+	}
 )
 
 var (
@@ -30,6 +34,7 @@ var (
 	fromPost         *serviceState
 	serviceList      = []string{}
 	tagList          = []string{}
+	appHealthResult  *appHealth
 )
 
 //updateStatus - service update
@@ -52,7 +57,13 @@ func updateStatus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, fromPost)
 	}
 
-	strID := fromPost.Host + fromPost.Service
+	strID := ""
+
+	if fromPost.Host != "" && fromPost.Service != "" {
+		strID = fromPost.Host + fromPost.Service
+	} else {
+		return c.JSON(http.StatusBadRequest, fromPost)
+	}
 
 	if serviceStateList[strID] != nil {
 
@@ -116,4 +127,16 @@ func deleteService(c echo.Context) error {
 	delete(serviceStateList, id)
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+func health(c echo.Context) error {
+	appHealthResult = &appHealth{}
+
+	if err := c.Bind(appHealthResult); err != nil {
+		return err
+	}
+
+	appHealthResult.APIVersion = "1.0.5"
+
+	return c.JSON(http.StatusOK, appHealthResult)
 }

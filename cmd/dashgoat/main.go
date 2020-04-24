@@ -45,6 +45,7 @@ func main() {
 	e.GET(add2url(webpath, "/list/:serviceitem"), getUniq)
 	e.GET(add2url(webpath, "/servicefilter/:item/:itemval"), serviceFilter)
 	e.DELETE(add2url(webpath, "/service/:id"), deleteService)
+	e.GET(add2url(webpath, "/health"), health)
 
 	// Start server
 	e.Logger.Fatal(e.Start(ipport))

@@ -16,6 +16,8 @@ func main() {
 	var webpath string
 	var weblog string
 
+	ss.serviceStateList = make(map[string]ServiceState, 0)
+
 	flag.StringVar(&ipport, "ipport", ":1323", "Specify <ip>:<port>")
 	flag.StringVar(&weblog, "weblog", "off", "HTTP log <on/off>")
 	flag.StringVar(&webpath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
@@ -28,9 +30,6 @@ func main() {
 	}
 
 	e := echo.New()
-
-	// Debug mode
-	e.Debug = true
 
 	//static files
 	e.Static(webpath, "web")

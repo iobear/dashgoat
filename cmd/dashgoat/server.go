@@ -24,7 +24,7 @@ type (
 		UpdateKey     string
 	}
 
-	// Services contai
+	// Services map
 	Services struct {
 		mutex            sync.RWMutex
 		serviceStateList map[string]ServiceState
@@ -54,48 +54,31 @@ func updateStatus(c echo.Context) error {
 	var postService ServiceState
 
 	if err := c.Bind(&postService); err != nil {
-		c.Logger().Error(ss.serviceStateList)
 		return err
 	}
 
 	if postService.validateUpdate() == false {
-		c.Logger().Error(ss.serviceStateList)
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
 	if err := validator.Validate(postService); err != nil {
-		c.Logger().Error(ss.serviceStateList)
 		return c.JSON(http.StatusBadRequest, ss.serviceStateList)
 	}
 
 	strID := ""
 
-	if postService.Host != "" && postService.Service != "" {
-		strID = postService.Host + postService.Service
-	} else {
-		strID = postService.Host + postService.Service
-		c.Logger().Error(strID)
-		c.Logger().Error(postService)
-		return c.JSON(http.StatusBadRequest, postService)
-	}
-
 	if _, ok := ss.serviceStateList[strID]; ok {
 
 		if postService.Status != ss.serviceStateList[strID].Status {
 			postService.Change = time.Now().Unix()
-			c.Logger().Info("change")
 
 		} else {
 			postService.Change = ss.serviceStateList[strID].Change
-			c.Logger().Info("no change")
 
 		}
 	}
 
-	c.Logger().Info(ss.serviceStateList)
-
 	ss.serviceStateList[strID] = postService
-	c.Logger().Info(ss.serviceStateList)
 
 	result["id"] = strID
 
@@ -160,7 +143,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.0.11"
+	appHealthResult.APIVersion = "1.0.12"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

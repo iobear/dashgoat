@@ -34,40 +34,40 @@ func add2url(path string, route string) string {
 }
 
 //validate and enrich input from POST
-func validateUpdate() bool {
+func (ss *ServiceState) validateUpdate() bool {
 
-	if fromPost.UpdateKey == updatekey {
-		fromPost.UpdateKey = "valid"
+	if ss.UpdateKey == updatekey {
+		ss.UpdateKey = "valid"
 	} else {
 		return false
 	}
 
-	fromPost.Seen = time.Now().Unix()
+	ss.Seen = time.Now().Unix()
 
-	msglength := len(fromPost.Message)
+	msglength := len(ss.Message)
 	if msglength > 254 {
-		fromPost.Message = string(fromPost.Message[0:254])
+		ss.Message = string(ss.Message[0:254])
 	}
 
-	severitylen := len(fromPost.Severity)
+	severitylen := len(ss.Severity)
 	if severitylen > 10 {
-		fromPost.Severity = string(fromPost.Severity[0:10])
+		ss.Severity = string(ss.Severity[0:10])
 	}
-	fromPost.Severity = strings.ToLower(fromPost.Severity)
+	ss.Severity = strings.ToLower(ss.Severity)
 
-	statuslen := len(fromPost.Status)
+	statuslen := len(ss.Status)
 	if statuslen > 10 {
-		fromPost.Status = string(fromPost.Status[0:10])
+		ss.Status = string(ss.Status[0:10])
 	}
-	fromPost.Status = strings.ToLower(fromPost.Status)
+	ss.Status = strings.ToLower(ss.Status)
 
-	if fromPost.Severity == "" {
+	if ss.Severity == "" {
 
-		if fromPost.Status == "ok" {
-			fromPost.Severity = "info"
+		if ss.Status == "ok" {
+			ss.Severity = "info"
 
 		} else {
-			fromPost.Severity = "error"
+			ss.Severity = "error"
 
 		}
 

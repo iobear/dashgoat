@@ -10,7 +10,8 @@ import (
 )
 
 type (
-	serviceState struct {
+	//ServiceState struct for validating post input
+	ServiceState struct {
 		Service       string   `json:"service" validate:"min=1,max=40"`
 		Host          string   `json:"host" validate:"min=1,max=40"`
 		Status        string   `json:"status" validate:"min=1,max=10,regexp=^[a-z]*$"`
@@ -24,59 +25,75 @@ type (
 		mutex         sync.RWMutex
 	}
 
-	appHealth struct {
+	//AppHealth holds health data
+	AppHealth struct {
 		APIVersion string `json:"apiversion"`
 	}
 )
 
 var (
-	serviceStateList = map[string]*serviceState{}
-	fromPost         *serviceState
+	serviceStateList = map[string]*ServiceState{}
 	serviceList      = []string{}
 	tagList          = []string{}
-	appHealthResult  *appHealth
+	appHealthResult  *AppHealth
 )
 
+//newPost - init new post
+func newPost() *ServiceState {
+	return &ServiceState{}
+}
+
 //updateStatus - service update
-func updateStatus(c echo.Context) error {
+func (ss *ServiceState) updateStatus(c echo.Context) error {
+	ss.mutex.Lock()
+	defer ss.mutex.Unlock()
+
 	var result = map[string]string{}
-	fromPost = &serviceState{}
 
-	fromPost.mutex.Lock()
-	defer fromPost.mutex.Unlock()
-
-	if err := c.Bind(fromPost); err != nil {
+	if err := c.Bind(ss); err != nil {
+		c.Logger().Error(ss)
 		return err
 	}
 
-	if validateUpdate() == false {
+	if ss.validateUpdate() == false {
+		c.Logger().Error(ss)
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
-	if err := validator.Validate(fromPost); err != nil {
-		return c.JSON(http.StatusBadRequest, fromPost)
+	if err := validator.Validate(ss); err != nil {
+		c.Logger().Error(ss)
+		return c.JSON(http.StatusBadRequest, ss)
 	}
 
 	strID := ""
 
-	if fromPost.Host != "" && fromPost.Service != "" {
-		strID = fromPost.Host + fromPost.Service
+	if ss.Host != "" && ss.Service != "" {
+		strID = ss.Host + ss.Service
 	} else {
-		return c.JSON(http.StatusBadRequest, fromPost)
+		strID = ss.Host + ss.Service
+		c.Logger().Error(strID)
+		c.Logger().Error(ss)
+		return c.JSON(http.StatusBadRequest, ss)
 	}
 
 	if serviceStateList[strID] != nil {
 
-		if fromPost.Status != serviceStateList[strID].Status {
-			fromPost.Change = time.Now().Unix()
+		if ss.Status != serviceStateList[strID].Status {
+			ss.Change = time.Now().Unix()
+			c.Logger().Info("change")
 
 		} else {
-			fromPost.Change = serviceStateList[strID].Change
-		}
+			ss.Change = serviceStateList[strID].Change
+			c.Logger().Info("no change")
 
+		}
 	}
 
-	serviceStateList[strID] = fromPost
+	c.Logger().Info(serviceStateList)
+
+	serviceStateList[strID] = ss
+	c.Logger().Info(serviceStateList)
+
 	result["id"] = strID
 
 	return c.JSON(http.StatusOK, result)
@@ -130,9 +147,9 @@ func deleteService(c echo.Context) error {
 }
 
 func health(c echo.Context) error {
-	appHealthResult = &appHealth{}
+	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.0.6"
+	appHealthResult.APIVersion = "1.0.11"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

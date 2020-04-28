@@ -28,6 +28,9 @@ func main() {
 
 	e := echo.New()
 
+	// Debug mode
+	e.Debug = true
+
 	//static files
 	e.Static(webpath, "web")
 
@@ -38,8 +41,9 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
-	e.POST(add2url(webpath, "/update"), updateStatus)
-	e.PUT(add2url(webpath, "/update"), updateStatus)
+	newpost := newPost()
+	e.POST(add2url(webpath, "/update"), newpost.updateStatus)
+	e.PUT(add2url(webpath, "/update"), newpost.updateStatus)
 	e.GET(add2url(webpath, "/status/:id"), getStatus)
 	e.GET(add2url(webpath, "/status/list"), getStatusList)
 	e.GET(add2url(webpath, "/list/:serviceitem"), getUniq)

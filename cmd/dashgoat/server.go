@@ -22,7 +22,12 @@ type (
 		Seen          int64    `json:"seen"`
 		Change        int64    `json:"change"`
 		UpdateKey     string
-		mutex         sync.RWMutex
+	}
+
+	// Services contai
+	Services struct {
+		mutex            sync.RWMutex
+		serviceStateList map[string]ServiceState
 	}
 
 	//AppHealth holds health data
@@ -32,67 +37,65 @@ type (
 )
 
 var (
-	serviceStateList = map[string]*ServiceState{}
-	serviceList      = []string{}
-	tagList          = []string{}
-	appHealthResult  *AppHealth
+	serviceList     = []string{}
+	tagList         = []string{}
+	appHealthResult *AppHealth
 )
 
-//newPost - init new post
-func newPost() *ServiceState {
-	return &ServiceState{}
-}
-
 //updateStatus - service update
-func (ss *ServiceState) updateStatus(c echo.Context) error {
+func updateStatus(c echo.Context) error {
+
 	ss.mutex.Lock()
+
 	defer ss.mutex.Unlock()
 
 	var result = map[string]string{}
 
-	if err := c.Bind(ss); err != nil {
-		c.Logger().Error(ss)
+	var postService ServiceState
+
+	if err := c.Bind(&postService); err != nil {
+		c.Logger().Error(ss.serviceStateList)
 		return err
 	}
 
-	if ss.validateUpdate() == false {
-		c.Logger().Error(ss)
+	if postService.validateUpdate() == false {
+		c.Logger().Error(ss.serviceStateList)
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
-	if err := validator.Validate(ss); err != nil {
-		c.Logger().Error(ss)
-		return c.JSON(http.StatusBadRequest, ss)
+	if err := validator.Validate(postService); err != nil {
+		c.Logger().Error(ss.serviceStateList)
+		return c.JSON(http.StatusBadRequest, ss.serviceStateList)
 	}
 
 	strID := ""
 
-	if ss.Host != "" && ss.Service != "" {
-		strID = ss.Host + ss.Service
+	if postService.Host != "" && postService.Service != "" {
+		strID = postService.Host + postService.Service
 	} else {
-		strID = ss.Host + ss.Service
+		strID = postService.Host + postService.Service
 		c.Logger().Error(strID)
-		c.Logger().Error(ss)
-		return c.JSON(http.StatusBadRequest, ss)
+		c.Logger().Error(postService)
+		return c.JSON(http.StatusBadRequest, postService)
 	}
 
-	if serviceStateList[strID] != nil {
+	if _, ok := ss.serviceStateList[strID]; ok {
 
-		if ss.Status != serviceStateList[strID].Status {
-			ss.Change = time.Now().Unix()
+		if postService.Status != ss.serviceStateList[strID].Status {
+			postService.Change = time.Now().Unix()
 			c.Logger().Info("change")
 
 		} else {
-			ss.Change = serviceStateList[strID].Change
+			postService.Change = ss.serviceStateList[strID].Change
 			c.Logger().Info("no change")
 
 		}
 	}
 
-	c.Logger().Info(serviceStateList)
+	c.Logger().Info(ss.serviceStateList)
 
-	serviceStateList[strID] = ss
-	c.Logger().Info(serviceStateList)
+	ss.serviceStateList[strID] = postService
+	c.Logger().Info(ss.serviceStateList)
 
 	result["id"] = strID
 
@@ -103,21 +106,28 @@ func (ss *ServiceState) updateStatus(c echo.Context) error {
 func getStatus(c echo.Context) error {
 
 	id := c.Param("id")
-	return c.JSON(http.StatusOK, serviceStateList[id])
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
+
+	return c.JSON(http.StatusOK, ss.serviceStateList[id])
 
 }
 
 //getStatusList - return all data
 func getStatusList(c echo.Context) error {
-
-	return c.JSON(http.StatusOK, serviceStateList)
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
+	return c.JSON(http.StatusOK, ss.serviceStateList)
 
 }
 
 //serviceFilter - list services with item value of..
 func serviceFilter(c echo.Context) error {
 	//placeholder func
-	return c.JSON(http.StatusOK, serviceStateList)
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
+
+	return c.JSON(http.StatusOK, ss.serviceStateList)
 }
 
 //getUniq - list unique values of service items
@@ -139,9 +149,10 @@ func getUniq(c echo.Context) error {
 
 //deleteService - removes service from serviceStateList
 func deleteService(c echo.Context) error {
-
+	ss.mutex.Lock()
+	defer ss.mutex.Unlock()
 	id := c.Param("id")
-	delete(serviceStateList, id)
+	delete(ss.serviceStateList, id)
 
 	return c.NoContent(http.StatusNoContent)
 }

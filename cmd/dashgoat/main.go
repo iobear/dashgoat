@@ -9,6 +9,7 @@ import (
 )
 
 var updatekey string
+var ss Services
 
 func main() {
 	var ipport string
@@ -40,10 +41,7 @@ func main() {
 	}
 	e.Use(middleware.Recover())
 
-	// Routes
-	newpost := newPost()
-	e.POST(add2url(webpath, "/update"), newpost.updateStatus)
-	e.PUT(add2url(webpath, "/update"), newpost.updateStatus)
+	e.POST(add2url(webpath, "/update"), updateStatus)
 	e.GET(add2url(webpath, "/status/:id"), getStatus)
 	e.GET(add2url(webpath, "/status/list"), getStatusList)
 	e.GET(add2url(webpath, "/list/:serviceitem"), getUniq)

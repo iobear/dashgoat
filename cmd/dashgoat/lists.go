@@ -6,8 +6,10 @@ import "fmt"
 func listServiceIDs() []string {
 
 	var resultList = []string{}
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
 
-	for key := range serviceStateList {
+	for key := range ss.serviceStateList {
 		resultList = append(resultList, key)
 	}
 
@@ -20,39 +22,41 @@ func uniqList(item string) []string {
 	var resultList = []string{}
 	var resultStr = ""
 	var listOfServices = listServiceIDs()
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
 
 	for _, id := range listOfServices {
 
 		if item == "service" {
-			resultStr = serviceStateList[id].Service
+			resultStr = ss.serviceStateList[id].Service
 
 		} else if item == "host" {
-			resultStr = serviceStateList[id].Host
+			resultStr = ss.serviceStateList[id].Host
 
 		} else if item == "status" {
-			resultStr = serviceStateList[id].Status
+			resultStr = ss.serviceStateList[id].Status
 
 		} else if item == "message" {
-			resultStr = serviceStateList[id].Message
+			resultStr = ss.serviceStateList[id].Message
 
 		} else if item == "severity" {
-			resultStr = serviceStateList[id].Severity
+			resultStr = ss.serviceStateList[id].Severity
 
 		} else if item == "nextupdatesec" {
-			resultInt := serviceStateList[id].NextUpdateSec
+			resultInt := ss.serviceStateList[id].NextUpdateSec
 			resultStr = fmt.Sprintf("%d", resultInt)
 
 		} else if item == "seen" {
-			int64Unix := serviceStateList[id].Seen
+			int64Unix := ss.serviceStateList[id].Seen
 			resultStr = fmt.Sprintf("%d", int64Unix)
 
 		} else if item == "change" {
-			int64Unix := serviceStateList[id].Change
+			int64Unix := ss.serviceStateList[id].Change
 			resultStr = fmt.Sprintf("%d", int64Unix)
 		}
 
 		if item == "tags" {
-			for _, value := range serviceStateList[id].Tags {
+			for _, value := range ss.serviceStateList[id].Tags {
 				if indexOf(resultList, value) == -1 {
 					resultList = append(resultList, value)
 				}

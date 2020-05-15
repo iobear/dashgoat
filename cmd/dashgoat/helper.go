@@ -42,7 +42,9 @@ func (ss *ServiceState) validateUpdate() bool {
 		return false
 	}
 
-	ss.Seen = time.Now().Unix()
+	if ss.Seen == 0 {
+		ss.Seen = time.Now().Unix()
+	}
 
 	msglength := len(ss.Message)
 	if msglength > 254 {

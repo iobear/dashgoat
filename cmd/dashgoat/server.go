@@ -12,8 +12,8 @@ import (
 type (
 	//ServiceState struct for validating post input
 	ServiceState struct {
-		Service       string   `json:"service" validate:"min=1,max=40"`
-		Host          string   `json:"host" validate:"min=1,max=40"`
+		Service       string   `json:"service" validate:"min=1,max=100"`
+		Host          string   `json:"host" validate:"min=1,max=100"`
 		Status        string   `json:"status" validate:"min=1,max=10,regexp=^[a-z]*$"`
 		Message       string   `json:"message" validate:"max=255"`
 		Severity      string   `json:"severity" validate:"max=10"`
@@ -66,6 +66,12 @@ func updateStatus(c echo.Context) error {
 	}
 
 	strID := ""
+
+	if postService.Host != "" && postService.Service != "" {
+		strID = postService.Host + postService.Service
+	} else {
+		return c.JSON(http.StatusBadRequest, postService)
+	}
 
 	if _, ok := ss.serviceStateList[strID]; ok {
 
@@ -143,7 +149,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.0.13"
+	appHealthResult.APIVersion = "1.0.16"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

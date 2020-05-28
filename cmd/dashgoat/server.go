@@ -19,7 +19,7 @@ type (
 		Severity      string   `json:"severity" validate:"max=10"`
 		NextUpdateSec int      `json:"nextupdatesec" validate:"max=605000"`
 		Tags          []string `json:"tags" validate:"max=20"`
-		Seen          int64    `json:"seen"`
+		Probe         int64    `json:"probe"`
 		Change        int64    `json:"change"`
 		UpdateKey     string
 	}
@@ -75,12 +75,13 @@ func updateStatus(c echo.Context) error {
 
 	if _, ok := ss.serviceStateList[strID]; ok {
 
-		if postService.Status != ss.serviceStateList[strID].Status {
-			postService.Change = time.Now().Unix()
+		if postService.Change == 0 {
+			if postService.Status != ss.serviceStateList[strID].Status {
+				postService.Change = time.Now().Unix()
+			} else {
+				postService.Change = ss.serviceStateList[strID].Change
 
-		} else {
-			postService.Change = ss.serviceStateList[strID].Change
-
+			}
 		}
 	}
 
@@ -149,7 +150,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.0.16"
+	appHealthResult.APIVersion = "1.1.0"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

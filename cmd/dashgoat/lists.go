@@ -46,8 +46,8 @@ func uniqList(item string) []string {
 			resultInt := ss.serviceStateList[id].NextUpdateSec
 			resultStr = fmt.Sprintf("%d", resultInt)
 
-		} else if item == "seen" {
-			int64Unix := ss.serviceStateList[id].Seen
+		} else if item == "probe" {
+			int64Unix := ss.serviceStateList[id].Probe
 			resultStr = fmt.Sprintf("%d", int64Unix)
 
 		} else if item == "change" {

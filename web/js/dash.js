@@ -1,6 +1,6 @@
 
 const container = document.getElementById("container");
-const dashItems = ['host', 'service', 'status', 'message', 'change', 'seen'];
+const dashItems = ['host', 'service', 'status', 'message', 'change', 'probe'];
 let oldrows = 0;
 let printList = [];
 
@@ -75,7 +75,7 @@ function updateRows() {
 			let container = document.getElementById(toUpdate);
 			container.innerText = "";
 
-			if (item == 'change' || item == 'seen') {
+			if (item == 'change' || item == 'probe') {
 
 				if (service[item]) {
 					container.innerText = timeDiff(service[item]);

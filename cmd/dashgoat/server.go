@@ -150,7 +150,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.1.0"
+	appHealthResult.APIVersion = "1.1.1"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

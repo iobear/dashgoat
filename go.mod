@@ -1,4 +1,4 @@
-module git.nodebender.net/bjorn/dash
+module github.com/iobear/dashgoat
 
 go 1.14
 

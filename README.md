@@ -2,6 +2,8 @@
 
 Dashgoat - A simple dashboard, easy to deploy.
 
+![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
+
 ## Golang Hello world
 
 ```go build  ./cmd/dashgoat```

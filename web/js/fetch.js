@@ -3,16 +3,16 @@ const status_list_uri = 'status/list';
 const url = host + status_list_uri;
 
 
-function askAPI(url) {
-
+function askAPI()
+{
 	fetch(url)
-		.then(function(response) {
+		.then(function(response)
+		{
 		return response.json();
 		})
-		.then(function(data) {
+		.then(function(data)
+		{
 			prepareData(data);
 	});
 
 }
-
-askAPI(url);

@@ -1,4 +1,3 @@
-
 const container = document.getElementById("container");
 const default_items = ['host', 'service', 'status', 'message', 'change', 'probe'];
 let dash_items = [];
@@ -7,6 +6,10 @@ let printList = [];
 let sort_by = '';
 let current_job = '';
 
+if (location.pathname != '/')
+{
+	document.title = location.pathname.replace(/\//g, '');
+}
 
 function createHeader()
 {

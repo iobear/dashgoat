@@ -31,10 +31,11 @@ func main() {
 
 	e := echo.New()
 
+	e.HideBanner = true
+
 	//static files
 	e.Static(webpath, "web")
 
-	// Middleware
 	if weblog == "on" {
 		e.Use(middleware.Logger())
 	}
@@ -47,6 +48,8 @@ func main() {
 	e.GET(add2url(webpath, "/servicefilter/:item/:itemval"), serviceFilter)
 	e.DELETE(add2url(webpath, "/service/:id"), deleteService)
 	e.GET(add2url(webpath, "/health"), health)
+
+	print("dashGoat ")
 
 	// Start server
 	e.Logger.Fatal(e.Start(ipport))

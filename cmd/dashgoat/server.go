@@ -32,7 +32,8 @@ type (
 
 	//AppHealth holds health data
 	AppHealth struct {
-		APIVersion string `json:"apiversion"`
+		APIVersion  string `json:"apiversion"`
+		HTMLVersion string `json:"htmlversion"`
 	}
 )
 
@@ -151,6 +152,7 @@ func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
 	appHealthResult.APIVersion = "1.1.4"
+	appHealthResult.HTMLVersion = "1.0"
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

@@ -32,8 +32,8 @@ type (
 
 	//AppHealth holds health data
 	AppHealth struct {
-		APIVersion  string `json:"apiversion"`
-		HTMLVersion string `json:"htmlversion"`
+		DashAPI  string `json:"dashapi"`
+		DashName string `json:"dashname"`
 	}
 )
 
@@ -151,8 +151,8 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.APIVersion = "1.1.4"
-	appHealthResult.HTMLVersion = "1.0"
+	appHealthResult.DashAPI = "1.1.5"
+	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }

@@ -1,15 +1,12 @@
 const container = document.getElementById("container");
 const default_items = ['host', 'service', 'status', 'message', 'change', 'probe'];
+const footer_items = ['dashname','','','','','dashversion'];
 let dash_items = [];
 let oldrows = 0;
 let printList = [];
 let sort_by = '';
 let current_job = '';
 
-if (location.pathname != '/')
-{
-	document.title = location.pathname.replace(/\//g, '');
-}
 
 function createHeader()
 {
@@ -28,6 +25,33 @@ function createHeader()
 }
 
 
+function createTableBody()
+{
+	let cell = document.createElement("tbody");
+	dashtable.appendChild(cell).id = "dashbody";
+
+}
+
+
+function createFooter()
+{
+	let cell = document.createElement("tfoot");
+	dashtable.appendChild(cell).id = "dashfooter";
+
+	for (let item of footer_items)
+	{
+		let cell2 = document.createElement("th");
+
+		if (item)
+		{
+			dashfooter.appendChild(cell2).id = item;
+		}
+		dashtable.appendChild(cell2).classList = "dashfooter";
+		dashfooter.appendChild(cell2).innerText = item;
+	}
+}
+
+
 function removeList()
 {
 	let prelist = document.getElementById("dashtable");
@@ -43,8 +67,8 @@ function removeList()
 
 function createRows(startrow)
 {
-	let cell = document.createElement("tbody");
-	dashtable.appendChild(cell).id = "dashbody";
+
+
 
 	for (let c = startrow; c < rows; c++)
 	{
@@ -89,8 +113,7 @@ function updateRows(sort = '')
 		sort_by = sort;
 	}
 
-	let rowcount = 0;
-	count = 0;
+	let count = 0;
 
 	sortPrintList();
 
@@ -104,13 +127,15 @@ function updateRows(sort = '')
 			container.innerText = "";
 			container.innerText = service[item];
 
-			if (item == 'change' || item == 'probe') {
-
-				if (service[item]) {
+			if (item == 'change' || item == 'probe')
+			{
+				if (service[item])
+				{
 					container.innerText = timeDiff(service[item]);
 				}
-
-			} else {
+			}
+			else
+			{
 				container.innerText = service[item];
 			}
 
@@ -206,7 +231,8 @@ function sortPrintList()
 		return '';
 	}
 
-	var item_list = print_list.map(function (item) {
+	var item_list = print_list.map(function (item)
+	{
 		return item[sort_by];
 	});
 
@@ -235,6 +261,14 @@ function sortPrintList()
 }
 
 
+function updateVersion(data)
+{
+	document.title = data['dashname'];
+	document.getElementById("dashname").textContent = data['dashname'];
+	document.getElementById("dashversion").textContent = data['dashapi'];
+}
+
+
 function show(job, sort='')
 {
 	current_job = job;
@@ -245,8 +279,11 @@ function show(job, sort='')
 
 	oldrows = 0;
 	removeList();
+	createTableBody();
 	selectHeader(job);
 	askAPI();
+	createFooter();
+	askHealth();
 }
 
-show('default','status')
+show('default','status');

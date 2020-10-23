@@ -1,10 +1,12 @@
 const host = window.location;
 const status_list_uri = 'status/list';
-const url = host + status_list_uri;
+const health_uri = 'health';
 
 
 function askAPI()
 {
+	const url = host + status_list_uri;
+
 	fetch(url)
 		.then(function(response)
 		{
@@ -12,7 +14,25 @@ function askAPI()
 		})
 		.then(function(data)
 		{
-			prepareData(data);
-	});
+				prepareData(data);
+		});
 
 }
+
+
+function askHealth()
+{
+	const url = host + health_uri;
+
+	fetch(url)
+		.then(function(response)
+		{
+		return response.json();
+		})
+		.then(function(data)
+		{
+				updateVersion(data);
+		});
+
+}
+

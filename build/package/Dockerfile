@@ -13,7 +13,7 @@ ENV WEBPATH "/"
 ENV WEBLOG "off"
 ENV UPDATEKEY "changeme"
 ENV IPPORT ":1323"
-ENV APPNAME "dashGoat"
+ENV DASHNAME "dashGoat"
 
 COPY --from=0 /go/src/dashgoatbuild/dashgoat /app/dashgoat
 COPY web/ /web/
@@ -21,4 +21,4 @@ COPY web/ /web/
 
 EXPOSE 1323
 
-CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -appname ${APPNAME}"]
+CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -appname ${DASHNAME}"]

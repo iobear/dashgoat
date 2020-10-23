@@ -21,4 +21,4 @@ COPY web/ /web/
 
 EXPOSE 1323
 
-CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -appname ${DASHNAME}"]
+CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME}"]

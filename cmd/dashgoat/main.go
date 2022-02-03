@@ -4,8 +4,7 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
 )
 
 var updatekey string
@@ -38,10 +37,10 @@ func main() {
 	//static files
 	e.Static(webpath, "web")
 
-	if weblog == "on" {
-		e.Use(middleware.Logger())
-	}
-	e.Use(middleware.Recover())
+	// if weblog == "on" {
+	// 	e.Use(middleware.Logger())
+	// }
+	// e.Use(middleware.Recover())
 
 	e.POST(add2url(webpath, "/update"), updateStatus)
 	e.GET(add2url(webpath, "/status/:id"), getStatus)

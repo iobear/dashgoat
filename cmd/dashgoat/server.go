@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"gopkg.in/validator.v2"
 )
 
 type (
@@ -62,9 +61,9 @@ func updateStatus(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
-	if err := validator.Validate(postService); err != nil {
-		return c.JSON(http.StatusBadRequest, ss.serviceStateList)
-	}
+	// if err := validator.Validate(postService); err != nil {
+	// 	return c.JSON(http.StatusBadRequest, ss.serviceStateList)
+	// }
 
 	strID := ""
 

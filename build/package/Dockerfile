@@ -4,6 +4,7 @@ WORKDIR /go/src/dashgoatbuild
 RUN go get -d -v github.com/labstack/echo/...
 RUN go get gopkg.in/validator.v2
 COPY cmd/dashgoat/* /go/src/dashgoatbuild/
+COPY go.* /go/src/dashgoatbuild/
 RUN ls -lah
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 

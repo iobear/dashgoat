@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -163,6 +164,8 @@ func deleteService(c echo.Context) error {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 	id := c.Param("id")
+	id = strings.Replace(id, " ", "-", -1)
+
 	delete(ss.serviceStateList, id)
 
 	return c.NoContent(http.StatusNoContent)

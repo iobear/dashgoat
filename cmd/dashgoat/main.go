@@ -17,7 +17,7 @@ func main() {
 	var webpath string
 	var weblog string
 
-	ss.serviceStateList = make(map[string]ServiceState, 0)
+	ss.serviceStateList = make(map[string]ServiceState)
 
 	e := echo.New()
 
@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	pathStartsWith := strings.HasPrefix(webpath, "/")
-	if pathStartsWith == false {
+	if !pathStartsWith {
 		webpath = "/" + webpath
 	}
 

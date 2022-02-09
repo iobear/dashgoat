@@ -42,11 +42,7 @@ type (
 	}
 )
 
-var (
-	serviceList     = []string{}
-	tagList         = []string{}
-	appHealthResult *AppHealth
-)
+var appHealthResult *AppHealth
 
 //updateStatus - service update
 func updateStatus(c echo.Context) error {
@@ -63,7 +59,7 @@ func updateStatus(c echo.Context) error {
 		return err
 	}
 
-	if postService.validateUpdate() == false {
+	if !postService.validateUpdate() {
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 

@@ -23,6 +23,12 @@ type (
 		UpdateKey     string
 	}
 
+	//ServiceState for MSO output
+	ServiceStateMSO struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+	}
+
 	// Services map
 	Services struct {
 		mutex            sync.RWMutex
@@ -111,6 +117,25 @@ func getStatusList(c echo.Context) error {
 
 }
 
+//getStatusList HPO/MSO
+func getStatusListMSO(c echo.Context) error {
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
+
+	var tmpServiceStateMSO ServiceStateMSO
+	serviceStateMSOlist := make(map[string]ServiceStateMSO)
+
+	for index, event := range ss.serviceStateList {
+		tmpServiceStateMSO.Status = event.Status
+		tmpServiceStateMSO.Message = event.Status + " - " + event.Service + " " + event.Host + "-" + event.Message
+
+		serviceStateMSOlist[index] = tmpServiceStateMSO
+	}
+
+	return c.JSON(http.StatusOK, serviceStateMSOlist)
+
+}
+
 //serviceFilter - list services with item value of..
 func serviceFilter(c echo.Context) error {
 	//placeholder func
@@ -150,7 +175,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.1.9"
+	appHealthResult.DashAPI = "1.1.10"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)

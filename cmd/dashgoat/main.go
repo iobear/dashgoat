@@ -46,6 +46,7 @@ func main() {
 	e.POST(add2url(webpath, "/update"), updateStatus)
 	e.GET(add2url(webpath, "/status/:id"), getStatus)
 	e.GET(add2url(webpath, "/status/list"), getStatusList)
+	e.GET(add2url(webpath, "/status/listmso"), getStatusListMSO)
 	e.GET(add2url(webpath, "/list/:serviceitem"), getUniq)
 	e.GET(add2url(webpath, "/servicefilter/:item/:itemval"), serviceFilter)
 	e.DELETE(add2url(webpath, "/service/:id"), deleteService)

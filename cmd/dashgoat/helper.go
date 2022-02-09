@@ -70,10 +70,11 @@ func (ss *ServiceState) validateUpdate() bool {
 
 		} else {
 			ss.Severity = "error"
-
 		}
-
 	}
+
+	ss.Host = strings.Replace(ss.Host, " ", "", -1)
+	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
 
 	return true
 }

@@ -4,8 +4,6 @@ const footer_items = ['dashname','','','','','dashversion'];
 let dash_items = [];
 let oldrows = 0;
 let printList = [];
-let sort_by = '';
-let current_job = '';
 
 
 function createHeader()
@@ -16,7 +14,7 @@ function createHeader()
 	for (let item of dash_items)
 	{
 		let cell = document.createElement("th");
-		cell.setAttribute("onclick", "updateRows(this.innerText.toLowerCase())");
+		cell.setAttribute("onclick", "setSortBy(this.innerText.toLowerCase())");
 
 		dashheader.appendChild(cell).classList.add(item)
 		dashheader.appendChild(cell).innerText = item;
@@ -68,8 +66,6 @@ function removeList()
 function createRows(startrow)
 {
 
-
-
 	for (let c = startrow; c < rows; c++)
 	{
 		rowid = `row${c}`;
@@ -108,14 +104,7 @@ function createColumns(rowid)
 
 function updateRows(sort = '')
 {
-	if (sort)
-	{
-		sort_by = sort;
-	}
-
 	let count = 0;
-
-	sortPrintList();
 
 	for (let service of print_list)
 	{
@@ -183,81 +172,10 @@ function changeRowAmount(rows)
 }
 
 
-function selectHeader(job)
+function selectHeader()
 {
-	if (job == 'default')
-	{
-		dash_items = default_items;
-	}
-
+	dash_items = default_items;
 	createHeader();
-}
-
-
-function prepareData(data)
-{
-	print_list = [];
-	keys = Object.keys( data );
-	rows = keys.length;
-
-	//If empty API
-	if ((rows == 2) && keys.includes('status'))
-	{
-		alert(data['message']);
-		return true;
-	}
-
-	for (var value of keys)
-	{
-		if (value)
-		{
-			print_list.push(data[value]);
-		}
-		else
-		{
-			rows = rows - 1;
-		}
-	}
-
-	changeRowAmount(rows);
-	updateRows();
-}
-
-
-function sortPrintList()
-{
-	if (sort_by == '')
-	{
-		return '';
-	}
-
-	var item_list = print_list.map(function (item)
-	{
-		return item[sort_by];
-	});
-
-	org_list = item_list.slice(); //copy list
-
-	if (Number.isInteger(org_list[0]))
-	{
-		item_list.sort(function(a, b){return a-b});
-	}
-	else
-	{
-		item_list.sort();
-	}
-
-	let new_print_list = [];
-	for (let sort_key in item_list)
-	{
-		let index_to_find = org_list.indexOf(item_list[sort_key]);
-		org_list[index_to_find] = '';
-		new_print_list.push(print_list[index_to_find]);
-	}
-
-	print_list = new_print_list;
-	new_print_list = []; //clean list
-	org_list = []; //clean list
 }
 
 
@@ -269,21 +187,15 @@ function updateVersion(data)
 }
 
 
-function show(job, sort='')
+function showDash()
 {
-	current_job = job;
-	if (sort != '')
-	{
-		sort_by = sort;
-	}
-
 	oldrows = 0;
 	removeList();
 	createTableBody();
-	selectHeader(job);
+	selectHeader();
 	askAPI();
 	createFooter();
 	askHealth();
 }
 
-show('default','status');
+showDash();

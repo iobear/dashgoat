@@ -18,6 +18,7 @@ func main() {
 	var weblog string
 
 	ss.serviceStateList = make(map[string]ServiceState)
+	go lostProbeTimer()
 
 	e := echo.New()
 
@@ -56,4 +57,5 @@ func main() {
 
 	// Start server
 	e.Logger.Fatal(e.Start(ipport))
+
 }

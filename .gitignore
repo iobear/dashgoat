@@ -1,6 +1,5 @@
 #go
 vendor/
-dashgoat
 
 # macOS
 .DS_Store

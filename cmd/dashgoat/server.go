@@ -174,7 +174,7 @@ func deleteService(c echo.Context) error {
 func health(c echo.Context) error {
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.1.11"
+	appHealthResult.DashAPI = "1.1.12"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)

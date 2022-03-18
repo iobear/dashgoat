@@ -57,7 +57,7 @@ function sortByStatus()
 }
 
 
-function prepareData(data)
+function prepareData(data, refresh = true)
 {
 	status_arr.forEach(iterStatus); //init empty status_map
 	print_list = [];
@@ -86,7 +86,7 @@ function prepareData(data)
 
 	sortByStatus();
 	changeRowAmount(rows);
-	updateRows();
+	updateRows(refresh);
 }
 
 

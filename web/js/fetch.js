@@ -12,15 +12,37 @@ function askAPI()
 	fetch(url)
 		.then(function(response)
 		{
+			if (response.status == 204){
+				return tellDashboard("Waiting for first update", "info");
+			}
 			return response.json();
 		})
 		.then(function(data)
 		{
 			prepareData(data);
-		}).catch(()=>{
+		}).catch(err =>{
+			console.log(err);
 			waitForBackend();
 		});
 
+}
+
+
+function tellDashboard(message, status) {
+	let result = {}
+	let msg = {}
+
+	msg["message"] = message;
+	msg["status"] = status;
+	msg["service"] = "JS";
+	msg["host"] = "localhost";
+	msg["severity"] = "info";
+	msg["change"] = 0;
+	msg["probe"] = 0;
+
+	result["localhostJS"] = msg;
+
+	return result;
 }
 
 
@@ -31,11 +53,11 @@ function askHealth()
 	fetch(url)
 		.then(function(response)
 		{
-		return response.json();
+			return response.json();
 		})
 		.then(function(data)
 		{
-				updateVersion(data);
+			updateVersion(data);
 		});
 
 }
@@ -43,9 +65,12 @@ function askHealth()
 
 function waitForBackend()
 {
+	msg = 'Waiting for backend to come alive'
+
+	prepareData(tellDashboard(msg, 'warning'), false);
 	console.log('Waiting for backend to come alive');
 
-	sleep(60).then(() => {
+	sleep(30).then(() => {
 		askAPI();
 	})
 

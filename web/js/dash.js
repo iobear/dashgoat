@@ -102,8 +102,9 @@ function createColumns(rowid)
 }
 
 
-function updateRows(sort = '')
+function updateRows(refresh = true)
 {
+	const refreshSec = 4;
 	let count = 0;
 
 	for (let service of print_list)
@@ -142,7 +143,10 @@ function updateRows(sort = '')
 		}
 		count++;
 	}
-	setTimeout(() => {  askAPI(); }, 4000);
+
+	if (refresh) {
+		setTimeout(() => {  askAPI(); }, refreshSec * 1000);
+	}
 }
 
 

@@ -21,6 +21,7 @@ type (
 		Tags          []string `json:"tags" validate:"max=20"`
 		Probe         int64    `json:"probe"`
 		Change        int64    `json:"change"`
+		From          []string `json:"from"`
 		UpdateKey     string
 	}
 
@@ -85,14 +86,20 @@ func updateStatus(c echo.Context) error {
 				postService.Change = ss.serviceStateList[strID].Change
 
 			}
+		} else if postService.Probe <= ss.serviceStateList[strID].Probe { //Already reported
+			return c.JSON(http.StatusAlreadyReported, "")
 		}
 	}
 
 	ss.serviceStateList[strID] = postService
 
+	if config.EnableBuddy {
+		go updateBuddy(postService, "")
+	}
+
 	result["id"] = strID
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusCreated, result)
 }
 
 //getStatus - get status of service with service id
@@ -110,6 +117,11 @@ func getStatus(c echo.Context) error {
 func getStatusList(c echo.Context) error {
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
+
+	if len(ss.serviceStateList) == 0 {
+		return c.JSON(http.StatusNoContent, "")
+	}
+
 	return c.JSON(http.StatusOK, ss.serviceStateList)
 
 }
@@ -166,16 +178,73 @@ func deleteService(c echo.Context) error {
 	id := c.Param("id")
 	id = strings.Replace(id, " ", "-", -1)
 
-	delete(ss.serviceStateList, id)
+	_, mapContainsKey := ss.serviceStateList[id]
 
-	return c.NoContent(http.StatusNoContent)
+	if mapContainsKey {
+		serviceStateToDelete := ss.serviceStateList[id]
+		delete(ss.serviceStateList, id)
+		go updateBuddy(serviceStateToDelete, id)
+		return c.NoContent(http.StatusNoContent)
+	}
+
+	return c.NoContent(http.StatusNotFound)
 }
 
 func health(c echo.Context) error {
+	if !dashgoat_ready {
+		return c.NoContent(http.StatusServiceUnavailable)
+	}
+
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.1.12"
+	appHealthResult.DashAPI = "1.2.0"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)
+}
+
+//validate and enrich input from POST
+func (ss *ServiceState) validateUpdate() bool {
+
+	if ss.UpdateKey == updatekey {
+		ss.UpdateKey = "valid"
+	} else {
+		return false
+	}
+
+	if ss.Probe == 0 {
+		ss.Probe = time.Now().Unix()
+	}
+
+	msglength := len(ss.Message)
+	if msglength > 254 {
+		ss.Message = string(ss.Message[0:254])
+	}
+
+	severitylen := len(ss.Severity)
+	if severitylen > 10 {
+		ss.Severity = string(ss.Severity[0:10])
+	}
+	ss.Severity = strings.ToLower(ss.Severity)
+
+	statuslen := len(ss.Status)
+	if statuslen > 10 {
+		ss.Status = string(ss.Status[0:10])
+	}
+	ss.Status = strings.ToLower(ss.Status)
+
+	if ss.Severity == "" {
+
+		if ss.Status == "ok" {
+			ss.Severity = "info"
+
+		} else {
+			ss.Severity = "error"
+		}
+	}
+
+	ss.Host = strings.Replace(ss.Host, " ", "", -1)
+	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
+
+	return true
 }

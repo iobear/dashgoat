@@ -1,8 +1,8 @@
 package main
 
 import (
+	"os"
 	"strings"
-	"time"
 )
 
 //indexOf - does the value exist, and where
@@ -19,6 +19,16 @@ func indexOf(slice []string, item string) int {
 	return -1
 }
 
+//contains Does the value exist, https://gosamples.dev/slice-contains/
+func contains(elems []string, v string) bool {
+	for _, s := range elems {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
 //add2url add url path root url
 func add2url(path string, route string) string {
 	var result strings.Builder
@@ -33,48 +43,17 @@ func add2url(path string, route string) string {
 	return result.String()
 }
 
-//validate and enrich input from POST
-func (ss *ServiceState) validateUpdate() bool {
+//isExists Does the given directory of filepath exist?
+func isExists(path string, task string) bool {
+	fileStat, err := os.Stat(path)
 
-	if ss.UpdateKey == updatekey {
-		ss.UpdateKey = "valid"
-	} else {
+	if err != nil {
 		return false
 	}
 
-	if ss.Probe == 0 {
-		ss.Probe = time.Now().Unix()
+	if task == "path" || task == "directory" {
+		return fileStat.IsDir()
 	}
-
-	msglength := len(ss.Message)
-	if msglength > 254 {
-		ss.Message = string(ss.Message[0:254])
-	}
-
-	severitylen := len(ss.Severity)
-	if severitylen > 10 {
-		ss.Severity = string(ss.Severity[0:10])
-	}
-	ss.Severity = strings.ToLower(ss.Severity)
-
-	statuslen := len(ss.Status)
-	if statuslen > 10 {
-		ss.Status = string(ss.Status[0:10])
-	}
-	ss.Status = strings.ToLower(ss.Status)
-
-	if ss.Severity == "" {
-
-		if ss.Status == "ok" {
-			ss.Severity = "info"
-
-		} else {
-			ss.Severity = "error"
-		}
-	}
-
-	ss.Host = strings.Replace(ss.Host, " ", "", -1)
-	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
 
 	return true
 }

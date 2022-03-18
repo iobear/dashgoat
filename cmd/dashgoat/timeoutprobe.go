@@ -95,5 +95,9 @@ func findProbeInterval() int {
 		result = interval_min
 	}
 
+	if result > interval_max {
+		result = interval_max
+	}
+
 	return result
 }

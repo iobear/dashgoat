@@ -2,23 +2,30 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
+var config Configer
+var dashgoat_ready bool
 var updatekey string
 var ss Services
+var bb Backlog
 var dashName string
 
 func main() {
 	var ipport string
 	var webpath string
 	var weblog string
+	var configfile string
 
 	ss.serviceStateList = make(map[string]ServiceState)
-	go lostProbeTimer()
+	bb.buddyBacklog = make(map[string][]string)
+	bb.StateDown = make(map[string]int64)
 
 	e := echo.New()
 
@@ -27,7 +34,14 @@ func main() {
 	flag.StringVar(&webpath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
 	flag.StringVar(&updatekey, "updatekey", "changeme", "Specify key to API update")
 	flag.StringVar(&dashName, "dashname", "dashGoat", "Dashboard name")
+	flag.StringVar(&configfile, "configfile", "dashgoat.yaml", "Name of configfile")
 	flag.Parse()
+
+	err := config.InitConfig(configfile)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	pathStartsWith := strings.HasPrefix(webpath, "/")
 	if !pathStartsWith {
@@ -54,6 +68,9 @@ func main() {
 	e.GET(add2url(webpath, "/health"), health)
 
 	print("Starting dashGoat.. Dashboard name: " + dashName + " ")
+
+	go lostProbeTimer()
+	go findBuddy()
 
 	// Start server
 	e.Logger.Fatal(e.Start(ipport))

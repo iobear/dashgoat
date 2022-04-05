@@ -136,7 +136,7 @@ func getStatusListMSO(c echo.Context) error {
 
 	for index, event := range ss.serviceStateList {
 		tmpServiceStateMSO.Status = event.Status
-		tmpServiceStateMSO.Message = event.Status + " - " + event.Service + " " + event.Host + "-" + event.Message
+		tmpServiceStateMSO.Message = "[" + event.Status + "] " + event.Service + " " + event.Host + "-" + event.Message
 
 		serviceStateMSOlist[index] = tmpServiceStateMSO
 	}

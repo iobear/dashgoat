@@ -3,7 +3,7 @@ RUN apk --no-cache add build-base git
 WORKDIR /go/src/dashgoatbuild
 COPY cmd/dashgoat/* /go/src/dashgoatbuild/
 COPY go.* /go/src/dashgoatbuild/
-COPY dashgoat.yaml /go/src/dashgoatbuild/
+COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
 RUN go get -d -v github.com/labstack/echo/...
 RUN go get gopkg.in/validator.v2
 RUN ls -lah

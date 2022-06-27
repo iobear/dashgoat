@@ -94,13 +94,24 @@ func talkToBuddy(event ServiceState, host Buddy, delete string) {
 }
 
 func findBuddy() {
-	firstRound := true
 
 	if !config.EnableBuddy {
 		dashgoat_ready = true
 		fmt.Println("Buddy not enabled")
 		return
 	}
+
+	firstRound := true
+	buddyAmount := 0
+	buddyTxt := "Buddy"
+
+	buddyAmount = len(config.BuddyHosts)
+	if buddyAmount > 1 {
+		buddyTxt = "Buddies"
+	}
+
+	buddyWelcome := fmt.Sprintf("%d %s ", buddyAmount, buddyTxt)
+	fmt.Println(buddyWelcome)
 
 	waitfor := 10
 	if config.CheckBuddyIntervalSec > 1 {

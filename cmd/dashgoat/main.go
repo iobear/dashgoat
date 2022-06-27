@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -22,6 +21,9 @@ func main() {
 	var webpath string
 	var weblog string
 	var configfile string
+	var oneBuddyUrl string
+	var oneBuddyKey string
+	var oneBuddyName string
 
 	ss.serviceStateList = make(map[string]ServiceState)
 	bb.buddyBacklog = make(map[string][]string)
@@ -33,14 +35,23 @@ func main() {
 	flag.StringVar(&weblog, "weblog", "off", "HTTP log <on/off>")
 	flag.StringVar(&webpath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
 	flag.StringVar(&updatekey, "updatekey", "changeme", "Specify key to API update")
-	flag.StringVar(&dashName, "dashname", "dashGoat", "Dashboard name")
+	flag.StringVar(&dashName, "dashname", "", "Dashboard name")
 	flag.StringVar(&configfile, "configfile", "dashgoat.yaml", "Name of configfile")
+	flag.StringVar(&oneBuddyUrl, "buddyurl", "", "Buddy url")
+	flag.StringVar(&oneBuddyKey, "buddykey", "", "Buddy update key, empty for same key")
+	flag.StringVar(&oneBuddyName, "buddyname", "", "Buddy name")
 	flag.Parse()
 
 	err := config.InitConfig(configfile)
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+	}
+
+	if oneBuddyUrl != "" {
+		if oneBuddyKey == "" {
+			oneBuddyKey = updatekey
+		}
+		config.OneBuddy(oneBuddyUrl, oneBuddyKey, oneBuddyName)
 	}
 
 	pathStartsWith := strings.HasPrefix(webpath, "/")
@@ -67,7 +78,7 @@ func main() {
 	e.DELETE(add2url(webpath, "/service/:id"), deleteService)
 	e.GET(add2url(webpath, "/health"), health)
 
-	print("Starting dashGoat.. Dashboard name: " + dashName + " ")
+	fmt.Println("Starting dashGoat.. Dashboard name: " + dashName + " ")
 
 	go lostProbeTimer()
 	go findBuddy()

@@ -25,6 +25,7 @@ type Configer struct {
 
 // InitConfig initiates a new decoded Config struct Alex style
 func (conf *Configer) InitConfig(configPath string) error {
+	var result error
 
 	if configPath == "" {
 		configPath = "dashgoat.yaml"
@@ -32,28 +33,57 @@ func (conf *Configer) InitConfig(configPath string) error {
 
 	fileExists := isExists(configPath, "file")
 	if !fileExists {
-		return fmt.Errorf("Cant read Config file " + configPath)
+		result = fmt.Errorf("Cant find Config file " + configPath + ", moving on")
+		configPath = ""
 	}
 
-	file, err := os.Open(configPath)
-	if err != nil {
-		return err
+	if configPath != "" {
+		file, err := os.Open(configPath)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		d := yaml.NewDecoder(file)
+
+		if err := d.Decode(&config); err != nil {
+			return err
+		}
 	}
-	defer file.Close()
 
-	d := yaml.NewDecoder(file)
-
-	if err := d.Decode(&config); err != nil {
-		return err
-	}
-
-	if dashName == "dashGoat" {
+	if dashName == "" {
+		conf.DashName = "dashGoat"
 		dashName = conf.DashName
+	}
+
+	if configPath == "" {
+		conf.EnableBuddy = false
+		conf.BuddyHosts = nil
+		conf.CheckBuddyIntervalSec = 30
 	}
 
 	if conf.BuddyDown == "" {
 		conf.BuddyDown = "error"
 	}
+
+	return result
+}
+
+func (conf *Configer) OneBuddy(url string, key string, name string) error {
+	var onebuddyconf Buddy
+
+	conf.EnableBuddy = true
+	onebuddyconf.Ignore = false
+	onebuddyconf.Key = key
+	onebuddyconf.Url = url
+	onebuddyconf.Name = "MyBuddy"
+
+	if name != "" {
+		onebuddyconf.Name = name
+	}
+
+	conf.BuddyHosts = nil
+	conf.BuddyHosts = append(conf.BuddyHosts, onebuddyconf)
 
 	return nil
 }

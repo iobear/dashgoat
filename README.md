@@ -100,7 +100,7 @@ There should be something about "My buddy is down" in the dashboard.
 Start your second instance:
 
 ```bash
-./dashgoat -updatekey my-precious! -buddyurl http://localhost:2001 -ipport :1323
+./dashgoat -updatekey my-precious! -buddyurl http://localhost:1323 -ipport :2001
 ```
 Your first dashboard should be happy now. If you check your new dashboard at ```http://localhost:2001```, it should say "Waiting for first update".
 

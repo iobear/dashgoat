@@ -4,6 +4,14 @@ Dashgoat - A simple dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
+## Features
+
+ * Easy to use
+ * Configuration management frendly
+ * Non hierarchical cluster option
+ * Lightweight
+ * HTTP(s) only, no special ports/protocols
+
 ## Golang Hello world
 
 ```go build  ./cmd/dashgoat```
@@ -12,7 +20,7 @@ Dashgoat - A simple dashboard, easy to deploy.
 
 curl API example;
 
-```
+```bash
 curl --request POST \
   --url http://127.0.0.1:1323/update \
   --header 'content-type: application/json' \
@@ -30,7 +38,7 @@ http://127.0.0.1:1323
 
 Update status to error;
 
-```
+```bash
 curl --request POST \
   --url http://127.0.0.1:1323/update \
   --header 'content-type: application/json' \
@@ -47,3 +55,9 @@ Check web page again.
 ## Docker Hello world
 
 ```docker run -e UPDATEKEY=my-precious! -p 1323:1323 --rm --name=dashgoat analogbear/dashgoat```
+
+## TODO
+
+ * Better auth
+ * Automatic cleanup option
+ * lots more..

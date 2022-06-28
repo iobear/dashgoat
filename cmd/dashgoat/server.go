@@ -219,7 +219,7 @@ func health(c echo.Context) error {
 
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.2.3"
+	appHealthResult.DashAPI = "1.2.4"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)

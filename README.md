@@ -72,7 +72,7 @@ curl --request POST \
 Now you should get a warning if the update is missing for 20 seconds. This feature is not meant to be super fast (< 10 sec), this is just to keep track of "lost" agents.
 
 
-## Docker/Podman Hello world
+## Docker Hello world
 
 ```docker run -e UPDATEKEY=my-precious! -p 1323:1323 --rm --name=dashgoat analogbear/dashgoat```
 
@@ -108,8 +108,31 @@ Now try doing the same updates as before, and you should see both dashGoat insta
 
 If you want more buddies, you can define them in a list, in the dashgoat.yaml file, instead of using the -buddyurl parameter.
 
+### Docker, Buddy Hello world
+
+So for docker you can't use localhost, as every Docker container has it own .. So to compensate, use the IP on your network card instead.
+
+first instance:
+
+```docker run  -e BUDDYURL=http://<local-nic-ip>:2001 -p <local-nic-ip>:1323:1323 --rm --name=dashgoat analogbear/dashgoat```
+
+Second instance:
+
+```docker run  -e BUDDYURL=http://<local-nic-ip>:1323 -p <local-nic-ip>:2001:1323 --rm --name=dashgoat2 analogbear/dashgoat```
+
 ## Full Api
 For a full API feature list, go to the doc folder and import the ```dashGoat.postman_collection.json``` file to Postman, Insomnia or Paw. Or read the json file :-)
+
+## Docker build
+
+If you want to build your own Docker container, you can use the Dockerfile, with the included GO build environment.
+
+```bash
+docker build -f build/package/Dockerfile -t myDashgoat
+```
+
+To include the config file, edit dashgoat.yaml, and copy it to cmd/dashgoat/ before running "docker build"
+
 
 ## TODO
 

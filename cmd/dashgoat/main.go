@@ -23,7 +23,7 @@ func main() {
 	var configfile string
 	var oneBuddyUrl string
 	var oneBuddyKey string
-	var oneBuddyName string
+	oneBuddyName := ""
 
 	ss.serviceStateList = make(map[string]ServiceState)
 	bb.buddyBacklog = make(map[string][]string)
@@ -47,10 +47,14 @@ func main() {
 		fmt.Println(err)
 	}
 
-	if oneBuddyUrl != "" {
-		if oneBuddyKey == "" {
+	if oneBuddyUrl != "" && oneBuddyUrl != "0" {
+		if oneBuddyKey == "" || oneBuddyKey == "0" {
 			oneBuddyKey = updatekey
 		}
+		if oneBuddyName == "0" {
+			oneBuddyName = ""
+		}
+
 		config.OneBuddy(oneBuddyUrl, oneBuddyKey, oneBuddyName)
 	}
 

@@ -13,9 +13,12 @@ FROM alpine:latest
 
 ENV WEBPATH "/"
 ENV WEBLOG "off"
-ENV UPDATEKEY "changeme"
+ENV UPDATEKEY "my-precious!"
 ENV IPPORT ":1323"
 ENV DASHNAME "dashGoat"
+ENV BUDDYURL "0"
+ENV BUDDYKEY "0"
+ENV BUDDYNAME "0"
 
 COPY --from=0 /go/src/dashgoatbuild/dashgoat /app/dashgoat
 COPY --from=0 /go/src/dashgoatbuild/dashgoat.yaml /dashgoat.yaml
@@ -24,4 +27,4 @@ COPY web/ /web/
 
 EXPOSE 1323
 
-CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME}"]
+CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME} -buddyurl ${BUDDYURL} -buddykey ${BUDDYKEY} -buddyname ${BUDDYNAME} "]

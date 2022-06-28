@@ -71,6 +71,24 @@ curl --request POST \
 ```
 Now you should get a warning if the update is missing for 20 seconds. This feature is not meant to be super fast (< 10 sec), this is just to keep track of "lost" agents.
 
+### TTL
+
+If you want your event to disappear after a set amount of seconds, use the ```ttl``` parameter, like this.
+
+```bash
+curl --request POST \
+  --url http://127.0.0.1:1323/update \
+  --header 'content-type: application/json' \
+  --data '{
+	"host": "host-1",
+	"service": "uptime",
+	"status": "ok",
+	"message": "Server has rebooted, msg gone in 10sec",
+	"updatekey": "my-precious!",
+	"ttl": 10
+}'
+```
+
 
 ## Docker Hello world
 

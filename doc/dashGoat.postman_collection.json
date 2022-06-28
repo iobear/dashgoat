@@ -248,7 +248,39 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"nextupdatesec\": 20\n}"
+					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello Nextupdatesec 20 sec\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"nextupdatesec\": 20\n}"
+				},
+				"url": {
+					"raw": "{{dashgoat_host}}/update",
+					"host": [
+						"{{dashgoat_host}}"
+					],
+					"path": [
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update TTL 10",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"TTL test 10 sec\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"ttl\": 10\n}"
 				},
 				"url": {
 					"raw": "{{dashgoat_host}}/update",

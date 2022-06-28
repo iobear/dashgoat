@@ -22,6 +22,7 @@ type (
 		Probe         int64    `json:"probe"`
 		Change        int64    `json:"change"`
 		From          []string `json:"from"`
+		Ttl           int      `json:"ttl"`
 		UpdateKey     string
 	}
 
@@ -115,6 +116,9 @@ func getStatus(c echo.Context) error {
 
 //getStatusList - return all data
 func getStatusList(c echo.Context) error {
+	currentTime := int(time.Now().Unix())
+	tmpServiceStateList := make(map[string]ServiceState)
+
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
@@ -122,12 +126,25 @@ func getStatusList(c echo.Context) error {
 		return c.JSON(http.StatusNoContent, "")
 	}
 
-	return c.JSON(http.StatusOK, ss.serviceStateList)
+	//Filter events with ttl defined
+	for index, event := range ss.serviceStateList {
+
+		if event.Ttl == 0 {
+			tmpServiceStateList[index] = event
+		} else if event.Ttl+int(event.Probe) > currentTime {
+			tmpServiceStateList[index] = event
+		}
+
+	}
+
+	return c.JSON(http.StatusOK, tmpServiceStateList)
 
 }
 
 //getStatusList HPO/MSO
 func getStatusListMSO(c echo.Context) error {
+	currentTime := int(time.Now().Unix())
+
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
@@ -138,7 +155,12 @@ func getStatusListMSO(c echo.Context) error {
 		tmpServiceStateMSO.Status = event.Status
 		tmpServiceStateMSO.Message = "[" + event.Status + "] " + event.Service + " " + event.Host + "-" + event.Message
 
-		serviceStateMSOlist[index] = tmpServiceStateMSO
+		//Filter events with ttl defined
+		if event.Ttl == 0 {
+			serviceStateMSOlist[index] = tmpServiceStateMSO
+		} else if event.Ttl+int(event.Probe) > currentTime {
+			serviceStateMSOlist[index] = tmpServiceStateMSO
+		}
 	}
 
 	return c.JSON(http.StatusOK, serviceStateMSOlist)

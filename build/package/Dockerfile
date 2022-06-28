@@ -3,7 +3,7 @@ RUN apk --no-cache add build-base git
 WORKDIR /go/src/dashgoatbuild
 COPY cmd/dashgoat/* /go/src/dashgoatbuild/
 COPY go.* /go/src/dashgoatbuild/
-COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
+#COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
 RUN go get -d -v github.com/labstack/echo/...
 RUN go get gopkg.in/validator.v2
 RUN ls -lah
@@ -21,7 +21,7 @@ ENV BUDDYKEY "0"
 ENV BUDDYNAME "0"
 
 COPY --from=0 /go/src/dashgoatbuild/dashgoat /app/dashgoat
-COPY --from=0 /go/src/dashgoatbuild/dashgoat.yaml /dashgoat.yaml
+#COPY --from=0 /go/src/dashgoatbuild/dashgoat.yaml /dashgoat.yaml
 COPY web/ /web/
 #RUN ls -la /web/*
 

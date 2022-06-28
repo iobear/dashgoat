@@ -1,16 +1,16 @@
-# dashgoat
+# dashGoat
 
-Dashgoat - A simple dashboard, easy to deploy.
+dashGoat - A simple dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
 ## Features
 
  * Easy to use
- * Configuration management frendly
+ * Configuration management friendly
  * Non hierarchical cluster option
  * Lightweight
- * HTTP(s) only, no special ports/protocols
+ * HTTP(s) only, no special protocols
 
 ## Golang Hello world
 
@@ -79,11 +79,11 @@ Now you should get a warning if the update is missing for 20 seconds. This featu
 
 ## Buddy system
 
-dashGoat can have a buddy, to share state or just to gossip to.
+dashGoat can have a buddy to share state, or just gossip to.
 
  1. When defining a Buddy, dashGoat will at start-up ask for a full list of service states from its buddy.
  2. When receiving an update, dashGoat will forward the update to its buddies.
- 3. If dashGoats buddy is down, it will spool the updates, and tell buddy later when its back.
+ 3. If dashGoats buddy is down, it will spool the updates, and tell buddy later when it's back.
 
 
 ### Buddy, hello world
@@ -131,11 +131,15 @@ If you want to build your own Docker container, you can use the Dockerfile, with
 docker build -f build/package/Dockerfile -t myDashgoat
 ```
 
-To include the config file, edit dashgoat.yaml, and copy it to cmd/dashgoat/ before running "docker build"
+To include the config file:
+ 1. comment-in the two copy commands in the Dockerfile
+ 2. edit dashgoat.yaml
+ 3. copy yaml to cmd/dashgoat/
+ 4. run "docker build..."
 
 
 ## TODO
 
  * Better auth
- * Automatic cleanup option
- * lots more..
+ * Automatic event cleanup
+ * lots more...

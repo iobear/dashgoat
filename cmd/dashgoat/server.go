@@ -100,7 +100,7 @@ func updateStatus(c echo.Context) error {
 
 	result["id"] = strID
 
-	return c.JSON(http.StatusCreated, result)
+	return c.JSON(http.StatusOK, result)
 }
 
 //getStatus - get status of service with service id
@@ -219,7 +219,7 @@ func health(c echo.Context) error {
 
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.2.4"
+	appHealthResult.DashAPI = "1.2.5"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)

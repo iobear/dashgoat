@@ -73,7 +73,7 @@ Now you should get a warning if the update is missing for 20 seconds. This featu
 
 ### TTL
 
-If you want your event to disappear after a set amount of seconds, use the ```ttl``` parameter, like this.
+If you want your event to change state/disappear after a set amount of seconds, use the ```ttl``` parameter, like this.
 
 ```bash
 curl --request POST \
@@ -88,7 +88,8 @@ curl --request POST \
 	"ttl": 10
 }'
 ```
-
+ * if status == "ok" the event vil disappear, after ttl expire.
+ * if status != "ok", state vil change to "ok", after ttl expire.
 
 ## Docker Hello world
 

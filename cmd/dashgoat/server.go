@@ -131,6 +131,9 @@ func getStatusList(c echo.Context) error {
 
 		if event.Ttl == 0 {
 			tmpServiceStateList[index] = event
+		} else if event.Ttl+int(event.Probe) < currentTime && event.Status != "ok" {
+			event.Status = "ok"
+			tmpServiceStateList[index] = event
 		} else if event.Ttl+int(event.Probe) > currentTime {
 			tmpServiceStateList[index] = event
 		}
@@ -157,6 +160,9 @@ func getStatusListMSO(c echo.Context) error {
 
 		//Filter events with ttl defined
 		if event.Ttl == 0 {
+			serviceStateMSOlist[index] = tmpServiceStateMSO
+		} else if event.Ttl+int(event.Probe) > currentTime && event.Status != "ok" {
+			tmpServiceStateMSO.Status = "ok"
 			serviceStateMSOlist[index] = tmpServiceStateMSO
 		} else if event.Ttl+int(event.Probe) > currentTime {
 			serviceStateMSOlist[index] = tmpServiceStateMSO
@@ -219,7 +225,7 @@ func health(c echo.Context) error {
 
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.2.5"
+	appHealthResult.DashAPI = "1.2.6"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)

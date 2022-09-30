@@ -47,7 +47,7 @@ type (
 
 var appHealthResult *AppHealth
 
-//updateStatus - service update
+// updateStatus - service update
 func updateStatus(c echo.Context) error {
 
 	ss.mutex.Lock()
@@ -103,7 +103,7 @@ func updateStatus(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-//getStatus - get status of service with service id
+// getStatus - get status of service with service id
 func getStatus(c echo.Context) error {
 
 	id := c.Param("id")
@@ -114,7 +114,7 @@ func getStatus(c echo.Context) error {
 
 }
 
-//getStatusList - return all data
+// getStatusList - return all data
 func getStatusList(c echo.Context) error {
 	currentTime := int(time.Now().Unix())
 	tmpServiceStateList := make(map[string]ServiceState)
@@ -144,7 +144,7 @@ func getStatusList(c echo.Context) error {
 
 }
 
-//getStatusList HPO/MSO
+// getStatusList HPO/MSO
 func getStatusListMSO(c echo.Context) error {
 	currentTime := int(time.Now().Unix())
 
@@ -173,7 +173,7 @@ func getStatusListMSO(c echo.Context) error {
 
 }
 
-//serviceFilter - list services with item value of..
+// serviceFilter - list services with item value of..
 func serviceFilter(c echo.Context) error {
 	//placeholder func
 	ss.mutex.RLock()
@@ -182,7 +182,7 @@ func serviceFilter(c echo.Context) error {
 	return c.JSON(http.StatusOK, ss.serviceStateList)
 }
 
-//getUniq - list unique values of service items
+// getUniq - list unique values of service items
 func getUniq(c echo.Context) error {
 
 	item := c.Param("serviceitem")
@@ -199,7 +199,7 @@ func getUniq(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-//deleteService - removes service from serviceStateList
+// deleteService - removes service from serviceStateList
 func deleteService(c echo.Context) error {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
@@ -225,13 +225,13 @@ func health(c echo.Context) error {
 
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.2.6"
+	appHealthResult.DashAPI = "1.2.7"
 	appHealthResult.DashName = dashName
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }
 
-//validate and enrich input from POST
+// validate and enrich input from POST
 func (ss *ServiceState) validateUpdate() bool {
 
 	if ss.UpdateKey == updatekey {

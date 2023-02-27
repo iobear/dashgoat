@@ -121,6 +121,7 @@ func findBuddy() {
 	for {
 		for _, bhost := range config.BuddyHosts {
 			if bhost.Name != config.DashName && !bhost.Ignore {
+				tellBuddyState(bhost.Name, false, "")
 				healthy := askHealth(bhost)
 				if healthy && firstRound {
 					firstRound = false

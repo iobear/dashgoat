@@ -70,7 +70,7 @@ function waitForBackend()
 	prepareData(tellDashboard(msg, 'warning'), false);
 	console.log('Waiting for backend to come alive');
 
-	sleep(30).then(() => {
+	sleep(4).then(() => {
 		askAPI();
 	})
 

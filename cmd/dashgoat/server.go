@@ -225,8 +225,8 @@ func health(c echo.Context) error {
 
 	appHealthResult = &AppHealth{}
 
-	appHealthResult.DashAPI = "1.2.7"
-	appHealthResult.DashName = dashName
+	appHealthResult.DashAPI = "1.2.8"
+	appHealthResult.DashName = config.DashName
 
 	return c.JSON(http.StatusOK, appHealthResult)
 }
@@ -234,7 +234,7 @@ func health(c echo.Context) error {
 // validate and enrich input from POST
 func (ss *ServiceState) validateUpdate() bool {
 
-	if ss.UpdateKey == updatekey {
+	if ss.UpdateKey == config.UpdateKey {
 		ss.UpdateKey = "valid"
 	} else {
 		return false

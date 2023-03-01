@@ -25,7 +25,7 @@ func updateBuddy(event ServiceState, delete string) {
 	bb.mutex.RUnlock()
 
 	for _, bhost := range config.BuddyHosts {
-		if bhost.Name != dashName && !bhost.Ignore && !contains(event.From, bhost.Name) {
+		if bhost.Name != config.DashName && !bhost.Ignore && !contains(event.From, bhost.Name) {
 			if buddyDown[bhost.Name] > 0 { //node down, move to backlog
 				tellBuddyState(bhost.Name, false, event.Host+event.Service)
 			} else {

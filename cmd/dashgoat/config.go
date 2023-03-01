@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-//Buddy struct
+// Buddy struct
 type Buddy struct {
 	Name   string `yaml:"name"`
 	Url    string `yaml:"url"`
@@ -17,6 +17,10 @@ type Buddy struct {
 
 type Configer struct {
 	DashName              string  `yaml:"dashName"`
+	IPport                string  `yaml:"ipport"`
+	WebLog                string  `yaml:"weblog"`
+	WebPath               string  `yaml:"webpath"`
+	UpdateKey             string  `yaml:"updatekey"`
 	EnableBuddy           bool    `yaml:"enableBuddy"`
 	CheckBuddyIntervalSec int     `yaml:"checkBuddyIntervalSec"`
 	BuddyDown             string  `yaml:"buddyDown"`
@@ -42,6 +46,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 		if err != nil {
 			return err
 		}
+
 		defer file.Close()
 
 		d := yaml.NewDecoder(file)
@@ -49,17 +54,31 @@ func (conf *Configer) InitConfig(configPath string) error {
 		if err := d.Decode(&config); err != nil {
 			return err
 		}
+		fmt.Println("Using settings from " + configPath + " ignoring cli args")
 	}
 
-	if dashName == "" {
+	if conf.DashName == "" {
 		conf.DashName = "dashGoat"
-		dashName = conf.DashName
 	}
 
-	if configPath == "" {
-		conf.EnableBuddy = false
-		conf.BuddyHosts = nil
-		conf.CheckBuddyIntervalSec = 30
+	if configPath == "" { // buddy settings
+		if buddyCli.Url != "" {
+			conf.BuddyHosts = append(conf.BuddyHosts, buddyCli)
+		}
+
+		conf.CheckBuddyIntervalSec = 11
+
+		if conf.BuddyHosts != nil {
+			conf.EnableBuddy = true
+		}
+
+		if conf.EnableBuddy {
+			err := validateBuddyConf()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		}
 	}
 
 	if conf.BuddyDown == "" {
@@ -69,21 +88,20 @@ func (conf *Configer) InitConfig(configPath string) error {
 	return result
 }
 
-func (conf *Configer) OneBuddy(url string, key string, name string) error {
-	var onebuddyconf Buddy
+func validateBuddyConf() error {
 
-	conf.EnableBuddy = true
-	onebuddyconf.Ignore = false
-	onebuddyconf.Key = key
-	onebuddyconf.Url = url
-	onebuddyconf.Name = "MyBuddy"
+	var message error
 
-	if name != "" {
-		onebuddyconf.Name = name
+	for idx, buddy := range config.BuddyHosts {
+		if buddy.Name == "" {
+			message = fmt.Errorf("Missing buddyname, for " + buddy.Url)
+			return message
+		}
+
+		if buddy.Key == "" {
+			config.BuddyHosts[idx].Key = config.UpdateKey
+		}
 	}
-
-	conf.BuddyHosts = nil
-	conf.BuddyHosts = append(conf.BuddyHosts, onebuddyconf)
 
 	return nil
 }

@@ -24,7 +24,7 @@ func main() {
 
 	e := echo.New()
 
-	flag.StringVar(&config.IPport, "ipport", ":1323", "Specify <ip>:<port>")
+	flag.StringVar(&config.IPport, "ipport", ":2000", "Specify <ip>:<port>")
 	flag.StringVar(&config.WebLog, "weblog", "off", "HTTP log <on/off>")
 	flag.StringVar(&config.WebPath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
 	flag.StringVar(&config.UpdateKey, "updatekey", "changeme", "Specify key to API update")

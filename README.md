@@ -22,7 +22,7 @@ curl API example;
 
 ```bash
 curl --request POST \
-  --url http://127.0.0.1:1323/update \
+  --url http://127.0.0.1:2000/update \
   --header 'content-type: application/json' \
   --data '{
 	"host": "host-1",
@@ -34,13 +34,13 @@ curl --request POST \
 ```
 
 Check your browser on:
-```http://127.0.0.1:1323```
+```http://127.0.0.1:2000```
 
 Update status to error;
 
 ```bash
 curl --request POST \
-  --url http://127.0.0.1:1323/update \
+  --url http://127.0.0.1:2000/update \
   --header 'content-type: application/json' \
   --data '{
 	"host": "host-1",
@@ -58,7 +58,7 @@ If you expect regular updates from a service, and you want to keep track of the 
 
 ```bash
 curl --request POST \
-  --url http://127.0.0.1:1323/update \
+  --url http://127.0.0.1:2000/update \
   --header 'content-type: application/json' \
   --data '{
 	"host": "host-1",
@@ -77,7 +77,7 @@ If you want your event to change state/disappear after a set amount of seconds, 
 
 ```bash
 curl --request POST \
-  --url http://127.0.0.1:1323/update \
+  --url http://127.0.0.1:2000/update \
   --header 'content-type: application/json' \
   --data '{
 	"host": "host-1",
@@ -93,7 +93,7 @@ curl --request POST \
 
 ## Docker Hello world
 
-```docker run -e UPDATEKEY=my-precious! -p 1323:1323 --rm --name=dashgoat analogbear/dashgoat```
+```docker run -e UPDATEKEY=my-precious! -p 1323:2000 --rm --name=dashgoat analogbear/dashgoat```
 
 
 ## Buddy system
@@ -113,13 +113,13 @@ Start your first instance:
 ./dashgoat -updatekey my-precious! -buddyurl http://localhost:2001
 ```
 Have a look at your browser again:
-```http://127.0.0.1:1323```
+```http://127.0.0.1:2000```
 
 There should be something about "My buddy is down" in the dashboard.
 Start your second instance:
 
 ```bash
-./dashgoat -updatekey my-precious! -buddyurl http://localhost:1323 -ipport :2001
+./dashgoat -updatekey my-precious! -buddyurl http://localhost:2000 -ipport :2001
 ```
 Your first dashboard should be happy now. If you check your new dashboard at ```http://localhost:2001```, it should say "Waiting for first update".
 
@@ -133,11 +133,11 @@ So for docker you can't use localhost, as every Docker container has it own .. S
 
 first instance:
 
-```docker run  -e BUDDYURL=http://<local-nic-ip>:2001 -p <local-nic-ip>:1323:1323 --rm --name=dashgoat analogbear/dashgoat```
+```docker run  -e BUDDYURL=http://<local-nic-ip>:2001 -p <local-nic-ip>:2000:2000 --rm --name=dashgoat analogbear/dashgoat```
 
 Second instance:
 
-```docker run  -e BUDDYURL=http://<local-nic-ip>:1323 -p <local-nic-ip>:2001:1323 --rm --name=dashgoat2 analogbear/dashgoat```
+```docker run  -e BUDDYURL=http://<local-nic-ip>:2000 -p <local-nic-ip>:2001:2000 --rm --name=dashgoat2 analogbear/dashgoat```
 
 ## Full Api
 For a full API feature list, go to the doc folder and import the ```dashGoat.postman_collection.json``` file to Postman, Insomnia or Paw. Or read the json file :-)

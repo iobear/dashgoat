@@ -14,7 +14,7 @@ FROM alpine:latest
 ENV WEBPATH "/"
 ENV WEBLOG "off"
 ENV UPDATEKEY "my-precious!"
-ENV IPPORT ":1323"
+ENV IPPORT ":2000"
 ENV DASHNAME "dashGoat"
 ENV BUDDYURL "0"
 ENV BUDDYKEY "0"
@@ -25,6 +25,6 @@ COPY --from=0 /go/src/dashgoatbuild/dashgoat /app/dashgoat
 COPY web/ /web/
 #RUN ls -la /web/*
 
-EXPOSE 1323
+EXPOSE 2000
 
 CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME} -buddyurl ${BUDDYURL} -buddykey ${BUDDYKEY} -buddyname ${BUDDYNAME} "]

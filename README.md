@@ -93,7 +93,7 @@ curl --request POST \
 
 ## Docker Hello world
 
-```docker run -e UPDATEKEY=my-precious! -p 1323:2000 --rm --name=dashgoat analogbear/dashgoat```
+```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```
 
 
 ## Buddy system
@@ -123,7 +123,7 @@ Start your second instance:
 ```
 Your first dashboard should be happy now. If you check your new dashboard at ```http://localhost:2001```, it should say "Waiting for first update".
 
-Now try doing the same updates as before, and you should see both dashGoat instances update, on both port 2001, and 1323.
+Now try doing the same updates as before, and you should see both dashGoat instances update, on both port 2001, and 2000.
 
 If you want more buddies, you can define them in a list, in the dashgoat.yaml file, instead of using the -buddyurl parameter.
 

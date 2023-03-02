@@ -725,7 +725,7 @@
 	"variable": [
 		{
 			"key": "dashgoat_host",
-			"value": "http://localhost:1323",
+			"value": "http://localhost:2000",
 			"type": "string"
 		},
 		{

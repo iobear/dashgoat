@@ -62,7 +62,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 	}
 
 	if configPath == "" { // buddy settings
-		if buddyCli.Url != "" {
+		if buddyCli.Url != "" && buddyCli.Url != "0" {
 			conf.BuddyHosts = append(conf.BuddyHosts, buddyCli)
 		}
 

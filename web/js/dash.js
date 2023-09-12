@@ -185,9 +185,9 @@ function selectHeader()
 
 function updateVersion(data)
 {
-	document.title = data['dashname'];
-	document.getElementById("dashname").textContent = data['dashname'];
-	document.getElementById("dashversion").textContent = data['dashapi'];
+	document.title = data['DashName'];
+	document.getElementById("dashname").textContent = data['DashName'];
+	document.getElementById("dashversion").textContent = data['DashGoatVersion'];
 }
 
 

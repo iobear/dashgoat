@@ -37,15 +37,7 @@ type (
 		mutex            sync.RWMutex
 		serviceStateList map[string]ServiceState
 	}
-
-	//AppHealth holds health data
-	AppHealth struct {
-		DashAPI  string `json:"dashapi"`
-		DashName string `json:"dashname"`
-	}
 )
-
-var appHealthResult *AppHealth
 
 // updateStatus - service update
 func updateStatus(c echo.Context) error {
@@ -219,16 +211,11 @@ func deleteService(c echo.Context) error {
 }
 
 func health(c echo.Context) error {
-	if !dashgoat_ready {
+	if !dashGoatReady() {
 		return c.NoContent(http.StatusServiceUnavailable)
 	}
 
-	appHealthResult = &AppHealth{}
-
-	appHealthResult.DashAPI = "1.2.10"
-	appHealthResult.DashName = config.DashName
-
-	return c.JSON(http.StatusOK, appHealthResult)
+	return c.JSON(http.StatusOK, readHostFacts())
 }
 
 // validate and enrich input from POST

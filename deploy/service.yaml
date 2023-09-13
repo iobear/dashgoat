@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: dashgoat-app-deployment
+ namespace: dashgoat
+spec:
+ selector:
+   app: dashgoat-app
+ ports:
+ - port: 2000
+   targetPort: 2000
+   protocol: TCP
+   name: http

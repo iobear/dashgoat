@@ -1,17 +1,7 @@
-dashName: dashGoat0
-enableBuddy: false
-buddyDown: warning
+dashName: dashGoat
+buddyDownStatusMsg: warning
 ipport: :2000
 weblog: off
 webpath: /
 updatekey: my-precious!
-checkBuddyIntervalSec: 9
-buddy:
-  - name: dashtest1
-    url: http://localhost:2001
-    key: my-precious!
-    ignore: false
-  - name: dashtest2
-    url: http://localhost:2002
-    key: my-precious!
-    ignore: true
+nsconfig: dashgoat-headless-svc

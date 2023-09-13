@@ -1,5 +1,5 @@
 FROM golang:alpine AS build-env
-RUN apk --no-cache add build-base git
+RUN apk add build-base git
 WORKDIR /go/src/dashgoatbuild
 COPY cmd/dashgoat/* /go/src/dashgoatbuild/
 COPY go.* /go/src/dashgoatbuild/
@@ -9,6 +9,8 @@ RUN go get gopkg.in/validator.v2
 RUN ls -lah
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 
+#FROM linuxcontainers/debian-slim
+#RUN apt-get update && apt-get install -y procps iputils-ping bind9-host --no-install-recommends && rm -rf /var/lib/apt/lists/*
 FROM alpine:latest
 
 ENV WEBPATH "/"
@@ -28,3 +30,5 @@ COPY web/ /web/
 EXPOSE 2000
 
 CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME} -buddyurl ${BUDDYURL} -buddykey ${BUDDYKEY} -buddyname ${BUDDYNAME} "]
+
+#docker build . --progress=plain -t analogbear/dashgoat:test -f build/package/Dockerfile

@@ -86,9 +86,7 @@ func updateStatus(c echo.Context) error {
 
 	ss.serviceStateList[strID] = postService
 
-	if config.EnableBuddy {
-		go updateBuddy(postService, "")
-	}
+	go updateBuddy(postService, "")
 
 	result["id"] = strID
 

@@ -139,6 +139,11 @@ Second instance:
 
 ```docker run  -e BUDDYURL=http://<local-nic-ip>:2000 -p <local-nic-ip>:2001:2000 --rm --name=dashgoat2 analogbear/dashgoat```
 
+### k8s Buddies
+
+For kubernetes you can use the files from the deploy folder as insperation, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via dns.
+ You can point to another name via the ```nsconfig``` option. 
+
 ## Full Api
 For a full API feature list, go to the doc folder and import the ```dashGoat.postman_collection.json``` file to Postman, Insomnia or Paw. Or read the json file :-)
 
@@ -159,6 +164,8 @@ To include the config file:
 
 ## TODO
 
+ * Better TTL handling
+ * favicon with most critical colour
  * Better auth
  * Automatic event cleanup
- * lots more...
+ * Better logging

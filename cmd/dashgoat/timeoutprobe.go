@@ -12,11 +12,10 @@ type (
 	}
 )
 
-//lostProbeTimer - handles lost probes
+// lostProbeTimer - handles lost probes
 func lostProbeTimer() {
 
 	for {
-
 		interval := findProbeInterval()
 		count, check_slice := listProbeTimeout()
 
@@ -33,7 +32,7 @@ func lostProbeTimer() {
 
 }
 
-//listProbeTimeout - returns list of services with a timout defined
+// listProbeTimeout - returns list of services with a timout defined
 func listProbeTimeout() (int, []TimerEpoch) {
 	var result []TimerEpoch
 
@@ -58,7 +57,7 @@ func listProbeTimeout() (int, []TimerEpoch) {
 	return count, result
 }
 
-//updateEventLostProbe - sets Message , Severity and Status accordingly
+// updateEventLostProbe - sets Message , Severity and Status accordingly
 func updateEventLostProbe(hostService string) {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
@@ -66,7 +65,7 @@ func updateEventLostProbe(hostService string) {
 	tmpStruct := ss.serviceStateList[hostService]
 	tmpStruct.Message = "Lost probe heartbeat"
 	tmpStruct.Severity = "error"
-	tmpStruct.Status = config.BuddyDown
+	tmpStruct.Status = config.BuddyDownStatusMsg
 
 	ss.serviceStateList[hostService] = tmpStruct
 }

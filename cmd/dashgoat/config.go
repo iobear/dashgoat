@@ -19,9 +19,8 @@ type (
 		WebLog                string   `yaml:"weblog"`
 		WebPath               string   `yaml:"webpath"`
 		UpdateKey             string   `yaml:"updatekey"`
-		EnableBuddy           bool     `yaml:"enableBuddy"`
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
-		BuddyDownStatusMsg    string   `yaml:"buddyDown"`
+		BuddyDownStatusMsg    string   `yaml:"buddyDownStatusMsg"`
 		BuddyHosts            []Buddy  `yaml:"buddy"`
 		IgnorePrefix          []string `yaml:"ignorePrefix"`
 	}
@@ -83,11 +82,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 
 		conf.CheckBuddyIntervalSec = 11
 
-		if conf.BuddyHosts != nil {
-			conf.EnableBuddy = true
-		}
-
-		if conf.EnableBuddy {
+		if len(conf.BuddyHosts) > 0 {
 			err := validateBuddyConf()
 			if err != nil {
 				fmt.Println(err)
@@ -136,13 +131,14 @@ func generateHostFacts() {
 	IPhost := ""
 
 	for _, ip := range getHostIPs() {
-		IPhost = hostname + "-" + ip
+		IPhost = hostname + "_" + ip
 		host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, IPhost)
 	}
 	if len(host_facts.Items.Hostnames) == 0 {
 		fmt.Println("Cant find an IP address, check ignorePrefix config")
 		os.Exit(1)
 	}
+	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
 }
 
 func getHostIPs() []string {
@@ -158,7 +154,7 @@ func getHostIPs() []string {
 	for _, addr := range addrs {
 		ip_addr = addr.String()
 		if !ignorePrefix(ip_addr) { //no localhost addr
-			result = append(result, addr.String())
+			result = append(result, strings.Split(addr.String(), "/")[0])
 		}
 	}
 

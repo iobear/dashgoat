@@ -10,17 +10,17 @@ import (
 )
 
 var config Configer
-var buddyCli Buddy
-var dashgoat_ready bool
+var buddy_cli Buddy
+var nsconfig string
 var ss Services
-var bb Backlog
+var backlog Backlog
 
 func main() {
 	var configfile string
 
 	ss.serviceStateList = make(map[string]ServiceState)
-	bb.buddyBacklog = make(map[string][]string)
-	bb.StateDown = make(map[string]int64)
+	backlog.buddyBacklog = make(map[string][]string)
+	backlog.StateDown = make(map[string]int64)
 
 	e := echo.New()
 
@@ -30,9 +30,10 @@ func main() {
 	flag.StringVar(&config.UpdateKey, "updatekey", "changeme", "Specify key to API update")
 	flag.StringVar(&config.DashName, "dashname", "", "Dashboard name")
 	flag.StringVar(&configfile, "configfile", "dashgoat.yaml", "Name of configfile")
-	flag.StringVar(&buddyCli.Url, "buddyurl", "", "Buddy url")
-	flag.StringVar(&buddyCli.Key, "buddykey", "", "Buddy update key, empty for same key")
-	flag.StringVar(&buddyCli.Name, "buddyname", "", "Buddy name")
+	flag.StringVar(&buddy_cli.Url, "buddyurl", "", "Buddy url")
+	flag.StringVar(&buddy_cli.Key, "buddykey", "", "Buddy update key, empty for same key")
+	flag.StringVar(&buddy_cli.Name, "buddyname", "", "Buddy name")
+	flag.StringVar(&nsconfig, "nsconfig", "", "Configure buddies via DNS/k8s namespace")
 	flag.Parse()
 
 	err := config.InitConfig(configfile)
@@ -64,12 +65,18 @@ func main() {
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteService)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
-	fmt.Println("Starting dashGoat.. Dashboard name: " + config.DashName + " ")
+	printWelcome()
 
 	go lostProbeTimer()
-	go findBuddy()
+	go findBuddy(config.BuddyHosts)
 
 	// Start server
 	e.Logger.Fatal(e.Start(config.IPport))
 
+}
+
+func printWelcome() {
+	fmt.Println("Starting dashGoat v" + readHostFacts().DashGoatVersion)
+	fmt.Println("Dashboard name: " + readHostFacts().DashName + " ")
+	fmt.Println("Go: " + readHostFacts().GoVersion + " ")
 }

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashgoat-deployment
+  namespace: dashgoat
+  labels:
+    app: dashgoat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashgoat-app
+  template:
+    metadata:
+      labels:
+        app: dashgoat-app
+    spec:
+      containers:
+      - name: dashgoat-app-deployment
+        image: analogbear/dashgoat
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 2000
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 2000

@@ -156,7 +156,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 		conf.TtlBehavior = strings.ToLower(conf.TtlBehavior)
 	}
 	if conf.TtlOkDelete == 0 {
-		conf.TtlOkDelete = 30
+		conf.TtlOkDelete = 3600
 	}
 	generateHostFacts()
 	return result

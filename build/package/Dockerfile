@@ -13,15 +13,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 #RUN apt-get update && apt-get install -y procps iputils-ping bind9-host --no-install-recommends && rm -rf /var/lib/apt/lists/*
 FROM alpine:latest
 
-ENV WEBPATH "/"
-ENV WEBLOG "off"
-ENV UPDATEKEY "my-precious!"
-ENV IPPORT ":2000"
-ENV DASHNAME "dashGoat"
-ENV BUDDYURL "0"
-ENV BUDDYKEY "0"
-ENV BUDDYNAME "0"
-
 COPY --from=0 /go/src/dashgoatbuild/dashgoat /app/dashgoat
 #COPY --from=0 /go/src/dashgoatbuild/dashgoat.yaml /dashgoat.yaml
 COPY web/ /web/
@@ -29,6 +20,6 @@ COPY web/ /web/
 
 EXPOSE 2000
 
-CMD ["sh", "-c", "/app/dashgoat -webpath ${WEBPATH}  -weblog ${WEBLOG} -updatekey ${UPDATEKEY} -ipport ${IPPORT} -dashname ${DASHNAME} -buddyurl ${BUDDYURL} -buddykey ${BUDDYKEY} -buddyname ${BUDDYNAME} "]
+CMD ["sh", "-c", "/app/dashgoat"]
 
 #docker build . --progress=plain -t analogbear/dashgoat:test -f build/package/Dockerfile

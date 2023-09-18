@@ -42,6 +42,7 @@ func main() {
 	flag.StringVar(&nsconfig, "nsconfig", "", "Configure buddies via DNS/k8s namespace")
 	flag.Parse()
 
+	config.ReadEnv()
 	err := config.InitConfig(configfile)
 	if err != nil {
 		fmt.Println(err)

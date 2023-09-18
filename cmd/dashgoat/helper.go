@@ -8,6 +8,7 @@ package main
 
 import (
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -62,4 +63,15 @@ func isExists(path string, task string) bool {
 	}
 
 	return true
+}
+
+// Convert string value to an integer
+func str2int(str_to_convert string) int {
+
+	result, err := strconv.Atoi(str_to_convert)
+	if err != nil {
+		return 0
+	}
+
+	return result
 }

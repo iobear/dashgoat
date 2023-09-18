@@ -49,6 +49,53 @@ type (
 
 var host_facts HostFacts
 
+func (conf *Configer) ReadEnv() {
+	var tmp_buddy Buddy
+
+	if os.Getenv("DASHNAME") != "" {
+		config.DashName = os.Getenv("DASHNAME")
+	}
+	if os.Getenv("IPPORT") != "" {
+		config.IPport = os.Getenv("IPPORT")
+	}
+	if os.Getenv("WEBLOG") != "" {
+		conf.WebLog = os.Getenv("WEBLOG")
+	}
+	if os.Getenv("WEBPATH") != "" {
+		conf.WebPath = os.Getenv("WEBPATH")
+	}
+	if os.Getenv("UPDATEKEY") != "" {
+		conf.UpdateKey = os.Getenv("UPDATEKEY")
+	}
+	if os.Getenv("CHECKBUDDYINTERVALSEC") != "" {
+		conf.CheckBuddyIntervalSec = str2int(os.Getenv("CHECKBUDDYINTERVALSEC"))
+	}
+	if os.Getenv("BUDDYDOWNSTATUSMSG") != "" {
+		conf.BuddyDownStatusMsg = os.Getenv("BUDDYDOWNSTATUSMSG")
+	}
+	if os.Getenv("BUDDYNAME") != "" && os.Getenv("BUDDYURL") != "" {
+		tmp_buddy.Name = os.Getenv("BUDDYNAME")
+		tmp_buddy.Url = os.Getenv("BUDDYURL")
+		if os.Getenv("BUDDYKEY") != "" {
+			tmp_buddy.Key = os.Getenv("BUDDYKEY")
+		}
+		conf.BuddyHosts = append(conf.BuddyHosts, tmp_buddy)
+	}
+	if os.Getenv("IGNOREPREFIX") != "" {
+		conf.IgnorePrefix = append(conf.IgnorePrefix, os.Getenv("IGNOREPREFIX"))
+	}
+	if os.Getenv("NSCONFIG") != "" {
+		nsconfig = os.Getenv("NSCONFIG")
+	}
+	if os.Getenv("TTLBEHAVIOR") != "" {
+		conf.TtlBehavior = os.Getenv("TTLBEHAVIOR")
+	}
+	if os.Getenv("TTLOKDELETE") != "" {
+		conf.TtlOkDelete = str2int(os.Getenv("TTLOKDELETE"))
+	}
+
+}
+
 // InitConfig initiates a new decoded Config struct Alex style
 func (conf *Configer) InitConfig(configPath string) error {
 	var result error
@@ -104,7 +151,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 	}
 
 	if conf.TtlBehavior == "" {
-		conf.TtlBehavior = "promoteonestep"
+		conf.TtlBehavior = "promotetook"
 	} else {
 		conf.TtlBehavior = strings.ToLower(conf.TtlBehavior)
 	}

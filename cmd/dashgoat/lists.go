@@ -1,8 +1,14 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package main
 
 import "fmt"
 
-//listServiceIDs - list all reported services
+// listServiceIDs - list all reported services
 func listServiceIDs() []string {
 
 	var resultList = []string{}
@@ -16,7 +22,7 @@ func listServiceIDs() []string {
 	return resultList
 }
 
-//uniqList - search struct item, return a list of unique values
+// uniqList - search struct item, return a list of unique values
 func uniqList(item string) []string {
 
 	var resultList = []string{}

@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package main
 
 import (
@@ -5,7 +11,7 @@ import (
 	"strings"
 )
 
-//indexOf - does the value exist, and where
+// indexOf - does the value exist, and where
 func indexOf(slice []string, item string) int {
 
 	for i := range slice {
@@ -19,7 +25,7 @@ func indexOf(slice []string, item string) int {
 	return -1
 }
 
-//contains Does the value exist, https://gosamples.dev/slice-contains/
+// contains Does the value exist, https://gosamples.dev/slice-contains/
 func contains(elems []string, v string) bool {
 	for _, s := range elems {
 		if v == s {
@@ -29,7 +35,7 @@ func contains(elems []string, v string) bool {
 	return false
 }
 
-//add2url add url path root url
+// add2url add url path root url
 func add2url(path string, route string) string {
 	var result strings.Builder
 
@@ -43,7 +49,7 @@ func add2url(path string, route string) string {
 	return result.String()
 }
 
-//isExists Does the given directory of filepath exist?
+// isExists Does the given directory of filepath exist?
 func isExists(path string, task string) bool {
 	fileStat, err := os.Stat(path)
 

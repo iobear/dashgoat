@@ -1,7 +1,9 @@
 dashName: dashGoat
-buddyDownStatusMsg: warning
+buddyDownStatusMsg: info
 ipport: :2000
 weblog: off
 webpath: /
 updatekey: my-precious!
+ttlbehavior: PromoteToOk # Remove, PromoteOnce, PromoteOneStep,PromoteToOk
+ttlokdelete: 300 # seconds to delete
 nsconfig: dashgoat-headless-svc

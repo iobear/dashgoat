@@ -29,6 +29,8 @@ type (
 		BuddyDownStatusMsg    string   `yaml:"buddyDownStatusMsg"`
 		BuddyHosts            []Buddy  `yaml:"buddy"`
 		IgnorePrefix          []string `yaml:"ignorePrefix"`
+		TtlBehavior           string   `yaml:"ttlbehavior"`
+		TtlOkDelete           int      `yaml:"ttlokdelete"`
 	}
 	HostFact struct {
 		Hostnames       []string
@@ -101,6 +103,14 @@ func (conf *Configer) InitConfig(configPath string) error {
 		conf.BuddyDownStatusMsg = "error"
 	}
 
+	if conf.TtlBehavior == "" {
+		conf.TtlBehavior = "promoteonestep"
+	} else {
+		conf.TtlBehavior = strings.ToLower(conf.TtlBehavior)
+	}
+	if conf.TtlOkDelete == 0 {
+		conf.TtlOkDelete = 30
+	}
 	generateHostFacts()
 	return result
 }
@@ -130,7 +140,7 @@ func generateHostFacts() {
 	host_facts.Items.DashName = config.DashName
 	host_facts.Items.UpAtEpoch = time.Now().Unix()
 	host_facts.Items.UpAt = time.Now()
-	host_facts.Items.DashGoatVersion = "1.3.0"
+	host_facts.Items.DashGoatVersion = "1.3.1"
 	host_facts.Items.GoVersion = runtime.Version()
 
 	hostname, _ := os.Hostname()

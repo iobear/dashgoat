@@ -74,6 +74,7 @@ func main() {
 	printWelcome()
 
 	go lostProbeTimer()
+	go ttlHousekeeping()
 	go findBuddy(config.BuddyHosts)
 
 	// Start server

@@ -88,8 +88,19 @@ curl --request POST \
 	"ttl": 10
 }'
 ```
+Default behaviour (PromoteToOk)
  * if status == "ok" the event vil disappear, after ttl expire.
  * if status != "ok", state vil change to "ok", after ttl expire.
+Via config there are three other modes
+
+Remove
+ * If ttl expires, serviceStatus is removed, not waiting for ```TtlOkDelete```
+
+PromoteOnce
+ * If ttl expires, status moved one to the right on the list ```["critical", "error", "warning", "info", "ok"]``` If status becomes ```ok``` serviceStatus waits for  ```TtlOkDelete``` expires.
+
+PromoteOneStep
+ * Like promoteOnce but status keeps promoting along the list everytime ttl expires until it ends at ```"ok"```
 
 ## Docker Hello world
 

@@ -13,16 +13,19 @@ function unix2date(unixtime)
 	return result;
 }
 
-function timeDiff(unixtime)
-{
+function timeDiff(unixtime) {
 	const endDate = new Date();
-	const startDate = new Date(unixtime*1000);
-	
-    var diff = endDate.getTime() - startDate.getTime();
-    var hours = Math.floor(diff / 1000 / 60 / 60);
-    diff -= hours * 1000 * 60 * 60;
-    var minutes = Math.floor(diff / 1000 / 60);
+	const startDate = new Date(unixtime * 1000);
 
-    return (hours <= 9 ? "0" : "") + hours + "H" + (minutes <= 9 ? "0" : "") + minutes;
+	var diff = endDate.getTime() - startDate.getTime();
+	var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+	var hours = Math.floor(diff / (1000 * 60 * 60));
+	var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+	if (days >= 1) {
+		hours = Math.ceil((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		return (days <= 9 ? "0" : "") + days + "D" + (hours <= 9 ? "0" : "") + hours + "H";
+	} else {
+		return (hours <= 9 ? "0" : "") + hours + "H" + (minutes <= 9 ? "0" : "") + minutes;
+	}
 }
-

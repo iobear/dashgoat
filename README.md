@@ -175,8 +175,12 @@ To include the config file:
 
 ## TODO
 
- * Better TTL handling
- * favicon with most critical colour
+ * ~~Better TTL handling~~
+ * dynamic favicon with most critical colour
+ * tags filter view
+ * add dependecy to service hosts+tags
+ * service status history
+ * users +gravatar?
  * Better auth
  * Automatic event cleanup
  * Better logging

@@ -177,6 +177,7 @@ To include the config file:
 
  * ~~Better TTL handling~~
  * dynamic favicon with most critical colour
+ * Start deprecating "Severity"
  * tags filter view
  * add dependecy to service hosts+tags
  * service status history

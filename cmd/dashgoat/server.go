@@ -49,11 +49,9 @@ type (
 func updateStatus(c echo.Context) error {
 
 	ss.mutex.Lock()
-
 	defer ss.mutex.Unlock()
 
 	var result = map[string]string{}
-
 	var postService ServiceState
 
 	if err := c.Bind(&postService); err != nil {
@@ -83,11 +81,14 @@ func updateStatus(c echo.Context) error {
 				postService.Change = time.Now().Unix()
 			} else {
 				postService.Change = ss.serviceStateList[strID].Change
-
 			}
 		} else if postService.Probe <= ss.serviceStateList[strID].Probe { // Already reported
 			return c.JSON(http.StatusAlreadyReported, "")
 		}
+	}
+
+	if _, exists := ss.serviceStateList[strID]; !exists {
+		postService.Change = time.Now().Unix()
 	}
 
 	ss.serviceStateList[strID] = postService
@@ -206,10 +207,6 @@ func (ss *ServiceState) validateUpdate() bool {
 
 	if ss.Probe == 0 {
 		ss.Probe = time.Now().Unix()
-	}
-
-	if ss.Change == 0 {
-		ss.Change = time.Now().Unix()
 	}
 
 	msglength := len(ss.Message)

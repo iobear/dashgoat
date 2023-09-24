@@ -3,6 +3,7 @@
 ## [test]
 Change:
  - Improved time translation to include days
+ - Update 'Change' field behavior, adding timestamp when empty
 
 ## [1.3.1] - 2023-09-18
 New:

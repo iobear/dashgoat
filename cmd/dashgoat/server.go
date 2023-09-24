@@ -85,7 +85,7 @@ func updateStatus(c echo.Context) error {
 				postService.Change = ss.serviceStateList[strID].Change
 
 			}
-		} else if postService.Probe <= ss.serviceStateList[strID].Probe { //Already reported
+		} else if postService.Probe <= ss.serviceStateList[strID].Probe { // Already reported
 			return c.JSON(http.StatusAlreadyReported, "")
 		}
 	}
@@ -206,6 +206,10 @@ func (ss *ServiceState) validateUpdate() bool {
 
 	if ss.Probe == 0 {
 		ss.Probe = time.Now().Unix()
+	}
+
+	if ss.Change == 0 {
+		ss.Change = time.Now().Unix()
 	}
 
 	msglength := len(ss.Message)

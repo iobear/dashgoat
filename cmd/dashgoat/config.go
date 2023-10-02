@@ -187,7 +187,7 @@ func generateHostFacts() {
 	host_facts.Items.DashName = config.DashName
 	host_facts.Items.UpAtEpoch = time.Now().Unix()
 	host_facts.Items.UpAt = time.Now()
-	host_facts.Items.DashGoatVersion = "1.3.2"
+	host_facts.Items.DashGoatVersion = Version
 	host_facts.Items.GoVersion = runtime.Version()
 
 	hostname, _ := os.Hostname()

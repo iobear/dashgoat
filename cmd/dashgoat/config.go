@@ -31,6 +31,7 @@ type (
 		IgnorePrefix          []string `yaml:"ignorePrefix"`
 		TtlBehavior           string   `yaml:"ttlbehavior"`
 		TtlOkDelete           int      `yaml:"ttlokdelete"`
+		DisableDependOn       bool     `yaml:"disableDependOn"`
 	}
 	HostFact struct {
 		Hostnames       []string

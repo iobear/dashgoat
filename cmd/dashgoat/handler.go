@@ -7,6 +7,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -29,6 +30,7 @@ type (
 		Change        int64    `json:"change"`
 		From          []string `json:"from"`
 		Ttl           int      `json:"ttl"`
+		DependOn      string   `json:"dependon"`
 		UpdateKey     string
 	}
 
@@ -44,6 +46,42 @@ type (
 		serviceStateList map[string]ServiceState
 	}
 )
+
+// Looks for service or tag that a second service depends on
+// beware - Only call this method if you have ss.mutex lock
+func isDependOnError(search_host_key string) string {
+
+	if config.DisableDependOn {
+		return ""
+	}
+
+	count_ok := 0
+	count_error := 0
+
+	search := strings.ToLower(strings.TrimSpace(search_host_key))
+
+	for statekey := range ss.serviceStateList {
+		if ss.serviceStateList[statekey].Host == search || contains(ss.serviceStateList[statekey].Tags, search) {
+			if ss.serviceStateList[statekey].Status == "error" || ss.serviceStateList[statekey].Status == "critical" {
+				count_error++
+			} else {
+				count_ok++
+			}
+		}
+	}
+
+	if count_error == 0 {
+		return ""
+	}
+	if count_error > 0 && count_ok == 0 {
+		return "down"
+	}
+	if count_error > 0 && count_ok > 0 {
+		return fmt.Sprintf("partly down %d/%d ", count_error, count_ok+count_error)
+	}
+
+	return ""
+}
 
 // updateStatus - service update
 func updateStatus(c echo.Context) error {
@@ -228,16 +266,30 @@ func (ss *ServiceState) validateUpdate() bool {
 
 	if ss.Severity == "" {
 
-		if ss.Status == "ok" {
+		if ss.Status == "ok" || ss.Status == "info" {
 			ss.Severity = "info"
-
 		} else {
 			ss.Severity = "error"
 		}
 	}
 
 	ss.Host = strings.Replace(ss.Host, " ", "", -1)
+	ss.Host = strings.ToLower(ss.Host)
 	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
+	ss.Service = strings.ToLower(ss.Service)
+
+	if ss.Status != "ok" && ss.DependOn != "" {
+		msg := isDependOnError(ss.DependOn)
+		if msg == "down" {
+			ss.Severity = "info"
+			ss.Status = "info"
+			ss.Message = "( " + ss.DependOn + " down ) " + ss.Message
+		} else if msg != "" {
+			ss.Severity = "info"
+			ss.Status = "info"
+			ss.Message = "( " + ss.DependOn + " ) " + msg + ss.Message
+		}
+	}
 
 	return true
 }

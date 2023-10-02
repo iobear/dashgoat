@@ -38,6 +38,7 @@ body {
 .main-table td  {
   background: #333333;
   border-left-color: #333333;
+  text-transform: capitalize;
 }
 
 .main-table .critical td {

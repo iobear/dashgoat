@@ -1,6 +1,9 @@
 
 # Changelog
-## [test]
+## [1.4.0]
+New:
+ - Add DependOn to reduce alert overload, depended services only show as info if source is down
+
 Change:
  - Improved time translation to include days
  - Update 'Change' field behavior, adding timestamp when empty

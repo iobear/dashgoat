@@ -52,7 +52,7 @@ curl --request POST \
 ```
 Check web page again.
 
-### Lost heartbeat
+### Watchdog - Lost heartbeat
 
 If you expect regular updates from a service, and you want to keep track of the service updates, you can use the ```nextupdatesec``` parameter, this will warn you if dashGoat is missing updates within the seconds defined.
 
@@ -101,6 +101,46 @@ PromoteOnce
 
 PromoteOneStep
  * Like promoteOnce but status keeps promoting along the list everytime ttl expires until it ends at ```"ok"```
+
+### Tags
+!! TODO - Frontend is not done, no filter API !!
+
+Tags are used to filter sevices depending on their tags, this way you can, as an example list services associated with specific customers or departments. You could also ad tags related to the service the server is running. Lets say you are running a transcoder service, the service is transcoding 4 channels, these channels can then be added as a list, like this:
+
+```bash
+curl --request POST \
+  --url http://127.0.0.1:2000/update \
+  --header 'content-type: application/json' \
+  --data '{
+	"host": "trans-1",
+	"service": "nginx",
+	"status": "ok",
+	"message": "Smooth",
+	"updatekey": "my-precious!",
+	"tags": ["tr-ch1","tr-ch2","tr-ch3","tr-ch4"]
+}'
+```
+You do that to all your transcoders, and now you can list them according to their channels, or whatever tag you use. These are also very handy when defining dependencies(DependOn)
+
+
+### DependOn
+
+DepenOn is a parameter you can add to your service updates, this will reduce the important alerts to the systems the services depend on. Like this:
+
+```bash
+curl --request POST \
+  --url http://127.0.0.1:2000/update \
+  --header 'content-type: application/json' \
+  --data '{
+	"host": "host-1",
+	"service": "nginx",
+	"status": "error",
+	"message": "No requests",
+	"updatekey": "my-precious!",
+	"dependon": "loadbalancer-1"
+}'
+```
+In this case if ```loadbalancer-1``` is down, all the services that has ```"dependon": "loadbalancer-1"``` will reduce status to ```info``` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags. In the above ```Tags``` example instead of using ```dependon:trans-1```, you can use the channel2 tag ```tr-ch2``` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with ```error``` and ```critical```.
 
 ## Docker Hello world
 
@@ -176,12 +216,11 @@ To include the config file:
 ## TODO
 
  * ~~Better TTL handling~~
- * dynamic favicon with most critical colour
- * Start deprecating "Severity"
- * tags filter view
- * add dependecy to service hosts+tags
- * service status history
- * users +gravatar?
+ * ~~add dependecy to service hosts+tags~~
+ * Tags filter view / filter API
+ * Dynamic favicon with most critical colour
+ * Service status history
+ * Users +gravatar?
  * Better auth
  * Automatic event cleanup
  * Better logging

@@ -140,7 +140,8 @@ curl --request POST \
 	"dependon": "loadbalancer-1"
 }'
 ```
-In this case if ```loadbalancer-1``` is down, all the services that has ```"dependon": "loadbalancer-1"``` will reduce status to ```info``` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags. In the above ```Tags``` example instead of using ```dependon:trans-1```, you can use the channel2 tag ```tr-ch2``` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with ```error``` and ```critical```.
+In this case if ```loadbalancer-1``` is down, all the services that has ```"dependon": "loadbalancer-1"``` will reduce status to ```info``` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags.
+<br /> In the above ```Tags``` example instead of using ```dependon:trans-1```, you can use the ch2 tag ```dependon:tr-ch2``` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with ```error``` and ```critical``` and only show "upstream" errors.
 
 ## Docker Hello world
 

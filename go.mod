@@ -3,7 +3,7 @@ module github.com/iobear/dashgoat
 go 1.21
 
 require (
-	github.com/labstack/echo/v4 v4.11.1
+	github.com/labstack/echo/v4 v4.11.2
 	gopkg.in/yaml.v2 v2.4.0
 )
 

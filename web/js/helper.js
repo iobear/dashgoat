@@ -29,3 +29,37 @@ function timeDiff(unixtime) {
 		return (hours <= 9 ? "0" : "") + hours + "H" + (minutes <= 9 ? "0" : "") + minutes;
 	}
 }
+
+function updateFaviconColor(color) {
+	var favicon = document.getElementById('dynamic-favicon');
+	var svgMarkup = `
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+			<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="${color}" />
+		</svg>
+	`;
+	favicon.href = "data:image/svg+xml," + encodeURIComponent(svgMarkup);
+}
+
+function onDashboardStateChange(newState) {
+	var color;
+	switch(newState) {
+		case 'critical':
+			color = '#ef1b11'; // Red
+			break;
+		case 'error':
+			color = '#ef8511'; // Orange
+			break;
+		case 'warning':
+			color = '#e2dc0c'; // Yellow
+			break;
+		case 'info':
+			color = '#14a7c9'; // Blue
+			break;
+		case 'ok':
+			color = '#33ff00'; // Green
+			break;
+		default:
+			color = '#808080'; // Gray
+	}
+	updateFaviconColor(color);
+}

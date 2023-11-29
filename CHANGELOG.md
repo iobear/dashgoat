@@ -1,5 +1,8 @@
 
 # Changelog
+## [1.4.1] - 2023-11-29
+ - Add status favicon
+
 ## [1.4.0] - 2023-10-02
 New:
  - Add DependOn to reduce alert overload, depended services only show as info if source is down

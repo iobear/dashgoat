@@ -131,6 +131,10 @@ function updateRows(refresh = true)
 
 			if (item == 'status')
 			{
+				if (count == 0)
+				{
+					onDashboardStateChange(service[item]);
+				}
 				if (service[item] != 'ok')
 				{
 					changeRowColor("row" + count, service[item]);

@@ -218,8 +218,9 @@ To include the config file:
 
  * ~~Better TTL handling~~
  * ~~add dependecy to service hosts+tags~~
+ * ~~Dynamic favicon with most critical colour~~
  * Tags filter view / filter API
- * Dynamic favicon with most critical colour
+ * Handle Metrics
  * Service status history
  * Users +gravatar?
  * Better auth

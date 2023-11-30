@@ -1,0 +1,47 @@
+name: Build and Test dashGoat
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'cmd/dashgoat/**'
+      - 'go.*'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'cmd/dashgoat/**'
+      - 'go.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.21'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential git
+
+    - name: Copy files and build
+      run: |
+        mkdir -p /go/src/dashgoatbuild
+        cp -R cmd/dashgoat/* /go/src/dashgoatbuild/
+        cp go.* /go/src/dashgoatbuild/
+        cd /go/src/dashgoatbuild
+        go get -d -v github.com/labstack/echo/...
+        go get gopkg.in/validator.v2
+        CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
+
+    - name: TTL test
+      run: ./tests/ttl-test.sh
+
+    - name: Nextupdate test
+      run: ./tests/nextupdate-test.sh

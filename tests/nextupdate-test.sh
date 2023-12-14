@@ -13,9 +13,28 @@ for service in "${services[@]}"; do
 
     curl -X POST "$BASE_URL/update" \
          -H "Content-Type: $CONTENT_TYPE" \
-         --data "{\"host\": \"host-1\", \"service\": \"$service\", \"status\": \"ok\", \"message\": \"Service $service running\",\"nextupdatesec\": 10, \"updatekey\": \"$UPDATE_KEY\"}"
+         --data "{\"host\": \"host-1\", \"service\": \"$service\", \"status\": \"ok\", \"message\": \"Service $service running\",\"nextupdatesec\": 5, \"updatekey\": \"$UPDATE_KEY\"}"
 
-    echo -e "\n"
 done
 
-echo ""
+echo "Waiting for nextupdatesec to expire"
+
+sleep 10
+
+for service in "${services[@]}"; do
+    STATUS=""
+    echo "Checking status for service: $service"
+
+    STATUS=$(curl -s "$BASE_URL/status/host-1$service")
+
+    if [ "$(echo "$STATUS" | jq -r '.status')" = "error" ]; then
+        echo "Nextupdatesec is triggerd - OK"
+    else
+        echo "Nextupdatesec is not triggerd - ERROR"
+        echo
+        echo "$STATUS"
+        echo
+        exit 1
+    fi
+
+done

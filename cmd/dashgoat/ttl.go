@@ -39,7 +39,7 @@ func ttlHousekeeping() {
 	ticker := time.NewTicker(time.Second * 3) // adjust the interval as needed
 	defer ticker.Stop()
 
-	for _ = range ticker.C {
+	for range ticker.C {
 		statusList := readStatusList()
 		currentUnixTimestamp := time.Now().Unix()
 		for key, serviceState := range statusList {

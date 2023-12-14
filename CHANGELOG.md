@@ -4,6 +4,9 @@
 Fix:
  - Fix check for nextupdatesec, always beeing 19sec
 
+Change:
+ - Change ttlHousekeeping() to more readable code
+
 ## [1.4.1] - 2023-11-29
 Add:
  - Add status favicon

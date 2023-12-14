@@ -2,12 +2,12 @@ name: Build and Test dashGoat
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'cmd/dashgoat/**'
       - 'go.*'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths:
       - 'cmd/dashgoat/**'
       - 'go.*'

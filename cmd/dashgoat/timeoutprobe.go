@@ -79,11 +79,11 @@ func updateEventLostProbe(hostService string) {
 func findProbeInterval() int {
 	interval_max := 60
 	interval_min := 4
-	result := 19
+	result := interval_min
 
 	result_slice := uniqList("nextupdatesec")
 
-	if len(result_slice) == 1 {
+	if len(result_slice) < 1 {
 		return result
 	}
 

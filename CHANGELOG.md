@@ -1,6 +1,11 @@
 
 # Changelog
+## [1.4.2] - 2023-12-14
+Fix:
+ - Fix check for nextupdatesec, always beeing 19sec
+
 ## [1.4.1] - 2023-11-29
+Add:
  - Add status favicon
 
 ## [1.4.0] - 2023-10-02

@@ -11,9 +11,25 @@ for service in "${services[@]}"; do
 
     curl -X POST "$BASE_URL/update" \
          -H "Content-Type: $CONTENT_TYPE" \
-         --data "{\"host\": \"host-1\", \"service\": \"$service\", \"status\": \"error\", \"message\": \"Service $service running\",\"ttl\": 10, \"updatekey\": \"$UPDATE_KEY\"}"
+         --data "{\"host\": \"host-1\", \"service\": \"$service\", \"status\": \"error\", \"message\": \"Service $service running\",\"ttl\": 5, \"updatekey\": \"$UPDATE_KEY\"}"
 
-    echo -e "\n"
 done
 
-echo ""
+echo "Waiting for TTL to expire"
+
+sleep 7
+
+for service in "${services[@]}"; do
+    STATUS=""
+    echo "Checking status for service: $service"
+
+    STATUS=$(curl -s "$BASE_URL/status/host-1$service")
+
+    if [ "$(echo "$STATUS" | jq -r '.status')" = "ok" ]; then
+        echo "TTL is expired - OK"
+    else
+        echo "TTL is not expired - ERROR"
+        exit 1
+    fi
+
+done

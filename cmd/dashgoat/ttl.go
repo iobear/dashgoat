@@ -39,28 +39,25 @@ func ttlHousekeeping() {
 	ticker := time.NewTicker(time.Second * 3) // adjust the interval as needed
 	defer ticker.Stop()
 
-	for {
-		select {
-		case <-ticker.C:
-			statusList := readStatusList()
-			currentUnixTimestamp := time.Now().Unix()
-			for key, serviceState := range statusList {
-				if serviceState.Ttl <= 0 {
-					continue
-				}
+	for _ = range ticker.C {
+		statusList := readStatusList()
+		currentUnixTimestamp := time.Now().Unix()
+		for key, serviceState := range statusList {
+			if serviceState.Ttl <= 0 {
+				continue
+			}
 
-				if serviceState.Probe+int64(serviceState.Ttl) <= currentUnixTimestamp {
-					if config.TtlBehavior == "remove" {
-						deleteServiceState(serviceState.Host + serviceState.Service)
-					} else {
-						serviceState = promoteStatus(serviceState, currentUnixTimestamp)
-						updateServiceState(key, serviceState)
-					}
+			if serviceState.Probe+int64(serviceState.Ttl) <= currentUnixTimestamp {
+				if config.TtlBehavior == "remove" {
+					deleteServiceState(serviceState.Host + serviceState.Service)
+				} else {
+					serviceState = promoteStatus(serviceState, currentUnixTimestamp)
+					updateServiceState(key, serviceState)
 				}
+			}
 
-				if serviceState.Status == "ok" && (serviceState.Probe+int64(config.TtlOkDelete) <= currentUnixTimestamp) {
-					deleteServiceState(key)
-				}
+			if serviceState.Status == "ok" && (serviceState.Probe+int64(config.TtlOkDelete) <= currentUnixTimestamp) {
+				deleteServiceState(key)
 			}
 		}
 	}

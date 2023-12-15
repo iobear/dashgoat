@@ -17,7 +17,7 @@ done
 
 echo "Waiting for TTL to expire"
 
-sleep 7
+sleep 11
 
 for service in "${services[@]}"; do
     STATUS=""

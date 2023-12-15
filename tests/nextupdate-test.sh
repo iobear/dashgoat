@@ -19,7 +19,7 @@ done
 
 echo "Waiting for nextupdatesec to expire"
 
-sleep 10
+sleep 11
 
 for service in "${services[@]}"; do
     STATUS=""

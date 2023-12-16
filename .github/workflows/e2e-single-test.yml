@@ -22,10 +22,10 @@ jobs:
 
     - name: Copy files and build
       run: |
-        mkdir -p /go/src/dashgoatbuild
-        cp -R cmd/dashgoat/* /go/src/dashgoatbuild/
-        cp go.* /go/src/dashgoatbuild/
-        cd /go/src/dashgoatbuild
+        mkdir -p $GITHUB_WORKSPACE/dashgoatbuild
+        cp -R cmd/dashgoat/* $GITHUB_WORKSPACE/dashgoatbuild/
+        cp go.* $GITHUB_WORKSPACE/dashgoatbuild/
+        cd $GITHUB_WORKSPACE/dashgoatbuild
         go get -d -v github.com/labstack/echo/...
         go get gopkg.in/validator.v2
         CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .

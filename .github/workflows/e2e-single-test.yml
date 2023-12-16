@@ -30,6 +30,11 @@ jobs:
         go get gopkg.in/validator.v2
         CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 
+    - name: Start Web Service
+      run: |
+        $GITHUB_WORKSPACE/dashgoatbuild/dashgoat &
+        sleep 2
+
     - name: TTL test
       run: ./tests/ttl-test.sh
 

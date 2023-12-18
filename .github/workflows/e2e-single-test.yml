@@ -31,9 +31,7 @@ jobs:
         CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 
     - name: Start Web Service
-      run: |
-        $GITHUB_WORKSPACE/dashgoatbuild/dashgoat &
-        sleep 2
+      run: ./tests/start-single.sh
 
     - name: TTL test
       run: ./tests/ttl-test.sh

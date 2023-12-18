@@ -3,3 +3,6 @@ vendor/
 
 # macOS
 .DS_Store
+
+#app
+dashgoat

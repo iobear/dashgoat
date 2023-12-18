@@ -219,6 +219,9 @@ To include the config file:
  * ~~Better TTL handling~~
  * ~~add dependecy to service hosts+tags~~
  * ~~Dynamic favicon with most critical colour~~
+ * API tests
+ * Configuration tests 
+ * Save state
  * Tags filter view / filter API
  * Handle Metrics
  * Service status history

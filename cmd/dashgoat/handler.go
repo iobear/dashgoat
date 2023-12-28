@@ -10,41 +10,9 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/labstack/echo/v4"
-)
-
-type (
-	//ServiceState struct for validating post input
-	ServiceState struct {
-		Service       string   `json:"service" validate:"min=1,max=100"`
-		Host          string   `json:"host" validate:"min=1,max=100"`
-		Status        string   `json:"status" validate:"min=1,max=10,regexp=^[a-z]*$"`
-		Message       string   `json:"message" validate:"max=255"`
-		Severity      string   `json:"severity" validate:"max=10"`
-		NextUpdateSec int      `json:"nextupdatesec" validate:"max=605000"`
-		Tags          []string `json:"tags" validate:"max=20"`
-		Probe         int64    `json:"probe"`
-		Change        int64    `json:"change"`
-		From          []string `json:"from"`
-		Ttl           int      `json:"ttl"`
-		DependOn      string   `json:"dependon"`
-		UpdateKey     string
-	}
-
-	//ServiceState for MSO output
-	ServiceStateMSO struct {
-		Status  string `json:"status"`
-		Message string `json:"message"`
-	}
-
-	// Services map
-	Services struct {
-		mutex            sync.RWMutex
-		serviceStateList map[string]ServiceState
-	}
 )
 
 // Looks for service or tag that a second service depends on
@@ -207,25 +175,24 @@ func getUniq(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-// deleteService - removes service from serviceStateList
-func deleteService(c echo.Context) error {
-	ss.mutex.Lock()
-	defer ss.mutex.Unlock()
+// deleteServiceHandler - removes service from serviceStateList
+func deleteServiceHandler(c echo.Context) error {
+	ss.mutex.RLock()
+	defer ss.mutex.RUnlock()
 	id := c.Param("id")
 	id = strings.Replace(id, " ", "-", -1)
 
 	_, mapContainsKey := ss.serviceStateList[id]
 
 	if mapContainsKey {
-		serviceStateToDelete := ss.serviceStateList[id]
-		delete(ss.serviceStateList, id)
-		go updateBuddy(serviceStateToDelete, id)
+		go deleteServiceState(id)
 		return c.NoContent(http.StatusNoContent)
 	}
 
 	return c.NoContent(http.StatusNotFound)
 }
 
+// health of dashGoat app
 func health(c echo.Context) error {
 	if !dashGoatReady() {
 		return c.NoContent(http.StatusServiceUnavailable)
@@ -234,7 +201,7 @@ func health(c echo.Context) error {
 	return c.JSON(http.StatusOK, readHostFacts())
 }
 
-// validate and enrich input from POST
+// validateUpdate, validate and enrich input from POST
 func (ss *ServiceState) validateUpdate() bool {
 
 	if ss.UpdateKey == config.UpdateKey {

@@ -1,5 +1,9 @@
 
 # Changelog
+## [1.4.3] - 2023-12-28
+Add:
+ - Add prometheus /metrics endpoint
+
 ## [1.4.2] - 2023-12-14
 Fix:
  - Fix check for nextupdatesec, always beeing 19sec

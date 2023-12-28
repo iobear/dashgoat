@@ -75,3 +75,20 @@ func str2int(str_to_convert string) int {
 
 	return result
 }
+
+// Convert string to bool
+func str2bool(str_to_convert string) bool {
+
+	str_to_convert = strings.ToLower(str_to_convert)
+
+	if str_to_convert == "yes" || str_to_convert == "y" {
+		str_to_convert = "true"
+	}
+
+	boolValue, err := strconv.ParseBool(str_to_convert)
+	if err != nil {
+		return false
+	}
+
+	return boolValue
+}

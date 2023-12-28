@@ -32,6 +32,7 @@ type (
 		TtlBehavior           string   `yaml:"ttlbehavior"`
 		TtlOkDelete           int      `yaml:"ttlokdelete"`
 		DisableDependOn       bool     `yaml:"disableDependOn"`
+		DisableMetrics        bool     `yaml:"disableMetrics"`
 	}
 	HostFact struct {
 		Hostnames       []string
@@ -93,6 +94,12 @@ func (conf *Configer) ReadEnv() {
 	}
 	if os.Getenv("TTLOKDELETE") != "" {
 		conf.TtlOkDelete = str2int(os.Getenv("TTLOKDELETE"))
+	}
+	if os.Getenv("DISABLEDEPENDSON") != "" {
+		conf.DisableDependOn = str2bool(os.Getenv("DISABLEDEPENDSON"))
+	}
+	if os.Getenv("DISABLEMETRICS") != "" {
+		conf.DisableMetrics = str2bool(os.Getenv("DISABLEMETRICS"))
 	}
 
 }
@@ -203,6 +210,8 @@ func generateHostFacts() {
 		os.Exit(1)
 	}
 	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
+	fmt.Print("Hostnames found: ")
+	fmt.Println(host_facts.Items.Hostnames)
 }
 
 func getHostIPs() []string {
@@ -234,7 +243,6 @@ func ignorePrefix(ip_addr string) bool {
 
 	for _, ignoreStr := range ignore {
 		if strings.HasSuffix(ip_addr, ignoreStr) {
-			fmt.Println("ignoring " + ip_addr)
 			return true
 		}
 	}

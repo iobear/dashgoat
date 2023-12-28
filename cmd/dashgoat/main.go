@@ -11,8 +11,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var config Configer
@@ -20,6 +22,7 @@ var buddy_cli Buddy
 var nsconfig string
 var ss Services
 var backlog Backlog
+var serviceStateCollector *ServiceStateCollector
 
 func main() {
 	var configfile string
@@ -63,13 +66,20 @@ func main() {
 	}
 	e.Use(middleware.Recover())
 
+	if !config.DisableMetrics {
+		e.Use(echoprometheus.NewMiddleware("dashgoat"))
+		serviceStateCollector = NewServiceStateCollector()
+		prometheus.MustRegister(serviceStateCollector)
+		e.GET(add2url(config.WebPath, "/metrics"), echoprometheus.NewHandler())
+	}
+
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)
 	e.GET(add2url(config.WebPath, "/status/:id"), getStatus)
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)
 	e.GET(add2url(config.WebPath, "/status/listmso"), getStatusListMSO)
 	e.GET(add2url(config.WebPath, "/list/:serviceitem"), getUniq)
 	e.GET(add2url(config.WebPath, "/servicefilter/:item/:itemval"), serviceFilter)
-	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteService)
+	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
 	printWelcome()

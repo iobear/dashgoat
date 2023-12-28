@@ -63,18 +63,6 @@ func ttlHousekeeping() {
 	}
 }
 
-func deleteServiceState(key string) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Recovered from panic:", r)
-		}
-		ss.mutex.Unlock()
-	}()
-
-	ss.mutex.Lock()
-	delete(ss.serviceStateList, key)
-}
-
 func promoteStatus(serviceState ServiceState, currentUnixTimestamp int64) ServiceState {
 
 	if config.TtlBehavior == "promoteonce" { // PromoteOnce

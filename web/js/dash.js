@@ -114,8 +114,11 @@ function updateRows(refresh = true)
 			let toUpdate = "row" + count + item;
 
 			let container = document.getElementById(toUpdate);
-			container.innerText = "";
-			container.innerText = service[item];
+
+			if (lowerCase(container.innerText) != lowerCase(service[item]))
+			{
+				container.innerText = service[item];
+			}
 
 			if (item == 'change' || item == 'probe')
 			{
@@ -123,10 +126,6 @@ function updateRows(refresh = true)
 				{
 					container.innerText = timeDiff(service[item]);
 				}
-			}
-			else
-			{
-				container.innerText = service[item];
 			}
 
 			if (item == 'status')

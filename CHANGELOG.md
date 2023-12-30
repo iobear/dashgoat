@@ -1,39 +1,42 @@
 
 # Changelog
-## [1.4.3] - 2023-12-28
-Add:
- - Add prometheus /metrics endpoint
+## [v1.4.3] - 2023-12-30
+New:
+ - Prometheus /metrics endpoint.
 
-## [1.4.2] - 2023-12-14
+Change:
+ - Optimize DOM update.
+
+## [v1.4.2] - 2023-12-14
 Fix:
- - Fix check for nextupdatesec, always beeing 19sec
+ - Check for nextupdatesec, always beeing 19sec.
 
 Change:
- - Change ttlHousekeeping() to more readable code
+ - ttlHousekeeping() to more readable code.
 
-## [1.4.1] - 2023-11-29
-Add:
- - Add status favicon
-
-## [1.4.0] - 2023-10-02
+## [v1.4.1] - 2023-11-29
 New:
- - Add DependOn to reduce alert overload, depended services only show as info if source is down
+ - Add status favicon.
 
-Change:
- - Improved time translation to include days
- - Update 'Change' field behavior, adding timestamp when empty
-
-## [1.3.1] - 2023-09-18
+## [v1.4.0] - 2023-10-02
 New:
-- Native ENV config
-- TtlOkDelete, seconds before deleting a service with state "ok"
+ - Add DependOn to reduce alert overload, depended services only show as info if source is down.
 
 Change:
- - TTL behaviour, 4 config modes: Remove, PromoteOnce, PromoteOneStep, PromoteToOk (default)
+ - Improved time translation to include days.
+ - Update 'Change' field behavior, adding timestamp when empty.
 
-## [1.3.0] - 2023-09-13
+## [v1.3.1] - 2023-09-18
+New:
+- Native ENV config, instead of translation via Dockerfile.
+- TtlOkDelete, seconds before deleting a service with state "ok".
+
+Change:
+ - TTL behaviour, 4 config modes: Remove, PromoteOnce, PromoteOneStep, PromoteToOk (default).
+
+## [v1.3.0] - 2023-09-13
 New:
  - k8s aware buddies and by extention, DNS aware buddies. DashGoat pods shoud be able to find each other, in the same namespace, provided there is a headless service called dashgoat-headless-svc.
 
-## before 1.3.0
+## before v1.3.0
 Will be add later.

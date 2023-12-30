@@ -40,26 +40,41 @@ function updateFaviconColor(color) {
 	favicon.href = "data:image/svg+xml," + encodeURIComponent(svgMarkup);
 }
 
-function onDashboardStateChange(newState) {
+function getStatusColor(statusStr) {
+    switch (statusStr) {
+        case 'critical': return '#ef1b11'; // Red
+        case 'error': return '#ef8511'; // Orange
+        case 'warning': return '#e2dc0c'; // Yellow
+        case 'info': return '#14a7c9'; // Blue
+        case 'ok': return '#33ff00'; // Green
+        default: return '#808080'; // Gray
+    }
+}
+
+function onDashboardStateChange(newState)
+{
 	var color;
-	switch(newState) {
-		case 'critical':
-			color = '#ef1b11'; // Red
-			break;
-		case 'error':
-			color = '#ef8511'; // Orange
-			break;
-		case 'warning':
-			color = '#e2dc0c'; // Yellow
-			break;
-		case 'info':
-			color = '#14a7c9'; // Blue
-			break;
-		case 'ok':
-			color = '#33ff00'; // Green
-			break;
-		default:
-			color = '#808080'; // Gray
-	}
+	color = getStatusColor(newState);
 	updateFaviconColor(color);
+}
+
+function isInt(value)
+{
+	if (isNaN(value))
+	{
+	  return false;
+	}
+	var x = parseFloat(value);
+
+	return (x | 0) === x;
+}
+
+function lowerCase(item)
+{
+	if (isInt(item))
+	{
+		return item;
+	}
+
+	return item.toLowerCase();
 }

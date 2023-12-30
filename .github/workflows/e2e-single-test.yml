@@ -38,3 +38,6 @@ jobs:
 
     - name: Nextupdate test
       run: ./tests/nextupdate-test.sh
+
+    - name: Metrics test
+      run: ./tests/metrics-test.sh

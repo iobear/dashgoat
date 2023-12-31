@@ -3,8 +3,8 @@
 ## [v1.4.3-Dev] - 2023-12-31
 New:
  - Prometheus /metrics endpoint.
- - Metrics history via /metricshistory/<host><service>/<hours>
- - HTML service timeline
+ - Metrics history via /metricshistory/\<host>\<service>/\<hours>
+ - HTML service timeline [jpg](doc/history_dev.jpg)
 
 Change:
  - Optimize DOM update.

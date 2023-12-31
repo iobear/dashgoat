@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 const host = window.location;
 const status_list_uri = 'status/list';
 const health_uri = 'health';
@@ -27,7 +33,6 @@ function askAPI()
 
 }
 
-
 function tellDashboard(message, status) {
 	let result = {}
 	let msg = {}
@@ -45,7 +50,6 @@ function tellDashboard(message, status) {
 	return result;
 }
 
-
 function askHealth()
 {
 	const url = host + health_uri;
@@ -61,7 +65,6 @@ function askHealth()
 		});
 
 }
-
 
 function waitForBackend()
 {

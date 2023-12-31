@@ -1,6 +1,6 @@
 # dashGoat
 
-dashGoat - A simple dashboard, easy to deploy.
+dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
@@ -193,7 +193,7 @@ Second instance:
 
 ### k8s Buddies
 
-For kubernetes you can use the files from the deploy folder as insperation, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via dns.
+For kubernetes you can use the files from the deploy folder as inspiration, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via dns.
  You can point to another name via the ```nsconfig``` option. 
 
 ## Full Api
@@ -219,13 +219,15 @@ To include the config file:
  * ~~Better TTL handling~~
  * ~~add dependecy to service hosts+tags~~
  * ~~Dynamic favicon with most critical colour~~
- * API tests
+ * API tests (in progress)
  * Configuration tests 
  * Save state
  * Tags filter view / filter API
  * Handle Metrics
- * Service status history
+ * ~~Metrics export~~
+ * ~~Service status history~~
  * Users +gravatar?
- * Better auth
+ * Auth on delete
  * Automatic event cleanup
  * Better logging
+ * dashGoat client

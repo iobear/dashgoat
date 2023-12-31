@@ -82,7 +82,7 @@ func str2bool(str_to_convert string) bool {
 	str_to_convert = strings.ToLower(str_to_convert)
 
 	if str_to_convert == "yes" || str_to_convert == "y" {
-		str_to_convert = "true"
+		return true
 	}
 
 	boolValue, err := strconv.ParseBool(str_to_convert)

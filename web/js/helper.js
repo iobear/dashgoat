@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 function unix2date(unixtime)
 {
 	const datetime = new Date(unixtime*1000);
@@ -71,6 +77,11 @@ function isInt(value)
 
 function lowerCase(item)
 {
+	if (item == "")
+	{
+		return item;
+	}
+
 	if (isInt(item))
 	{
 		return item;

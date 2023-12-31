@@ -71,6 +71,7 @@ func main() {
 		serviceStateCollector = NewServiceStateCollector()
 		prometheus.MustRegister(serviceStateCollector)
 		e.GET(add2url(config.WebPath, "/metrics"), echoprometheus.NewHandler())
+		e.GET(add2url(config.WebPath, "/metricshistory/:serviceid/:hours"), getMetricsHistory)
 	}
 
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)

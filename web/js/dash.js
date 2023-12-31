@@ -1,4 +1,9 @@
-const container = document.getElementById("container");
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 const default_items = ['host', 'service', 'status', 'message', 'change', 'probe'];
 const footer_items = ['dashname','','','','','dashversion'];
 let dash_items = [];
@@ -65,7 +70,6 @@ function removeList()
 
 function createRows(startrow)
 {
-
 	for (let c = startrow; c < rows; c++)
 	{
 		rowid = `row${c}`;
@@ -73,8 +77,16 @@ function createRows(startrow)
 		dashbody.appendChild(cell).id = rowid;
 
 		createColumns(rowid);
+		createHistoryRows(rowid);
 	}
+}
 
+function createHistoryRows(rowid)
+{
+	history_rowid = rowid + 'h';
+	cell = document.createElement("tr");
+	cell.setAttribute('style', 'display: none;');
+	dashbody.appendChild(cell).id = history_rowid;
 }
 
 
@@ -111,7 +123,8 @@ function updateRows(refresh = true)
 	{
 		for (let item of dash_items)
 		{
-			let toUpdate = "row" + count + item;
+			let row = "row" + count;
+			let toUpdate = row + item;
 
 			let container = document.getElementById(toUpdate);
 
@@ -125,6 +138,10 @@ function updateRows(refresh = true)
 				if (service[item])
 				{
 					container.innerText = timeDiff(service[item]);
+					container.onclick = function() {
+						displayHistory(service, row);
+						console.log("Clicked on:", row);
+					};
 				}
 			}
 

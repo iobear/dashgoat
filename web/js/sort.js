@@ -1,10 +1,17 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 let sort_by = 'change';
 let sort_reverse = true;
 let status_maps = {};
 let status_arr = ['critical','error','warning','info','ok'];
+let print_list = [];
 
 
-function iterStatus(value)
+function initStatusItem(value)
 {
 	status_maps[value] = [];
 }
@@ -59,7 +66,7 @@ function sortByStatus()
 
 function prepareData(data, refresh = true)
 {
-	status_arr.forEach(iterStatus); //init empty status_map
+	status_arr.forEach(initStatusItem); //init empty status_map
 	print_list = [];
 	keys = Object.keys( data );
 	rows = keys.length;

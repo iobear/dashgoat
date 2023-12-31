@@ -4,6 +4,8 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
+[CHANGELOG](CHANGELOG.md)
+
 ## Features
 
  * Easy to use

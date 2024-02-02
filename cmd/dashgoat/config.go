@@ -33,6 +33,7 @@ type (
 		TtlOkDelete           int      `yaml:"ttlokdelete"`
 		DisableDependOn       bool     `yaml:"disableDependOn"`
 		DisableMetrics        bool     `yaml:"disableMetrics"`
+		Prometheusurl         string   `yaml:"prometheusurl"`
 	}
 	HostFact struct {
 		Hostnames       []string
@@ -42,6 +43,7 @@ type (
 		UpAtEpoch       int64
 		DashGoatVersion string
 		GoVersion       string
+		MetricsHistory  bool
 	}
 	HostFacts struct {
 		Items HostFact
@@ -101,7 +103,9 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("DISABLEMETRICS") != "" {
 		conf.DisableMetrics = str2bool(os.Getenv("DISABLEMETRICS"))
 	}
-
+	if os.Getenv("PROMETHEUSURL") != "" {
+		conf.Prometheusurl = os.Getenv("PROMETHEUSURL")
+	}
 }
 
 // InitConfig initiates a new decoded Config struct Alex style
@@ -212,6 +216,14 @@ func generateHostFacts() {
 	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
 	fmt.Print("Hostnames found: ")
 	fmt.Println(host_facts.Items.Hostnames)
+
+	if config.DisableMetrics || config.Prometheusurl == "" {
+		host_facts.Items.MetricsHistory = false
+		fmt.Println("MetricsHistory: off")
+	} else {
+		host_facts.Items.MetricsHistory = true
+		fmt.Println("MetricsHistory: on")
+	}
 }
 
 func getHostIPs() []string {

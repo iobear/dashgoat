@@ -60,11 +60,15 @@ func (collector *ServiceStateCollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect fetches the current state of all services and sends the metrics over to the provided channel
 func (collector *ServiceStateCollector) Collect(ch chan<- prometheus.Metric) {
-	// Lock the serviceStateList for safe concurrent access
+	if config.DisableMetrics {
+		return
+	}
+
+	// Lock the serviceStateList
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
-	// Set the gauge values
+	// Set gauge values
 	for serviceName, state := range ss.serviceStateList {
 		statusValue := status2int(state.Status)
 		collector.serviceStatusGauge.WithLabelValues(serviceName).Set(statusValue)
@@ -74,13 +78,20 @@ func (collector *ServiceStateCollector) Collect(ch chan<- prometheus.Metric) {
 
 // Delete a service's metric
 func deleteServiceMetric(serviceName string) {
+	if config.DisableMetrics {
+		return
+	}
 	serviceStateCollector.serviceStatusGauge.Delete(prometheus.Labels{"service": serviceName})
 }
 
 func queryPrometheus(hours int, serviceID string) ([]ServiceStatus, error) {
+	if config.DisableMetrics || config.Prometheusurl == "" {
+		err := fmt.Errorf("prometheus_off")
+		return nil, err
+	}
 
 	client, err := api.NewClient(api.Config{
-		Address: "http://localhost:9090", // Replace with your Prometheus server address
+		Address: config.Prometheusurl,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error creating Prometheus client: %v", err)
@@ -129,9 +140,9 @@ func getMetricsHistory(c echo.Context) error {
 
 	statuses, err := queryPrometheus(hours, serviceID)
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusUnprocessableEntity, err)
 	}
 
 	return c.JSON(http.StatusOK, statuses)
-
 }

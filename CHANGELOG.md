@@ -1,12 +1,12 @@
-
 # Changelog
-## [v1.4.3-Dev] - 2023-12-31
+## [v1.5.0] - 2024-02-02
 New:
  - Prometheus /metrics endpoint.
- - Metrics history via /metricshistory/\<host>\<service>/\<hours>
- - HTML service timeline [jpg](doc/history_dev.jpg)
+ - Metrics history with Prometheus backend, via /metricshistory/\<host>\<service>/\<hours>
+ - Metrics timeline for every service entry.
 
 Change:
+ - New table layout with \<div\>
  - Optimize DOM update.
 
 ## [v1.4.2] - 2023-12-14
@@ -41,4 +41,4 @@ New:
  - k8s aware buddies and by extention, DNS aware buddies. DashGoat pods shoud be able to find each other, in the same namespace, provided there is a headless service called dashgoat-headless-svc.
 
 ## before v1.3.0
-Will be add later.
+Will be added later.

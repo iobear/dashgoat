@@ -61,7 +61,7 @@ function askHealth()
 		})
 		.then(function(data)
 		{
-			updateVersion(data);
+			insertBackendAppData(data);
 		});
 
 }

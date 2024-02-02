@@ -4,24 +4,27 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-const default_items = ['host', 'service', 'status', 'message', 'change', 'probe'];
-const footer_items = ['dashname','','','','','dashversion'];
-let dash_items = [];
+const default_header = ['host', 'service', 'status', 'message', 'change', 'probe'];
+const table_footer = ['dashname','','','','','dashversion'];
+let table_header = [];
 let oldrows = 0;
 let printList = [];
-
+let backend_app_data = {};
+backend_app_data['metrics_history'] = true;
 
 function createHeader()
 {
-	let cell = document.createElement("thead");
+	let cell = document.createElement("div");
+	cell.classList.add('divTableHeader');
+	cell.classList.add('divTableRow');
 	dashtable.appendChild(cell).id = "dashheader";
 
-	for (let item of dash_items)
+	for (let item of table_header)
 	{
-		let cell = document.createElement("th");
-		cell.setAttribute("onclick", "setSortBy(this.innerText.toLowerCase())");
+		let cell = document.createElement("div");
 
-		dashheader.appendChild(cell).classList.add(item)
+		cell.setAttribute("onclick", "setSortBy(this.innerText.toLowerCase())");
+		dashheader.appendChild(cell).classList.add('cell'+item)
 		dashheader.appendChild(cell).innerText = item;
 	}
 
@@ -30,27 +33,33 @@ function createHeader()
 
 function createTableBody()
 {
-	let cell = document.createElement("tbody");
-	dashtable.appendChild(cell).id = "dashbody";
+	let cell = document.createElement("div");
 
+	cell.classList.add('divTableBody');
+	dashtable.appendChild(cell).id = "dashbody";
 }
 
 
 function createFooter()
 {
-	let cell = document.createElement("tfoot");
+	let cell = document.createElement("div");
+	cell.classList.add('divTableFoot');
+	cell.classList.add('divTableRow');
 	dashtable.appendChild(cell).id = "dashfooter";
 
-	for (let item of footer_items)
+	let count = 0;
+	for (let item of table_footer)
 	{
-		let cell2 = document.createElement("th");
+		let cell2 = document.createElement("div");
 
 		if (item)
 		{
 			dashfooter.appendChild(cell2).id = item;
 		}
 		dashtable.appendChild(cell2).classList = "dashfooter";
+		cell2.classList.add('cell'+table_header[count]);
 		dashfooter.appendChild(cell2).innerText = item;
+		count++;
 	}
 }
 
@@ -64,7 +73,6 @@ function removeList()
 		document.getElementById("dashheader").remove();
 		document.getElementById("dashbody").remove();
 	}
-
 }
 
 
@@ -73,19 +81,29 @@ function createRows(startrow)
 	for (let c = startrow; c < rows; c++)
 	{
 		rowid = `row${c}`;
-		let cell = document.createElement("tr");
+		let cell = document.createElement("div");
+		cell.classList.add('divTableRow');
 		dashbody.appendChild(cell).id = rowid;
 
 		createColumns(rowid);
-		createHistoryRows(rowid);
+		if (backend_app_data['metrics_history'] == true)
+		{
+			createHistoryRows(rowid);
+		}
+		else
+		{
+			console.log('no history');
+		}
 	}
 }
 
 function createHistoryRows(rowid)
 {
 	history_rowid = rowid + 'h';
-	cell = document.createElement("tr");
+	cell = document.createElement("div");
+
 	cell.setAttribute('style', 'display: none;');
+	cell.classList.add('timeline');
 	dashbody.appendChild(cell).id = history_rowid;
 }
 
@@ -100,17 +118,18 @@ function removeRows(startrow)
 }
 
 
-function createColumns(rowid)
-{
-	let rowToUpdate = document.getElementById(rowid);
+function createColumns(rowid) {
+    let rowToUpdate = document.getElementById(rowid);
 
-	for (let item of dash_items)
+	for (let item of table_header)
 	{
-		let cell = document.createElement("td");
+        let tdDiv = document.createElement('div');
 
-		rowToUpdate.appendChild(cell).classList.add(item)
-		rowToUpdate.appendChild(cell).id = `${rowid}${item}`;
-	}
+		tdDiv.id = `${rowid}${item}`;
+		tdDiv.classList.add('cell'+item);
+
+        rowToUpdate.appendChild(tdDiv);
+    }
 }
 
 
@@ -121,26 +140,34 @@ function updateRows(refresh = true)
 
 	for (let service of print_list)
 	{
-		for (let item of dash_items)
+		for (let item of table_header)
 		{
 			let row = "row" + count;
-			let toUpdate = row + item;
-
+			let toUpdate = row;
 			let container = document.getElementById(toUpdate);
 
-			if (lowerCase(container.innerText) != lowerCase(service[item]))
+			// Target the div inside the container (td)
+			let divInsideContainer = container.querySelector('#'+row+item);
+
+			if (!divInsideContainer)
 			{
-				container.innerText = service[item];
+				console.log('Empty container');
+				continue;
+			}
+
+			if (lowerCase(divInsideContainer.innerText) != lowerCase(service[item]))
+			{
+				divInsideContainer.innerText = service[item];
 			}
 
 			if (item == 'change' || item == 'probe')
 			{
 				if (service[item])
 				{
-					container.innerText = timeDiff(service[item]);
-					container.onclick = function() {
+					divInsideContainer.innerText = timeDiff(service[item]);
+					divInsideContainer.onclick = function()
+					{
 						displayHistory(service, row);
-						console.log("Clicked on:", row);
 					};
 				}
 			}
@@ -151,14 +178,7 @@ function updateRows(refresh = true)
 				{
 					onDashboardStateChange(service[item]);
 				}
-				if (service[item] != 'ok')
-				{
-					changeRowColor("row" + count, service[item]);
-				}
-				else
-				{
-					changeRowColor("row" + count, "");
-				}
+				changeRowColor("row" + count, service[item]);
 			}
 		}
 		count++;
@@ -172,7 +192,8 @@ function updateRows(refresh = true)
 
 function changeRowColor(rowid, status)
 {
-	document.getElementById(rowid).className = status;
+	document.getElementById(rowid).className = ('divTableRow ' + status);
+	document.getElementById(rowid+'h').className = ('timeline ' + status);
 }
 
 
@@ -198,13 +219,14 @@ function changeRowAmount(rows)
 
 function selectHeader()
 {
-	dash_items = default_items;
+	table_header = default_header;
 	createHeader();
 }
 
 
-function updateVersion(data)
+function insertBackendAppData(data)
 {
+	backend_app_data['metrics_history'] = data['MetricsHistory'];
 	document.title = data['DashName'];
 	document.getElementById("dashname").textContent = data['DashName'];
 	document.getElementById("dashversion").textContent = data['DashGoatVersion'];
@@ -215,8 +237,8 @@ function showDash()
 {
 	oldrows = 0;
 	removeList();
-	createTableBody();
 	selectHeader();
+	createTableBody();
 	askAPI();
 	createFooter();
 	askHealth();

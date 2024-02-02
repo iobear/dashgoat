@@ -7,70 +7,98 @@ body {
   font-weight: 300;
 }
 
-.main-table {
+.divTable {
   margin: auto;
   margin-top: 3em;
-  border-spacing: 0 0.5em;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  min-width: 800px;
 }
-.main-table th, .main-table td {
-  padding: .8em 2em;
 
-}
-.main-table th:first-of-type, 
-.main-table td:first-of-type {
-  border-radius: 4px 0 0 4px;
+.divTableRow {
+  font-weight: inherit;
+  text-transform: capitalize;
+  display: flex;
+  margin-top: 8px;
   border-left-width: 0.7em;
   border-left-style: solid;
-  padding-left: 1.3em;
-}
-.main-table th:last-of-type, 
-.main-table td:last-of-type {
-  border-radius: 0 4px 4px 0;
-}
-
-.main-table th {
-  font-weight: inherit;
-  text-transform: uppercase;
-  background: #223f4c;
   border-left-color: #223f4c;
-}
-.main-table td  {
-  background: #333333;
-  border-left-color: #333333;
-  text-transform: capitalize;
+  border-radius: 4px 4px 4px 4px;
 }
 
-.main-table .critical td {
+.divTable .cellhost,
+.divTable .cellservice,
+.divTable .cellstatus,
+.divTable .cellchange,
+.divTable .cellprobe,
+.divTable .cellmessage {
+  flex: 1;
+  padding: .8em 1em;
+}
+
+.divTable .cellhost {
+  padding-left: 1.3em;
+  flex-grow: 2;
+}
+.divTable .cellservice {
+  flex-grow: 2;
+}
+.divTable .cellmessage {
+  flex-grow: 5;
+}
+.divTable .cellchange,
+.divTable .cellprobe,
+.divTable .cellstatus {
+  /* flex-grow: 1; */
+  width: 400px;
+}
+
+.divTableHeader {
+  text-transform: uppercase;
+  background-color: #223f4c;
+}
+.divTableFoot {
+  background-color: #223f4c;
+  color: #7895a4;
+  margin-top: 8px;
+}
+
+.divTable .critical  {
   background: #423232;
   border-left-color: #ef1b11;
 }
-.main-table .error td {
+.divTable .error  {
   background: #3a3026;
-  border-left-color: #ef8511;
+  border-left-color: #db7600;
 }
-.main-table .warning td {
+.divTable .warning {
   background: #383827;
   border-left-color: #e2dc0c;
 }
-.main-table .info td {
+.divTable .info {
   background: #273233;
   border-left-color: #14a7c9;
 }
-.main-table .dashfooter {
-  font-size: 12px;
-  color: gray;
-  text-transform: none;
+.divTable .ok {
+  background: #333333;
+  border-left-color: #333333;
+}
+
+.timeline {
+  overflow: hidden;
+  border-radius: 4px 4px 4px 4px;
 }
 .timeline-wrapper {
+  border-radius: 4px 4px 4px 4px;
+  overflow: hidden;
+  padding: .8em 2em;
   display: flex;
-  flex-direction: row;
-  gap: 0.5px;
 }
 .timeline-field {
+  float: left;
+  height: 22px;
+  background: gray;
+  color: gray;
   flex-grow: 1;
-  /* width: 2px; */
-  height: 20px;
-  border: 0px solid;
-  /* margin: 1px; */
-  background: #ddd;
 }

@@ -50,8 +50,7 @@ body {
 .divTable .cellchange,
 .divTable .cellprobe,
 .divTable .cellstatus {
-  /* flex-grow: 1; */
-  width: 400px;
+  flex-grow: 1;
 }
 
 .divTableHeader {

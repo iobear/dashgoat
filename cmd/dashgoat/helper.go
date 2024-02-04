@@ -7,6 +7,9 @@
 package main
 
 import (
+	"io/fs"
+	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -91,4 +94,19 @@ func str2bool(str_to_convert string) bool {
 	}
 
 	return boolValue
+}
+
+func getFileSystem(useOS bool) http.FileSystem {
+	if useOS {
+		log.Print("using live mode")
+		return http.FS(os.DirFS("web"))
+	}
+
+	log.Print("using embed mode")
+	fsys, err := fs.Sub(embededFiles, "web")
+	if err != nil {
+		panic(err)
+	}
+
+	return http.FS(fsys)
 }

@@ -7,8 +7,11 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"net/http"
+	"os"
 	"strings"
 
 	"github.com/labstack/echo-contrib/echoprometheus"
@@ -16,6 +19,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus"
 )
+
+//go:embed web
+var embededFiles embed.FS
 
 var config Configer
 var buddy_cli Buddy
@@ -56,10 +62,13 @@ func main() {
 		config.WebPath = "/" + config.WebPath
 	}
 
-	e.HideBanner = true
+	// Serving embedded static files
+	useOS := len(os.Args) > 1 && os.Args[1] == "live"
+	assetHandler := http.FileServer(getFileSystem(useOS))
+	e.GET("/", echo.WrapHandler(assetHandler))
+	e.GET("/*", echo.WrapHandler(http.StripPrefix("/", assetHandler)))
 
-	//static files
-	e.Static(config.WebPath, "web")
+	e.HideBanner = true
 
 	if config.WebLog == "on" {
 		e.Use(middleware.Logger())

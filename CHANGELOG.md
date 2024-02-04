@@ -1,4 +1,8 @@
 # Changelog
+## [v1.5.1] - 2024-02-04
+New:
+ - Embed webfiles to single binary
+
 ## [v1.5.0] - 2024-02-02
 New:
  - Prometheus /metrics endpoint.

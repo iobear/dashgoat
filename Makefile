@@ -1,21 +1,21 @@
 .PHONY: all windows macintel macarm linux rpi
 
-BINARY_NAME=dashGoat
+BINARY_NAME=dashgoat
 SOURCE_FILE=./cmd/dashgoat
 
 all: windows macintel macarm linux rpi
 
 windows:
-	GOOS=windows GOARCH=amd64 go build -o build/$(BINARY_NAME)-amd64.exe $(SOURCE_FILE)
+	GOOS=windows GOARCH=amd64 go build -o build/$(BINARY_NAME).exe $(SOURCE_FILE)
 
 macintel:
-	GOOS=darwin GOARCH=amd64 go build -o build/$(BINARY_NAME)-macintel $(SOURCE_FILE)
+	GOOS=darwin GOARCH=amd64 go build -o build/$(BINARY_NAME)-mac $(SOURCE_FILE)
 
 macarm:
-	GOOS=darwin GOARCH=arm64 go build -o build/$(BINARY_NAME)-macarm $(SOURCE_FILE)
+	GOOS=darwin GOARCH=arm64 go build -o build/$(BINARY_NAME)-mac-arm $(SOURCE_FILE)
 
 linux:
 	GOOS=linux GOARCH=amd64 go build -o build/$(BINARY_NAME) $(SOURCE_FILE)
 
 rpi:
-	GOOS=linux GOARCH=arm GOARM=5 go build -o build/$(BINARY_NAME) $(SOURCE_FILE)
+	GOOS=linux GOARCH=arm GOARM=5 go build -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)

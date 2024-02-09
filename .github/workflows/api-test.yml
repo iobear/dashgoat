@@ -43,5 +43,8 @@ jobs:
     - name: Metrics test
       run: ./tests/metrics-test.sh
 
+    - name: Tags test
+      run: ./tests/tags-test.sh
+
     - name: End test
       run: ./tests/stop-instances.sh

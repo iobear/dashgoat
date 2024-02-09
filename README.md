@@ -196,8 +196,7 @@ Second instance:
 
 ### k8s Buddies
 
-For kubernetes you can use the files from the deploy folder as inspiration, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via dns.
- You can point to another name via the ```nsconfig``` option. 
+For Kubernetes you can use the files from the ```deploy``` folder as inspiration, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via DNS. You can point to another DNS-name via the ```nsconfig``` option.
 
 ## Full Api
 For a full API feature list, go to the doc folder and import the ```dashGoat.postman_collection.json``` file to Postman, Insomnia or Paw. Or read the json file :-)

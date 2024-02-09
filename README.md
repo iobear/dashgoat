@@ -4,7 +4,7 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
-[CHANGELOG](CHANGELOG.md)
+[CHANGELOG](CHANGELOG.md) [API](doc/API.md) [k8s](/deploy)
 
 ## Features
 
@@ -16,9 +16,9 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ## Golang Hello world
 
-```go build  ./cmd/dashgoat```
+`go build  ./cmd/dashgoat`
 
-```./dashgoat -updatekey my-precious!```
+`./dashgoat -updatekey my-precious!`
 
 curl API example;
 
@@ -36,7 +36,7 @@ curl --request POST \
 ```
 
 Check your browser on:
-```http://127.0.0.1:2000```
+`http://127.0.0.1:2000`
 
 Update status to error;
 
@@ -56,7 +56,7 @@ Check web page again.
 
 ## Watchdog - Lost heartbeat
 
-If you expect regular updates from a service, and you want to keep track of the service updates, you can use the ```nextupdatesec``` parameter, this will warn you if dashGoat is missing updates within the seconds defined.
+If you expect regular updates from a service, and you want to keep track of the service updates, you can use the `nextupdatesec` parameter, this will warn you if dashGoat is missing updates within the seconds defined.
 
 ```bash
 curl --request POST \
@@ -75,7 +75,7 @@ Now you should get a warning if the update is missing for 20 seconds. This featu
 
 ## TTL
 
-If you want your event to change state/disappear after a set amount of seconds, use the ```ttl``` parameter, like this.
+If you want your event to change state/disappear after a set amount of seconds, use the `ttl` parameter, like this.
 
 ```bash
 curl --request POST \
@@ -96,13 +96,13 @@ Default behaviour (PromoteToOk)
 Via config there are three other modes
 
 Remove
- * If ttl expires, serviceStatus is removed, not waiting for ```TtlOkDelete```
+ * If ttl expires, serviceStatus is removed, not waiting for `TtlOkDelete`
 
 PromoteOnce
- * If ttl expires, status moved one to the right on the list ```["critical", "error", "warning", "info", "ok"]``` If status becomes ```ok``` serviceStatus waits for  ```TtlOkDelete``` expires.
+ * If ttl expires, status moved one to the right on the list `["critical", "error", "warning", "info", "ok"]` If status becomes `ok` serviceStatus waits for  `TtlOkDelete` expires.
 
 PromoteOneStep
- * Like promoteOnce but status keeps promoting along the list everytime ttl expires until it ends at ```"ok"```
+ * Like promoteOnce but status keeps promoting along the list everytime ttl expires until it ends at `"ok"`
 
 ## Tags
 !! TODO - Frontend is not done, no filter API !!
@@ -142,8 +142,8 @@ curl --request POST \
 	"dependon": "loadbalancer-1"
 }'
 ```
-In this case if ```loadbalancer-1``` is down, all the services that has ```"dependon": "loadbalancer-1"``` will reduce status to ```info``` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags.
-<br /> In the above ```Tags``` example instead of using ```dependon:trans-1```, you can use the ch2 tag ```dependon:tr-ch2``` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with ```error``` and ```critical``` and only show "upstream" errors.
+In this case if `loadbalancer-1` is down, all the services that has `"dependon": "loadbalancer-1"` will reduce status to `info` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags.
+<br /> In the above `Tags` example instead of using `dependon:trans-1`, you can use the ch2 tag `dependon:tr-ch2` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with `error` and `critical` and only show "upstream" errors.
 
 
 ## Docker Hello world
@@ -168,7 +168,7 @@ Start your first instance:
 ./dashgoat -updatekey my-precious! -buddyurl http://localhost:2001
 ```
 Have a look at your browser again:
-```http://127.0.0.1:2000```
+`http://127.0.0.1:2000`
 
 There should be something about "My buddy is down" in the dashboard.
 Start your second instance:
@@ -176,7 +176,7 @@ Start your second instance:
 ```bash
 ./dashgoat -updatekey my-precious! -buddyurl http://localhost:2000 -ipport :2001
 ```
-Your first dashboard should be happy now. If you check your new dashboard at ```http://localhost:2001```, it should say "Waiting for first update".
+Your first dashboard should be happy now. If you check your new dashboard at `http://localhost:2001`, it should say "Waiting for first update".
 
 Now try doing the same updates as before, and you should see both dashGoat instances update, on both port 2001, and 2000.
 
@@ -196,10 +196,10 @@ Second instance:
 
 ### k8s Buddies
 
-For Kubernetes you can use the files from the ```deploy``` folder as inspiration, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via DNS. You can point to another DNS-name via the ```nsconfig``` option.
+For Kubernetes you can use the files from the `deploy` folder as inspiration, if you add the headless service "dashgoat-headless-svc", dashGoat will find its buddies via DNS. You can point to another DNS-name via the `nsconfig` option.
 
 ## Full Api
-For a full API feature list, go to the doc folder and import the ```dashGoat.postman_collection.json``` file to Postman, Insomnia or Paw. Or read the json file :-)
+For a full API feature list, go to the doc folder and import the `dashGoat.postman_collection.json` file to Postman, Insomnia or Paw. Or read the [API](doc/API.md) file.
 
 ## Docker build
 

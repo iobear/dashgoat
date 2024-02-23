@@ -6,7 +6,7 @@ COPY go.* /go/src/dashgoatbuild/
 COPY web/ /go/src/dashgoatbuild/web/
 #COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
 RUN go get -d -v github.com/labstack/echo/...
-RUN go get gopkg.in/validator.v2
+RUN go get github.com/iobear/dashgoat/common
 RUN ls -lah
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 

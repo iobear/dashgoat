@@ -28,7 +28,7 @@ jobs:
         cp go.* $GITHUB_WORKSPACE/dashgoatbuild/
         cd $GITHUB_WORKSPACE/dashgoatbuild
         go get -d -v github.com/labstack/echo/...
-        go get gopkg.in/validator.v2
+        go get github.com/iobear/dashgoat/common
         CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 
     - name: Start Web Service

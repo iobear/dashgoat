@@ -1,5 +1,8 @@
 # Changelog
 ## [v1.5.dev] - 2024-02-23
+Fix:
+ - JS dashboard update error
+
 Change:
  - Made a common module, moved ServiceState to common for other tools
 

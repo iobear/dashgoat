@@ -193,7 +193,10 @@ function updateRows(refresh = true)
 function changeRowColor(rowid, status)
 {
 	document.getElementById(rowid).className = ('divTableRow ' + status);
-	document.getElementById(rowid+'h').className = ('timeline ' + status);
+
+	if (backend_app_data['metrics_history'] == true) {
+		document.getElementById(rowid+'h').className = ('timeline ' + status);
+	}
 }
 
 

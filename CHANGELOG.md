@@ -1,4 +1,8 @@
 # Changelog
+## [v1.5.dev] - 2024-02-23
+Change:
+ - Made a common module, moved ServiceState to common for other tools
+
 ## [v1.5.1] - 2024-02-04
 New:
  - Embed webfiles to single binary

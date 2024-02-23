@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	dg "github.com/iobear/dashgoat/common"
 	"github.com/labstack/echo/v4"
 )
 
@@ -58,16 +59,21 @@ func updateStatus(c echo.Context) error {
 	defer ss.mutex.Unlock()
 
 	var result = map[string]string{}
-	var postService ServiceState
+	var postService dg.ServiceState
 
 	if err := c.Bind(&postService); err != nil {
 		return err
 	}
 
-	if !postService.validateUpdate() {
+	if !checkUpdatekey(postService.UpdateKey) {
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
+	postService.UpdateKey = "valid"
+	postService = dg.FilterUpdate(postService)
+	postService = runDependOn(postService)
+
+	// TODO
 	// if err := validator.Validate(postService); err != nil {
 	// 	return c.JSON(http.StatusBadRequest, ss.serviceStateList)
 	// }
@@ -201,49 +207,16 @@ func health(c echo.Context) error {
 	return c.JSON(http.StatusOK, readHostFacts())
 }
 
-// validateUpdate, validate and enrich input from POST
-func (ss *ServiceState) validateUpdate() bool {
+func checkUpdatekey(key string) bool {
 
-	if ss.UpdateKey == config.UpdateKey {
-		ss.UpdateKey = "valid"
-	} else {
+	if key != config.UpdateKey {
 		return false
 	}
 
-	if ss.Probe == 0 {
-		ss.Probe = time.Now().Unix()
-	}
+	return true
+}
 
-	msglength := len(ss.Message)
-	if msglength > 254 {
-		ss.Message = string(ss.Message[0:254])
-	}
-
-	severitylen := len(ss.Severity)
-	if severitylen > 10 {
-		ss.Severity = string(ss.Severity[0:10])
-	}
-	ss.Severity = strings.ToLower(ss.Severity)
-
-	statuslen := len(ss.Status)
-	if statuslen > 10 {
-		ss.Status = string(ss.Status[0:10])
-	}
-	ss.Status = strings.ToLower(ss.Status)
-
-	if ss.Severity == "" {
-
-		if ss.Status == "ok" || ss.Status == "info" {
-			ss.Severity = "info"
-		} else {
-			ss.Severity = "error"
-		}
-	}
-
-	ss.Host = strings.Replace(ss.Host, " ", "", -1)
-	ss.Host = strings.ToLower(ss.Host)
-	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
-	ss.Service = strings.ToLower(ss.Service)
+func runDependOn(ss dg.ServiceState) dg.ServiceState {
 
 	if ss.Status != "ok" && ss.DependOn != "" {
 		msg := isDependOnError(ss.DependOn)
@@ -258,5 +231,5 @@ func (ss *ServiceState) validateUpdate() bool {
 		}
 	}
 
-	return true
+	return ss
 }

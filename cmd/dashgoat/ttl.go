@@ -9,13 +9,15 @@ package main
 import (
 	"fmt"
 	"time"
+
+	dg "github.com/iobear/dashgoat/common"
 )
 
-func readStatusList() map[string]ServiceState {
+func readStatusList() map[string]dg.ServiceState {
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
-	statusListCopy := make(map[string]ServiceState, len(ss.serviceStateList))
+	statusListCopy := make(map[string]dg.ServiceState, len(ss.serviceStateList))
 	for key, serviceState := range ss.serviceStateList {
 		statusListCopy[key] = serviceState
 	}
@@ -23,7 +25,7 @@ func readStatusList() map[string]ServiceState {
 	return statusListCopy
 }
 
-func updateServiceState(key string, serviceState ServiceState) {
+func updateServiceState(key string, serviceState dg.ServiceState) {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered from panic:", r)
@@ -63,7 +65,7 @@ func ttlHousekeeping() {
 	}
 }
 
-func promoteStatus(serviceState ServiceState, currentUnixTimestamp int64) ServiceState {
+func promoteStatus(serviceState dg.ServiceState, currentUnixTimestamp int64) dg.ServiceState {
 
 	if config.TtlBehavior == "promoteonce" { // PromoteOnce
 		serviceState.Ttl = 0

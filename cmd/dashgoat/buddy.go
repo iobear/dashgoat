@@ -14,6 +14,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	dg "github.com/iobear/dashgoat/common"
 )
 
 type (
@@ -25,7 +27,7 @@ type (
 )
 
 // Update Buddies with newly recieved msg
-func updateBuddy(event ServiceState, delete string) {
+func updateBuddy(event dg.ServiceState, delete string) {
 	to_update := listBuddies()
 
 	if len(to_update) < 1 {
@@ -66,7 +68,7 @@ func talkToBuddyApiDelete(hosturl string, delete string) {
 
 }
 
-func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
+func talkToBuddyApi(event dg.ServiceState, host Buddy, delete string) {
 	my_hostnames := readHostFacts().Hostnames
 
 	my_name := config.DashName
@@ -276,7 +278,7 @@ func UpdateFromBuddy(bhost Buddy) error {
 
 func AskApiFullStatusList(bhost Buddy) error {
 
-	resultMap := make(map[string]ServiceState)
+	resultMap := make(map[string]dg.ServiceState)
 
 	req, err := http.NewRequest("GET", bhost.Url+"/status/list", nil)
 	if err != nil {
@@ -336,7 +338,7 @@ func serviceListDeleteBuddy(ok_buddies []Buddy) {
 }
 
 func tellServiceListAboutBuddy(buddyName string, up bool) {
-	var result ServiceState
+	var result dg.ServiceState
 
 	serviceName := buddyName + "buddy"
 

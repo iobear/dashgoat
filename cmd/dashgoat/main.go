@@ -13,11 +13,25 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
+	dg "github.com/iobear/dashgoat/common"
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus"
+)
+
+type (
+	//ServiceState for MSO output
+	ServiceStateMSO struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+	}
+	Services struct {
+		mutex            sync.RWMutex
+		serviceStateList map[string]dg.ServiceState
+	}
 )
 
 //go:embed web
@@ -27,13 +41,14 @@ var config Configer
 var buddy_cli Buddy
 var nsconfig string
 var ss Services
+
 var backlog Backlog
 var serviceStateCollector *ServiceStateCollector
 
 func main() {
 	var configfile string
 
-	ss.serviceStateList = make(map[string]ServiceState)
+	ss.serviceStateList = make(map[string]dg.ServiceState)
 	backlog.buddyBacklog = make(map[string][]string)
 	backlog.StateDown = make(map[string]int64)
 

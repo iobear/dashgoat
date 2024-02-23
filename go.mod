@@ -1,12 +1,12 @@
 module github.com/iobear/dashgoat
 
-go 1.21
+go 1.22
 
 require (
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/prometheus/client_golang v1.18.0
-	github.com/prometheus/common v0.46.0
+	github.com/prometheus/common v0.48.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 

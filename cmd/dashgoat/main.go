@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 	"sync"
 
@@ -77,8 +76,11 @@ func main() {
 		config.WebPath = "/" + config.WebPath
 	}
 
+	useOS := false
 	// Serving embedded static files
-	useOS := len(os.Args) > 1 && os.Args[1] == "live"
+	// if len(os.Args) > 1 && os.Args[1] == "live" {
+	// 	useOS = true
+	// }
 	assetHandler := http.FileServer(getFileSystem(useOS))
 	e.GET("/", echo.WrapHandler(assetHandler))
 	e.GET("/*", echo.WrapHandler(http.StripPrefix("/", assetHandler)))

@@ -23,7 +23,7 @@ function createHeader()
 	{
 		let cell = document.createElement("div");
 
-		cell.setAttribute("onclick", "setSortBy(this.innerText.toLowerCase())");
+		cell.setAttribute("onclick", "setSortBy(this.innerText)");
 		dashheader.appendChild(cell).classList.add('cell'+item)
 		dashheader.appendChild(cell).innerText = item;
 	}

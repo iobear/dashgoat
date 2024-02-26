@@ -1,7 +1,8 @@
 # Changelog
-## [v1.5.dev] - 2024-02-23
+## [v1.5.dev] - 2024-02-26
 Fix:
  - JS dashboard update error
+ - JS lowercase undefined error
 
 Change:
  - Made a common module, moved ServiceState to common for other tools

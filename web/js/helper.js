@@ -84,6 +84,11 @@ function lowerCase(item)
 		return item;
 	}
 
+	if (item == undefined)
+	{
+		return item;
+	}
+
 	if (isInt(item))
 	{
 		return item;

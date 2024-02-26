@@ -45,7 +45,7 @@ body {
   flex-grow: 2;
 }
 .divTable .cellmessage {
-  flex-grow: 5;
+  flex-grow: 6;
 }
 .divTable .cellchange,
 .divTable .cellprobe,

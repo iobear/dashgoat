@@ -7,6 +7,8 @@ COPY web/ /go/src/dashgoatbuild/web/
 COPY common/ /go/src/dashgoatbuild/
 #COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
 RUN go get -d -v github.com/labstack/echo/...
+RUN go get github.com/iobear/dashgoat/common
+
 RUN ls -lah
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dashgoat .
 

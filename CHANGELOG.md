@@ -1,5 +1,5 @@
 # Changelog
-## [v1.5.dev] - 2024-02-26
+## [v1.5.2] - 2024-02-26
 Fix:
  - JS dashboard update error
  - JS lowercase undefined error

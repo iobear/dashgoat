@@ -4,7 +4,6 @@ WORKDIR /go/src/dashgoatbuild
 COPY cmd/dashgoat/* /go/src/dashgoatbuild/
 COPY go.* /go/src/dashgoatbuild/
 COPY web/ /go/src/dashgoatbuild/web/
-COPY common/ /go/src/dashgoatbuild/
 #COPY cmd/dashgoat/dashgoat.yaml /go/src/dashgoatbuild/
 RUN go get -d -v github.com/labstack/echo/...
 RUN go get github.com/iobear/dashgoat/common

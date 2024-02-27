@@ -30,7 +30,7 @@ type (
 	}
 )
 
-// validateUpdate
+// ValidateUpdate
 func FilterUpdate(ss ServiceState) ServiceState {
 
 	if ss.Probe == 0 {

@@ -1,9 +1,9 @@
 module github.com/iobear/dashgoat
 
-go 1.22
+go 1.22.0
 
 require (
-	github.com/iobear/dashgoat/common latest
+	github.com/iobear/dashgoat/common v0.0.0-20240227172109-914ca4fa630b
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/prometheus/client_golang v1.18.0

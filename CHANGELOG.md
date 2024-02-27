@@ -52,5 +52,22 @@ Change:
 New:
  - k8s aware buddies and by extention, DNS aware buddies. DashGoat pods shoud be able to find each other, in the same namespace, provided there is a headless service called dashgoat-headless-svc.
 
-## before v1.3.0
+## [v1.2.9] - 2023-03-01
+Change:
+ - Code now under MPL 2.0
+ - Default port is now :2000
+
+## [v1.2.8] - 2023-02-27
+Change:
+ - Config code cleanup
+
+## [v1.2.6] - 2022-07-02
+Change:
+ - TTL feature, add option to only change state to ok, instead of beeing deleted
+
+## [v1.2.0] - 2022-03-18
+New:
+ - Buddy cluster feature, share state with your buddy instance over HTTP.
+
+## before v1.x.0
 Will be added later.

@@ -3,7 +3,7 @@ module github.com/iobear/dashgoat
 go 1.22
 
 require (
-	github.com/iobear/dashgoat/common v1.5.3
+	github.com/iobear/dashgoat/common latest
 	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/prometheus/client_golang v1.18.0

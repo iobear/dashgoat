@@ -15,7 +15,7 @@ macarm:
 	GOOS=darwin GOARCH=arm64 go build -o build/$(BINARY_NAME)-mac-arm $(SOURCE_FILE)
 
 linux:
-	GOOS=linux GOARCH=amd64 go build -o build/$(BINARY_NAME) $(SOURCE_FILE)
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/$(BINARY_NAME) $(SOURCE_FILE)
 
 rpi:
 	GOOS=linux GOARCH=arm GOARM=5 go build -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)

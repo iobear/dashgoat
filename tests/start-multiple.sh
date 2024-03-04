@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo
+echo "-- start multiple --"
+
 MAX=6
 
 # Check if an argument is provided

@@ -125,4 +125,5 @@ func printWelcome() {
 	fmt.Println("Starting dashGoat " + readHostFacts().DashGoatVersion)
 	fmt.Println("Dashboard name: " + readHostFacts().DashName + " ")
 	fmt.Println("Go: " + readHostFacts().GoVersion + " ")
+	fmt.Println("Labstack Echo: " + echo.Version + " ")
 }

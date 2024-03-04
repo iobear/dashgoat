@@ -1,3 +1,5 @@
 package main
 
-const Version string = "v1.5.2"
+var Version string = "v1.dev"
+var BuildDate string = "not_set"
+var Commit string = "not_set"

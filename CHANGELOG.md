@@ -1,4 +1,9 @@
 # Changelog
+
+## [v1.5.3] - 2024-03-04
+Change:
+ - Change versioning to follow git tags
+
 ## [v1.5.2] - 2024-02-26
 Fix:
  - JS dashboard update error

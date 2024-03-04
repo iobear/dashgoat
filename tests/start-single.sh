@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo
+echo "-- start-single --"
+
 BASE_URL="http://localhost:2000"
 
 if [ -z "$GITHUB_WORKSPACE" ]; then

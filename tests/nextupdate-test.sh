@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo
+echo "-- nextupdate test --"
+
 BASE_URL="http://localhost:2000"
 CONTENT_TYPE="application/json"
 UPDATE_KEY="changeme"

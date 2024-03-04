@@ -1,3 +1,8 @@
+VERSION = $(shell git tag -l --sort=-creatordate | head -n 1)
+COMMIT = $(shell git describe --always)
+BUILD_DATE = $(shell date +%Y-%m-%d)
+LDFLAGS = -ldflags="-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.BuildDate=$(BUILD_DATE)'"
+
 .PHONY: all windows macintel macarm linux rpi
 
 BINARY_NAME=dashgoat
@@ -6,16 +11,24 @@ SOURCE_FILE=./cmd/dashgoat
 all: windows macintel macarm linux rpi
 
 windows:
-	GOOS=windows GOARCH=amd64 go build -o build/$(BINARY_NAME).exe $(SOURCE_FILE)
+	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o build/$(BINARY_NAME).exe $(SOURCE_FILE)
 
 macintel:
-	GOOS=darwin GOARCH=amd64 go build -o build/$(BINARY_NAME)-mac $(SOURCE_FILE)
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o build/$(BINARY_NAME)-mac $(SOURCE_FILE)
 
 macarm:
-	GOOS=darwin GOARCH=arm64 go build -o build/$(BINARY_NAME)-mac-arm $(SOURCE_FILE)
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o build/$(BINARY_NAME)-mac-arm $(SOURCE_FILE)
 
 linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/$(BINARY_NAME) $(SOURCE_FILE)
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o build/$(BINARY_NAME) $(SOURCE_FILE)
 
 rpi:
-	GOOS=linux GOARCH=arm GOARM=5 go build -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
+	GOOS=linux GOARCH=arm GOARM=5 go build $(LDFLAGS) -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
+
+ci:
+	./tests/start-single.sh
+	./tests/ttl-test.sh
+	./tests/nextupdate-test.sh
+	./tests/metrics-test.sh
+	./tests/tags-test.sh
+	./tests/stop-instances.sh

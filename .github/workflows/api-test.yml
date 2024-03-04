@@ -24,7 +24,7 @@ jobs:
       run: make linux
 
     - name: Copy binary
-      run: cp build/dashgoat dashgoat
+      run: ./tests/copy-bin.sh
 
     - name: Start Web Service
       run: ./tests/start-single.sh

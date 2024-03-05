@@ -23,8 +23,8 @@ jobs:
     - name: Build binary
       run: make linux
 
-    - name: Copy binary
-      run: ./tests/copy-bin.sh
+    - name: Link binary
+      run: ./tests/link-bin.sh
 
     - name: Start Web Service
       run: ./tests/start-single.sh

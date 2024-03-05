@@ -37,3 +37,10 @@ ci:
 	./tests/metrics-test.sh
 	./tests/tags-test.sh
 	./tests/stop-instances.sh
+
+clean:
+	./tests/stop-instances.sh
+	rm -f build/dashgoa*
+	rm -rf $(SOURCE_FILE)/web
+	touch dashgoat
+	rm dashgoat 

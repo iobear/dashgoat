@@ -30,6 +30,7 @@ rpi: prepare
 	GOOS=linux GOARCH=arm GOARM=5 go build $(LDFLAGS) -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
 
 ci:
+	./tests/link-bin.sh
 	./tests/start-single.sh
 	./tests/ttl-test.sh
 	./tests/nextupdate-test.sh

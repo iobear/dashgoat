@@ -4,5 +4,6 @@ vendor/
 # macOS
 .DS_Store
 
+build/dashgoa*
 #app
 #dashgoat

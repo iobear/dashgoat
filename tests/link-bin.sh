@@ -33,9 +33,10 @@ if [[ "$DGBIN" == "" ]]; then
     echo "Unsupported system: $OS $ARCH"
 fi
 
+rm -f dashgoat
+ln -s $SOURCE_DIR$DGBIN dashgoat
+
 #Debug
 pwd
 ls
-
-rm -f dashgoat
-ln -s $SOURCE_DIR$DGBIN dashgoat
+ls build

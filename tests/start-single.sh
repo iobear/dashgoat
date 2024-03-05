@@ -5,11 +5,7 @@ echo "-- start-single --"
 
 BASE_URL="http://localhost:2000"
 
-if [ -z "$GITHUB_WORKSPACE" ]; then
-    ./dashgoat $1 &
-else
-    $GITHUB_WORKSPACE/dashgoatbuild/dashgoat $1 &
-fi
+./dashgoat $1 &
 
 PID=$!  # Get the PID
 echo $PID > PID-SINGLE-$PID

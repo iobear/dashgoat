@@ -71,7 +71,7 @@ func updateEventLostProbe(hostService string) {
 	tmpStruct := ss.serviceStateList[hostService]
 	tmpStruct.Message = "Lost probe heartbeat"
 	tmpStruct.Severity = "error"
-	tmpStruct.Status = config.BuddyDownStatusMsg
+	tmpStruct.Status = "error"
 
 	ss.serviceStateList[hostService] = tmpStruct
 }

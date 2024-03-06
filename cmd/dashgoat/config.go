@@ -142,7 +142,8 @@ func (conf *Configer) InitConfig(configPath string) error {
 		conf.DashName = "dashGoat"
 	}
 
-	if configPath == "" { // buddy settings
+	// buddy settings
+	if configPath == "" {
 		if buddy_cli.Url != "" && buddy_cli.Url != "0" {
 			conf.BuddyHosts = append(conf.BuddyHosts, buddy_cli)
 		}
@@ -159,7 +160,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 	}
 
 	if conf.BuddyDownStatusMsg == "" {
-		conf.BuddyDownStatusMsg = "error"
+		conf.BuddyDownStatusMsg = "warning"
 	}
 
 	if conf.TtlBehavior == "" {
@@ -217,7 +218,7 @@ func generateHostFacts() {
 	fmt.Print("Hostnames found: ")
 	fmt.Println(host_facts.Items.Hostnames)
 
-	if config.DisableMetrics || config.Prometheusurl == "" {
+	if config.DisableMetrics && config.Prometheusurl == "" {
 		host_facts.Items.MetricsHistory = false
 		fmt.Println("MetricsHistory: off")
 	} else {

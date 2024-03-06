@@ -108,6 +108,7 @@ func queryPrometheus(hours int, serviceID string) ([]ServiceStatus, error) {
 		Step:  time.Minute, // Adjust the step to suit your needs
 	})
 	if err != nil {
+		fmt.Println(config.Prometheusurl)
 		return nil, fmt.Errorf("error querying Prometheus: %v", err)
 	}
 	if len(warnings) > 0 {

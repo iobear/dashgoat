@@ -85,8 +85,8 @@ func deleteServiceMetric(serviceName string) {
 }
 
 func queryPrometheus(hours int, serviceID string) ([]ServiceStatus, error) {
-	if config.DisableMetrics || config.Prometheusurl == "" {
-		err := fmt.Errorf("prometheus_off")
+	if config.DisableMetrics && config.Prometheusurl == "" {
+		err := fmt.Errorf("prometheus is off")
 		return nil, err
 	}
 

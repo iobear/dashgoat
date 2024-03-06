@@ -1,4 +1,10 @@
 # Changelog
+## [v1.5.4] - 2024-03-06
+Fix:
+ - Logic error in relations to DisableMetrics
+
+Add:
+ - Basic Prometheus docs
 
 ## [v1.5.3] - 2024-03-04
 Change:

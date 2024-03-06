@@ -7,3 +7,4 @@ updatekey: my-precious!
 ttlbehavior: PromoteToOk # Remove, PromoteOnce, PromoteOneStep,PromoteToOk
 ttlokdelete: 300 # seconds to delete
 nsconfig: dashgoat-headless-svc
+prometheusurl: http://localhost:9090

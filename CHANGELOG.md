@@ -2,6 +2,7 @@
 ## [v1.5.4] - 2024-03-06
 Fix:
  - Logic error in relations to DisableMetrics
+ - Wrong state of timeoutprobe
 
 Add:
  - Basic Prometheus docs

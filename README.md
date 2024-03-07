@@ -153,6 +153,8 @@ Either by using a enviroment variable,
 Or adding a line to the `dashgoat.yaml`
  `prometheusurl: http://localhost:9090`
 
+To show the timeline in dashGoat select the change time and the timeline will appear, this feature needs some rework in the UI.
+
 ## Docker Hello world
 
 ```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```

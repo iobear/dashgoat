@@ -200,7 +200,7 @@ func deleteServiceHandler(c echo.Context) error {
 
 // health of dashGoat app
 func health(c echo.Context) error {
-	if !dashGoatReady() {
+	if !isDashGoatReady() {
 		return c.NoContent(http.StatusServiceUnavailable)
 	}
 

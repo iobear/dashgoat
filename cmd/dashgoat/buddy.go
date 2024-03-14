@@ -157,7 +157,7 @@ func findBuddy(buddyConfig []Buddy) {
 			}
 		}
 
-		if !dashGoatReady() {
+		if !isDashGoatReady() {
 			setDashGoatReady(true)
 		}
 

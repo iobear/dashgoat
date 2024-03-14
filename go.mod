@@ -1,6 +1,6 @@
 module github.com/iobear/dashgoat
 
-go 1.22
+go 1.22.1
 
 require (
 	github.com/iobear/dashgoat/common v0.0.0-20240314112511-1a9d15ac1e05

@@ -357,6 +357,8 @@ func tellServiceListAboutBuddy(buddyName string, up bool) {
 		result.Message = "My buddy is down"
 	}
 
+	iSnewState(result)
+
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 	ss.serviceStateList[serviceName] = result

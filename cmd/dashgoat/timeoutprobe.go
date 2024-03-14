@@ -73,6 +73,8 @@ func updateEventLostProbe(hostService string) {
 	tmpStruct.Severity = "error"
 	tmpStruct.Status = "error"
 
+	iSnewState(tmpStruct)
+
 	ss.serviceStateList[hostService] = tmpStruct
 }
 

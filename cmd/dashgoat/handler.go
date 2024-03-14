@@ -49,7 +49,7 @@ func updateStatus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, postService)
 	}
 
-	//	iSnewState(postService)
+	iSnewState(postService)
 
 	if _, ok := ss.serviceStateList[strID]; ok {
 

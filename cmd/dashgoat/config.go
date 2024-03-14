@@ -30,6 +30,7 @@ type (
 		DisableDependOn       bool     `yaml:"disableDependOn"`
 		DisableMetrics        bool     `yaml:"disableMetrics"`
 		Prometheusurl         string   `yaml:"prometheusurl"`
+		PagerdutyConfig       PdConfig `yaml:"pagerdutyconfig"`
 	}
 )
 

@@ -7,10 +7,13 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"flag"
 	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -33,6 +36,8 @@ type (
 	}
 )
 
+var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
 //go:embed web
 var embededFiles embed.FS
 
@@ -52,6 +57,28 @@ func main() {
 	backlog.StateDown = make(map[string]int64)
 
 	e := echo.New()
+
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogStatus:   true,
+		LogURI:      true,
+		LogError:    true,
+		HandleError: true, // forwards error to the global error handler, so it can decide appropriate status code
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			if v.Error == nil {
+				logger.LogAttrs(context.Background(), slog.LevelInfo, "REQUEST",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+				)
+			} else {
+				logger.LogAttrs(context.Background(), slog.LevelError, "REQUEST_ERROR",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+					slog.String("err", v.Error.Error()),
+				)
+			}
+			return nil
+		},
+	}))
 
 	flag.StringVar(&config.IPport, "ipport", ":2000", "Specify <ip>:<port>")
 	flag.StringVar(&config.WebLog, "weblog", "off", "HTTP log <on/off>")
@@ -87,9 +114,6 @@ func main() {
 
 	e.HideBanner = true
 
-	if config.WebLog == "on" {
-		e.Use(middleware.Logger())
-	}
 	e.Use(middleware.Recover())
 
 	if !config.DisableMetrics {
@@ -110,7 +134,8 @@ func main() {
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
-	printWelcome()
+	logger.Error("welcome", "Starting dashGoat", readHostFacts().DashGoatVersion)
+	logger.Info("welcome details", "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName)
 
 	go lostProbeTimer()
 	go ttlHousekeeping()
@@ -119,11 +144,4 @@ func main() {
 	// Start server
 	e.Logger.Fatal(e.Start(config.IPport))
 
-}
-
-func printWelcome() {
-	fmt.Println("Starting dashGoat " + readHostFacts().DashGoatVersion)
-	fmt.Println("Dashboard name: " + readHostFacts().DashName + " ")
-	fmt.Println("Go: " + readHostFacts().GoVersion + " ")
-	fmt.Println("Labstack Echo: " + echo.Version + " ")
 }

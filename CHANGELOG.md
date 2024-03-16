@@ -1,4 +1,13 @@
 # Changelog
+## [v1.5.dev] - 2024-03-16
+Add:
+ - Slog logging
+ - PagerDuty push
+ - Report state change
+
+Change:
+ - Upgrade Go + dependencies
+
 ## [v1.5.4] - 2024-03-06
 Fix:
  - Logic error in relations to DisableMetrics

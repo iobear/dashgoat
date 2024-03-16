@@ -140,6 +140,7 @@ func main() {
 	go lostProbeTimer()
 	go ttlHousekeeping()
 	go findBuddy(config.BuddyHosts)
+	go initPagerDuty()
 
 	// Start server
 	e.Logger.Fatal(e.Start(config.IPport))

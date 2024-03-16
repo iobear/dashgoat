@@ -20,16 +20,20 @@ func iSnewState(checkss dg.ServiceState) (state string, new bool) {
 		if ss.serviceStateList[hostservice].Status == checkss.Status {
 			return "", false
 		}
-		go reportStateChange(hostservice, ss.serviceStateList[hostservice].Status, checkss.Status)
+		go reportStateChange(ss.serviceStateList[hostservice].Status, checkss)
 		return checkss.Status, false
 	}
 
-	go reportStateChange(hostservice, "", checkss.Status)
+	go reportStateChange("", checkss)
 	return checkss.Status, true
 }
 
 // reportStateChange, updates dependencies
-func reportStateChange(hostservice string, from string, to string) {
-	logger.Info("statechange", "hostservice", hostservice, "from", from, "to", to)
+func reportStateChange(fromstate string, reportss dg.ServiceState) {
+	logger.Info("statechange", "hostservice", reportss.Host+reportss.Service, "from", fromstate, "to", reportss.Status)
+
+	if config.PagerdutyConfig.PdMode != "off" {
+		pdClient.CompilePdEvent(fromstate, reportss)
+	}
 
 }

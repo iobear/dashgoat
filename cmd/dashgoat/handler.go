@@ -49,7 +49,11 @@ func updateStatus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, postService)
 	}
 
-	iSnewState(postService)
+	if len(postService.From) == 0 { //From can't be empty
+		postService.From = append(postService.From, "127.0.0.1")
+	}
+
+	iSnewState(postService) // Informs abount state change
 
 	if _, ok := ss.serviceStateList[strID]; ok {
 

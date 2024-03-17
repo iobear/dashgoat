@@ -28,12 +28,13 @@ func iSnewState(checkss dg.ServiceState) (state string, new bool) {
 	return checkss.Status, true
 }
 
-// reportStateChange, updates dependencies
+// ReportStateChange
 func reportStateChange(fromstate string, reportss dg.ServiceState) {
 	logger.Info("statechange", "hostservice", reportss.Host+reportss.Service, "from", fromstate, "to", reportss.Status)
 
 	if config.PagerdutyConfig.PdMode != "off" {
-		pdClient.CompilePdEvent(fromstate, reportss)
+		if len(reportss.From) == 1 { // Check if I'm the first to know
+			pdClient.CompilePdEvent(fromstate, reportss)
+		}
 	}
-
 }

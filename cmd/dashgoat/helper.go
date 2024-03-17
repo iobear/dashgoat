@@ -53,7 +53,7 @@ func add2url(path string, route string) string {
 	return result.String()
 }
 
-// isExists Does the given directory of filepath exist?
+// isExists Does the given directory or filepath exist?
 func isExists(path string, task string) bool {
 	fileStat, err := os.Stat(path)
 

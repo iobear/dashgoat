@@ -155,6 +155,34 @@ Or adding a line to the `dashgoat.yaml`
 
 To show the timeline in dashGoat select the change time and the timeline will appear, this feature needs some rework in the UI.
 
+## PagerDuty
+
+You can forward events to PagerDutys diffrent tecnical services depending on hosts + services, tags and severity, there is also a catch all.
+<br />Minimum config, catch all:
+```yaml
+pagerdutyconfig:
+  pagerdutyservicemaps:
+    - hostservice:
+      tag:
+      eapikey: 12345acc39464b01d0105f1234567890
+```
+All options looks like this, first matching the host `host-1` and service `cache` to one technical service key, second matching all services with tag `customer23` to another tecnical service key. Both only being forwarded to PageDuty if severity is `error` or higher.
+```yaml
+pagerdutyconfig:
+  url: https://events.pagerduty.com/v2/enqueue
+  timeout: 10s
+  triggerlevel: error
+  pagerdutymode: push
+  pagerdutyservicemaps:
+    - hostservice: host-1cache
+      tag:
+      eapikey: 12345acc39464b01d0105f1234567890
+    - hostservice:
+      tag: customer23
+      eapikey: ffff5acc39464b01d0105f123456ffff
+```
+
+
 ## Docker Hello world
 
 ```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```
@@ -230,6 +258,8 @@ To include the config file:
  * ~~Better TTL handling~~
  * ~~add dependecy to service hosts+tags~~
  * ~~Dynamic favicon with most critical colour~~
+ * Delete event in dashboard
+ * MS teams support
  * API tests (in progress)
  * Configuration tests 
  * Save state
@@ -240,5 +270,6 @@ To include the config file:
  * Users +gravatar?
  * Auth on delete
  * Automatic event cleanup
- * Better logging
+ * ~~Better logging~~
+ * ~~PagerDuty support~~
  * dashGoat client

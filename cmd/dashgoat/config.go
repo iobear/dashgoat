@@ -23,6 +23,7 @@ type (
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
 		BuddyDownStatusMsg    string   `yaml:"buddyDownStatusMsg"`
 		BuddyHosts            []Buddy  `yaml:"buddy"`
+		BuddyNsConfig         string   `yaml:"buddynsconfig"`
 		IgnorePrefix          []string `yaml:"ignorePrefix"`
 		TtlBehavior           string   `yaml:"ttlbehavior"`
 		TtlOkDelete           int      `yaml:"ttlokdelete"`
@@ -65,8 +66,8 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("IGNOREPREFIX") != "" {
 		conf.IgnorePrefix = append(conf.IgnorePrefix, os.Getenv("IGNOREPREFIX"))
 	}
-	if os.Getenv("NSCONFIG") != "" {
-		nsconfig = os.Getenv("NSCONFIG")
+	if os.Getenv("BUDDYNSCONFIG") != "" {
+		buddy_nsconfig = os.Getenv("BUDDYNSCONFIG")
 	}
 	if os.Getenv("TTLBEHAVIOR") != "" {
 		conf.TtlBehavior = os.Getenv("TTLBEHAVIOR")

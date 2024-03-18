@@ -5,11 +5,15 @@ Add:
  - PagerDuty push
  - Report state change
 
+Fix:
+ - Add missing buddynsconfig option to config file
+
 Change:
  - Upgrade Go + dependencies
+ - config element nsconfig is now called buddynsconfig
 
 Deprecated:
- - weblog config parameter
+ - weblog config element
 
 ## [v1.5.4] - 2024-03-06
 Fix:

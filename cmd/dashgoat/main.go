@@ -43,7 +43,7 @@ var embededFiles embed.FS
 
 var config Configer
 var buddy_cli Buddy
-var nsconfig string
+var buddy_nsconfig string
 var ss Services
 
 var backlog Backlog
@@ -88,7 +88,7 @@ func main() {
 	flag.StringVar(&buddy_cli.Url, "buddyurl", "", "Buddy url")
 	flag.StringVar(&buddy_cli.Key, "buddykey", "", "Buddy update key, empty for same key")
 	flag.StringVar(&buddy_cli.Name, "buddyname", "", "Buddy name")
-	flag.StringVar(&nsconfig, "nsconfig", "", "Configure buddies via DNS/k8s namespace")
+	flag.StringVar(&buddy_nsconfig, "buddynsconfig", "", "Configure buddies via DNS/k8s namespace")
 	flag.Parse()
 
 	config.ReadEnv()

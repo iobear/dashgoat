@@ -41,17 +41,21 @@ func initBuddyConf(rawConfig []Buddy) {
 		}
 	}
 
-	if nsconfig != "" {
+	if buddy_nsconfig == "" {
+		buddy_nsconfig = config.BuddyNsConfig
+	}
+
+	if buddy_nsconfig != "" {
 		findDNSBuddies()
 	}
 
 	//look for headless service IPs
-	if isK8s() && nsconfig == "" {
-		nsconfig = "dashgoat-headless-svc"
+	if isK8s() && buddy_nsconfig == "" {
+		buddy_nsconfig = "dashgoat-headless-svc"
 		findDNSBuddies()
 	}
 
-	if nsconfig != "" {
+	if buddy_nsconfig != "" {
 		go loopFindDNSBuddies()
 	}
 }
@@ -116,7 +120,7 @@ func ipLookup() (error, bool) {
 	var err error
 	var new_ip bool
 
-	ips, err := net.LookupIP(nsconfig)
+	ips, err := net.LookupIP(buddy_nsconfig)
 	if err != nil {
 		fmt.Println(err)
 		return err, new_ip
@@ -143,7 +147,7 @@ func ajustBuddyConfig(ips []net.IP) {
 
 	//Remove old nsconfig-Buddies not found last lookup
 	for _, buddy := range listBuddies() {
-		if buddy.NSconfig == nsconfig && buddy.LastSeen != time_now {
+		if buddy.NSconfig == buddy_nsconfig && buddy.LastSeen != time_now {
 			delBuddy(buddy)
 		}
 	}
@@ -160,7 +164,7 @@ func compileBuddyConfig(ip string, time_now int64) (Buddy, bool) {
 	}
 
 	result.LastSeen = time_now
-	result.NSconfig = nsconfig
+	result.NSconfig = buddy_nsconfig
 	result.Key = config.UpdateKey
 	result.Url = "http://" + ip + ":" + strings.Split(config.IPport, ":")[1] //TODO - needs some work
 

@@ -92,7 +92,7 @@ func talkToBuddyApi(event dg.ServiceState, host Buddy, delete string) {
 
 	jsonMapAsStringFormat, err := json.Marshal(event)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error("talkToBuddyApi json marshall", err)
 		return
 	}
 
@@ -107,7 +107,7 @@ func talkToBuddyApi(event dg.ServiceState, host Buddy, delete string) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error("talkToBuddyApi problems talking to "+host.Url, err)
 		tellBuddyState(host.Name, false, event.Host)
 		return
 	}
@@ -123,7 +123,7 @@ func findBuddy(buddyConfig []Buddy) {
 
 	if buddyAmount < 1 {
 		setDashGoatReady(true)
-		fmt.Println("Buddy not found")
+		logger.Info("Buddy not found")
 	}
 
 	firstRound := true
@@ -134,7 +134,7 @@ func findBuddy(buddyConfig []Buddy) {
 	}
 
 	buddyWelcome := fmt.Sprintf("%d %s ", buddyAmount, buddyTxt)
-	fmt.Println(buddyWelcome)
+	logger.Info(buddyWelcome)
 
 	waitfor := 10
 	if config.CheckBuddyIntervalSec > 1 {

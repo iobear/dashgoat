@@ -10,7 +10,6 @@ import (
 	"context"
 	"embed"
 	"flag"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -36,7 +35,8 @@ type (
 	}
 )
 
-var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+// var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+var logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 //go:embed web
 var embededFiles embed.FS
@@ -95,7 +95,7 @@ func main() {
 	config.ReadEnv()
 	err := config.InitConfig(configfile)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error("cant initialize config", err)
 	}
 
 	pathStartsWith := strings.HasPrefix(config.WebPath, "/")

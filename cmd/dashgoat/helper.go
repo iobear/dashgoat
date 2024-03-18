@@ -7,7 +7,6 @@
 package main
 
 import (
-	"fmt"
 	"io/fs"
 	"net/http"
 	"os"
@@ -98,11 +97,11 @@ func str2bool(str_to_convert string) bool {
 
 func getFileSystem(useOS bool) http.FileSystem {
 	if useOS {
-		fmt.Println("using live mode")
+		logger.Info("using live mode")
 		return http.FS(os.DirFS("web"))
 	}
 
-	fmt.Println("using embed mode")
+	logger.Info("using embed mode")
 	fsys, err := fs.Sub(embededFiles, "web")
 	if err != nil {
 		panic(err)

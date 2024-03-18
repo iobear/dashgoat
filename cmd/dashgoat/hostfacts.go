@@ -48,19 +48,18 @@ func generateHostFacts() {
 		host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, IPhost)
 	}
 	if len(host_facts.Items.Hostnames) == 0 {
-		fmt.Println("Cant find an IP address, check ignorePrefix config")
+		logger.Error("Cant find an IP address, check ignorePrefix config")
 		os.Exit(1)
 	}
 	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
-	fmt.Print("Hostnames found: ")
-	fmt.Println(host_facts.Items.Hostnames)
+	logger.Info("Welcome", "Hostnames found", host_facts.Items.Hostnames)
 
 	if config.DisableMetrics && config.Prometheusurl == "" {
 		host_facts.Items.MetricsHistory = false
-		fmt.Println("MetricsHistory: off")
+		logger.Info("HostFacts", "MetricsHistory", "off")
 	} else {
 		host_facts.Items.MetricsHistory = true
-		fmt.Println("MetricsHistory: on")
+		logger.Info("HostFacts", "MetricsHistory", "on")
 	}
 }
 

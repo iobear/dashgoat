@@ -117,7 +117,7 @@ func (conf *Configer) InitConfig(configPath string) error {
 		if err := d.Decode(&config); err != nil {
 			return err
 		}
-		fmt.Println("Using settings from " + configPath + " ignoring cli args")
+		logger.Error("Using settings from " + configPath + " ignoring cli args")
 	}
 
 	if conf.DashName == "" {

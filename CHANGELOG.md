@@ -1,5 +1,5 @@
 # Changelog
-## [v1.6.dev] - 2024-03-18
+## [v1.6.0] - 2024-03-18
 Add:
  - Slog logging
  - PagerDuty push

@@ -1,10 +1,9 @@
 dashName: dashGoat
 buddyDownStatusMsg: info
 ipport: :2000
-weblog: off
 webpath: /
 updatekey: my-precious!
 ttlbehavior: PromoteToOk # Remove, PromoteOnce, PromoteOneStep,PromoteToOk
 ttlokdelete: 300 # seconds to delete
-nsconfig: dashgoat-headless-svc
+buddynsconfig: dashgoat-headless-svc
 prometheusurl: http://localhost:9090

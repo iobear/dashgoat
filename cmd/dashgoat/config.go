@@ -14,6 +14,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var severitys = []string{"ok", "info", "warning", "error", "critical"}
+
 type (
 	Configer struct {
 		DashName              string   `yaml:"dashName"`

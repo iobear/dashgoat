@@ -110,6 +110,14 @@ func initPagerDuty() {
 
 }
 
+func shouldPagerDutyTrigger(severity_to_check string) bool {
+	trigger_level := indexOf(severitys, config.PagerdutyConfig.TriggerLevel)
+	to_check := indexOf(severitys, severity_to_check)
+
+	return to_check >= trigger_level
+
+}
+
 func (c *PdClient) CompilePdEvent(fromstate string, dgss dg.ServiceState) {
 	var pdevent PagerDutyEvent
 
@@ -123,7 +131,7 @@ func (c *PdClient) CompilePdEvent(fromstate string, dgss dg.ServiceState) {
 
 	action := "resolve"
 
-	if dgss.Status != "ok" {
+	if shouldPagerDutyTrigger(dgss.Status) {
 		action = "trigger"
 	}
 
@@ -153,7 +161,7 @@ func findKey(dgss dg.ServiceState) (pdkey string, pdmatch string) {
 	var match string
 
 	for _, item := range config.PagerdutyConfig.PdServiceMaps {
-		if item.HostService == dgss.Host+dgss.Service {
+		if item.HostService == dgss.Host+dgss.Service || item.HostService == "0catchall0" { // look for match or catch all token
 			return item.EapiKey, item.HostService
 		}
 

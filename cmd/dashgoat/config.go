@@ -91,21 +91,21 @@ func (conf *Configer) ReadEnv() {
 }
 
 // InitConfig initiates a new decoded Config struct Alex style
-func (conf *Configer) InitConfig(configPath string) error {
+func (conf *Configer) InitConfig(config_path string) error {
 	var result error
 
-	if configPath == "" {
-		configPath = "dashgoat.yaml"
+	if config_path == "" {
+		config_path = "dashgoat.yaml"
 	}
 
-	fileExists := isExists(configPath, "file")
-	if !fileExists {
-		result = fmt.Errorf("Cant find Config file " + configPath + ", moving on")
-		configPath = ""
+	file_exists := isExists(config_path, "file")
+	if !file_exists {
+		result = fmt.Errorf("Cant find Config file " + config_path + ", moving on")
+		config_path = ""
 	}
 
-	if configPath != "" {
-		file, err := os.Open(configPath)
+	if config_path != "" {
+		file, err := os.Open(config_path)
 		if err != nil {
 			return err
 		}
@@ -117,15 +117,15 @@ func (conf *Configer) InitConfig(configPath string) error {
 		if err := d.Decode(&config); err != nil {
 			return err
 		}
-		logger.Error("Using settings from " + configPath + " ignoring cli args")
+		logger.Error("Using settings from " + config_path + " ignoring cli args")
 	}
 
 	if conf.DashName == "" {
 		conf.DashName = "dashGoat"
 	}
 
-	// buddy settings
-	if configPath == "" {
+	// Buddy settings
+	if config_path == "" {
 		if buddy_cli.Url != "" && buddy_cli.Url != "0" {
 			conf.BuddyHosts = append(conf.BuddyHosts, buddy_cli)
 		}

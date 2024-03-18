@@ -8,6 +8,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -34,6 +35,7 @@ type PdConfig struct {
 	URL           string         `yaml:"url"`
 	Timeout       time.Duration  `yaml:"timeout"`
 	PdMode        string         `yaml:"pagerdutymode"`
+	TriggerLevel  string         `yaml:"triggerlevel"`
 	PdServiceMaps []PdServiceMap `yaml:"pagerdutyservicemaps"`
 }
 
@@ -49,16 +51,55 @@ type PdClient struct {
 
 var pdClient = &PdClient{}
 
+func validatePagerdutyConf() error {
+	var result error
+
+	// Is PagerDuty enabled?
+	if config.PagerdutyConfig.PdMode == "off" {
+		return result
+	}
+
+	if len(config.PagerdutyConfig.PdServiceMaps) == 0 {
+		logger.Info("no pagerdutyservicemaps, setting pagerdutymode off")
+		config.PagerdutyConfig.PdMode = "off"
+		return result
+	}
+
+	// Default PdMode
+	pdClient.config.PdMode = "push"
+
+	// Default timeout value
+	if config.PagerdutyConfig.Timeout == 0 {
+		config.PagerdutyConfig.Timeout = 10
+	}
+
+	// Default PagerDuty Url US
+	if config.PagerdutyConfig.URL == "" {
+		config.PagerdutyConfig.URL = "https://events.pagerduty.com/v2/enqueue"
+	}
+
+	// Default PagerDuty trigger level
+	if config.PagerdutyConfig.TriggerLevel == "" {
+		config.PagerdutyConfig.TriggerLevel = "error"
+	}
+
+	for key, val := range config.PagerdutyConfig.PdServiceMaps {
+		if val.EapiKey == "" {
+			return fmt.Errorf("pagerDuty eapikey missing")
+		}
+		if val.HostService == "" && val.Tag == "" {
+			config.PagerdutyConfig.PdServiceMaps[key].HostService = "0catchall0"
+		}
+	}
+
+	return result
+}
+
 func initPagerDuty() {
 	logger.Info("PagerDuty mode is " + config.PagerdutyConfig.PdMode)
 
 	if config.PagerdutyConfig.PdMode == "off" {
 		return
-	}
-
-	if len(config.PagerdutyConfig.PdServiceMaps) == 0 {
-		logger.Error("No PdPdServiceMaps, setting PdMode off")
-		config.PagerdutyConfig.PdMode = "off"
 	}
 
 	pdClient.config = PdConfig{

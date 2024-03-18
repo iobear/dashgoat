@@ -1,5 +1,5 @@
 # Changelog
-## [v1.5.dev] - 2024-03-16
+## [v1.6.dev] - 2024-03-18
 Add:
  - Slog logging
  - PagerDuty push
@@ -7,6 +7,9 @@ Add:
 
 Change:
  - Upgrade Go + dependencies
+
+Deprecated:
+ - weblog config parameter
 
 ## [v1.5.4] - 2024-03-06
 Fix:

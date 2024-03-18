@@ -18,7 +18,6 @@ type (
 	Configer struct {
 		DashName              string   `yaml:"dashName"`
 		IPport                string   `yaml:"ipport"`
-		WebLog                string   `yaml:"weblog"`
 		WebPath               string   `yaml:"webpath"`
 		UpdateKey             string   `yaml:"updatekey"`
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
@@ -42,9 +41,6 @@ func (conf *Configer) ReadEnv() {
 	}
 	if os.Getenv("IPPORT") != "" {
 		config.IPport = os.Getenv("IPPORT")
-	}
-	if os.Getenv("WEBLOG") != "" {
-		conf.WebLog = os.Getenv("WEBLOG")
 	}
 	if os.Getenv("WEBPATH") != "" {
 		conf.WebPath = os.Getenv("WEBPATH")
@@ -157,6 +153,12 @@ func (conf *Configer) InitConfig(config_path string) error {
 	if conf.TtlOkDelete == 0 {
 		conf.TtlOkDelete = 3600
 	}
+
+	err := validatePagerdutyConf()
+	if err != nil {
+		return err
+	}
+
 	generateHostFacts()
 	return result
 }

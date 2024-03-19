@@ -22,61 +22,61 @@ func updateStatus(c echo.Context) error {
 	defer ss.mutex.Unlock()
 
 	var result = map[string]string{}
-	var postService dg.ServiceState
+	var post_service_state dg.ServiceState
 
-	if err := c.Bind(&postService); err != nil {
+	if err := c.Bind(&post_service_state); err != nil {
 		return err
 	}
 
-	if !checkUpdatekey(postService.UpdateKey) {
+	if !checkUpdatekey(post_service_state.UpdateKey) {
 		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
 	}
 
-	postService.UpdateKey = "valid"
-	postService = dg.FilterUpdate(postService)
-	postService = runDependOn(postService)
+	post_service_state.UpdateKey = "valid"
+	post_service_state = dg.FilterUpdate(post_service_state)
+	post_service_state = runDependOn(post_service_state)
 
 	// TODO
 	// if err := validator.Validate(postService); err != nil {
 	// 	return c.JSON(http.StatusBadRequest, ss.serviceStateList)
 	// }
 
-	strID := ""
+	host_service := ""
 
-	if postService.Host != "" && postService.Service != "" {
-		strID = postService.Host + postService.Service
+	if post_service_state.Host != "" && post_service_state.Service != "" {
+		host_service = post_service_state.Host + post_service_state.Service
 	} else {
-		return c.JSON(http.StatusBadRequest, postService)
+		return c.JSON(http.StatusBadRequest, post_service_state)
 	}
 
-	if len(postService.From) == 0 { //From can't be empty
-		postService.From = append(postService.From, "127.0.0.1")
+	if len(post_service_state.From) == 0 { //From can't be empty
+		post_service_state.From = append(post_service_state.From, "127.0.0.1")
 	}
 
-	iSnewState(postService) // Informs abount state change
+	iSnewState(post_service_state) // Informs abount state change
 
-	if _, ok := ss.serviceStateList[strID]; ok {
+	if _, ok := ss.serviceStateList[host_service]; ok {
 
-		if postService.Change == 0 {
-			if postService.Status != ss.serviceStateList[strID].Status {
-				postService.Change = time.Now().Unix()
+		if post_service_state.Change == 0 {
+			if post_service_state.Status != ss.serviceStateList[host_service].Status {
+				post_service_state.Change = time.Now().Unix()
 			} else {
-				postService.Change = ss.serviceStateList[strID].Change
+				post_service_state.Change = ss.serviceStateList[host_service].Change
 			}
-		} else if postService.Probe <= ss.serviceStateList[strID].Probe { // Already reported
+		} else if post_service_state.Probe <= ss.serviceStateList[host_service].Probe { // Already reported
 			return c.JSON(http.StatusAlreadyReported, "")
 		}
 	}
 
-	if _, exists := ss.serviceStateList[strID]; !exists {
-		postService.Change = time.Now().Unix()
+	if _, exists := ss.serviceStateList[host_service]; !exists {
+		post_service_state.Change = time.Now().Unix()
 	}
 
-	ss.serviceStateList[strID] = postService
+	ss.serviceStateList[host_service] = post_service_state
 
-	go updateBuddy(postService, "")
+	go updateBuddy(post_service_state, "")
 
-	result["id"] = strID
+	result["id"] = host_service
 
 	return c.JSON(http.StatusOK, result)
 }
@@ -105,22 +105,22 @@ func getStatusList(c echo.Context) error {
 
 }
 
-// getStatusList HPO/MSO
+// getStatusList HPO/MSO - simplified status list
 func getStatusListMSO(c echo.Context) error {
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
-	var tmpServiceStateMSO ServiceStateMSO
-	serviceStateMSOlist := make(map[string]ServiceStateMSO)
+	var tmp_service_state_MSO ServiceStateMSO
+	service_state_MSO_list := make(map[string]ServiceStateMSO)
 
 	for index, event := range ss.serviceStateList {
-		tmpServiceStateMSO.Status = event.Status
-		tmpServiceStateMSO.Message = "[" + event.Status + "] " + event.Service + " " + event.Host + "-" + event.Message
+		tmp_service_state_MSO.Status = event.Status
+		tmp_service_state_MSO.Message = "[" + event.Status + "] " + event.Service + " " + event.Host + "-" + event.Message
 
-		serviceStateMSOlist[index] = tmpServiceStateMSO
+		service_state_MSO_list[index] = tmp_service_state_MSO
 	}
 
-	return c.JSON(http.StatusOK, serviceStateMSOlist)
+	return c.JSON(http.StatusOK, service_state_MSO_list)
 
 }
 

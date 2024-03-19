@@ -1,4 +1,8 @@
 # Changelog
+## [v1.6.dev] - 2024-03-19
+Add:
+ - Config element logformat <txt/json>
+
 ## [v1.6.0] - 2024-03-18
 Add:
  - Slog logging

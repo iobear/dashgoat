@@ -22,6 +22,7 @@ type (
 		DashName              string   `yaml:"dashName"`
 		IPport                string   `yaml:"ipport"`
 		WebPath               string   `yaml:"webpath"`
+		LogFormat             string   `yaml:"logformat"`
 		UpdateKey             string   `yaml:"updatekey"`
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
 		BuddyDownStatusMsg    string   `yaml:"buddyDownStatusMsg"`
@@ -48,6 +49,9 @@ func (conf *Configer) ReadEnv() {
 	}
 	if os.Getenv("WEBPATH") != "" {
 		conf.WebPath = os.Getenv("WEBPATH")
+	}
+	if os.Getenv("LOGFORMAT") != "" {
+		conf.LogFormat = os.Getenv("LOGFORMAT")
 	}
 	if os.Getenv("UPDATEKEY") != "" {
 		conf.UpdateKey = os.Getenv("UPDATEKEY")
@@ -156,6 +160,11 @@ func (conf *Configer) InitConfig(config_path string) error {
 	// Default delete time on resolved TTL
 	if conf.TtlOkDelete == 0 {
 		conf.TtlOkDelete = 3600
+	}
+
+	// Default logformat <txt/json>
+	if conf.LogFormat == "" {
+		conf.LogFormat = "txt"
 	}
 
 	err := validatePagerdutyConf()

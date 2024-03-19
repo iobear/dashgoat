@@ -1,9 +1,16 @@
+# default dashGoat
 dashName: dashGoat
 buddyDownStatusMsg: info
+# default :2000
 ipport: :2000
+# default /
 webpath: /
+# default txt, options <txt/json>
+logformat: txt
+# default changeme
 updatekey: my-precious!
-ttlbehavior: PromoteToOk # Remove, PromoteOnce, PromoteOneStep,PromoteToOk
+# default PromoteToOk, options <Remove/PromoteOnce/PromoteOneStep/PromoteToOk>
+ttlbehavior: PromoteToOk
 ttlokdelete: 300 # seconds to delete
 buddynsconfig: dashgoat-headless-svc
 prometheusurl: http://localhost:9090

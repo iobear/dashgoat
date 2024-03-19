@@ -35,7 +35,6 @@ type (
 	}
 )
 
-// var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 var logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 //go:embed web
@@ -95,6 +94,10 @@ func main() {
 	err := config.InitConfig(configfile)
 	if err != nil {
 		logger.Error("cant initialize config", err)
+	}
+
+	if config.LogFormat == "json" {
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	}
 
 	pathStartsWith := strings.HasPrefix(config.WebPath, "/")

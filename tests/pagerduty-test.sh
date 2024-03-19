@@ -24,7 +24,7 @@ for service_with_tags in "${services_with_tags[@]}"; do
 done
 
 
-echo "-- 2x Host-1 should be seen in PagerDuty"
+echo "-- 2x Host-1 should be seen in PagerDuty --"
 
 for service_with_tags in "${services_with_tags[@]}"; do
 
@@ -34,4 +34,4 @@ for service_with_tags in "${services_with_tags[@]}"; do
 
 done
 
-echo "-- Host-2 should NOT be seen in PagerDuty"
+echo "-- Host-2 should NOT be seen in PagerDuty --"

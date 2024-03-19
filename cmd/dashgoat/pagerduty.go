@@ -111,8 +111,8 @@ func initPagerDuty() {
 }
 
 func shouldPagerDutyTrigger(severity_to_check string) bool {
-	trigger_level := indexOf(severitys, config.PagerdutyConfig.TriggerLevel)
-	to_check := indexOf(severitys, severity_to_check)
+	trigger_level := indexOf(severitys[:], config.PagerdutyConfig.TriggerLevel)
+	to_check := indexOf(severitys[:], severity_to_check)
 
 	return to_check >= trigger_level
 

@@ -73,10 +73,9 @@ func promoteStatus(serviceState dg.ServiceState, currentUnixTimestamp int64) dg.
 	}
 
 	// Default PromoteOneStep
-	statusHierarchy := []string{"critical", "error", "warning", "info", "ok"}
-	for i, status := range statusHierarchy {
-		if serviceState.Status == status && i < len(statusHierarchy)-1 {
-			serviceState.Status = statusHierarchy[i+1]
+	for i, status := range severitysReverse {
+		if serviceState.Status == status && i < len(severitysReverse)-1 {
+			serviceState.Status = severitysReverse[i+1]
 			serviceState.Probe = currentUnixTimestamp
 			break
 		}

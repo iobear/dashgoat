@@ -14,7 +14,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var severitys = []string{"ok", "info", "warning", "error", "critical"}
+var severitys = [5]string{"ok", "info", "warning", "error", "critical"}
+var severitysReverse = [5]string{"critical", "error", "warning", "info", "ok"}
 
 type (
 	Configer struct {

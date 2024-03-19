@@ -19,8 +19,6 @@ import (
 	"github.com/prometheus/common/model"
 )
 
-var statusList = [5]string{"critical", "error", "warning", "info", "ok"}
-
 // ServiceStateCollector implements the prometheus.Collector interface
 type ServiceStateCollector struct {
 	serviceStatusGauge *prometheus.GaugeVec
@@ -32,7 +30,7 @@ type ServiceStatus struct {
 }
 
 func status2int(status string) float64 {
-	return float64(indexOf(statusList[:], status))
+	return float64(indexOf(severitysReverse[:], status))
 }
 
 func int2status(status float64) string {
@@ -40,7 +38,7 @@ func int2status(status float64) string {
 		return "unknown"
 	}
 
-	return statusList[int(status)]
+	return severitysReverse[int(status)]
 }
 
 // NewServiceStateCollector creates a new ServiceStateCollector

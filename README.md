@@ -255,21 +255,13 @@ To include the config file:
 
 ## TODO
 
- * ~~Better TTL handling~~
- * ~~add dependecy to service hosts+tags~~
- * ~~Dynamic favicon with most critical colour~~
  * Delete event in dashboard
  * MS teams support
  * API tests (in progress)
  * Configuration tests 
  * Save state
  * Tags filter view / filter API
- * ~~Handle Metrics~~
- * ~~Metrics export~~
- * ~~Service status history~~
  * Users +gravatar?
  * Auth on delete
  * Automatic event cleanup
- * ~~Better logging~~
- * ~~PagerDuty support~~
  * dashGoat client

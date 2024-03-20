@@ -29,13 +29,13 @@ All requests should include the `Content-Type: application/json` header unless o
       "service": "HTTP",
       "status": "ok", // <ok/info/warning/error/critical>
       "message": "Hello World",
-      *"severity": "info",
-      *"nextupdatesec": 601, // expect update within 601 seconds
-      *"ttl": 600, // If no new update, assume system ok after 600 seconds
-      *"tags": ["production","uk","customer"],
-      *"probe": 1610839637, // last seen unix timestamp
-      *"from": ["uptimeprobe-uk"],
-      *"dependon": "loadbalancer-uk-1", // My service depends on loadbalancer-uk-1
+      "severity": "info", // (optional)
+      "nextupdatesec": 601, // expect update within 601 seconds (optional)
+      "ttl": 600, // If no new update, assume system ok after 600 seconds (optional)
+      "tags": ["production","uk","customer"], // (optional)
+      "probe": 1610839637, // last seen unix timestamp (optional)
+      "from": ["uptimeprobe-uk"], // (optional)
+      "dependon": "loadbalancer-uk-1", // My service depends on loadbalancer-uk-1 (optional)
       "updatekey": "your_updatekey_here"
     }
     ```

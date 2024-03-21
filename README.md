@@ -73,6 +73,20 @@ curl --request POST \
 ```
 Now you should get a warning if the update is missing for 20 seconds. This feature is not meant to be super fast (< 10 sec), this is just to keep track of "lost" agents.
 
+If POST is not possible you can use GET like this:
+
+```bash
+curl http://127.0.0.1:2000/heartbeat/hdjsakl678dsa/router01/20/dsl,openwrt,home
+```
+
+The input is as follows
+```bash
+curl http://127.0.0.1:2000/heartbeat/<heartbeatkey>/<host>/<nextupdatesec>/<tags>
+```
+
+When using HTTP GET you need to update the config with:
+`heartbeatkey: <key>` or use the enviroment variable `HEARTBEATKEY=<key>`
+
 ## TTL
 
 If you want your event to change state/disappear after a set amount of seconds, use the `ttl` parameter, like this.

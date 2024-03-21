@@ -8,12 +8,77 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	dg "github.com/iobear/dashgoat/common"
 	"github.com/labstack/echo/v4"
 )
+
+// heartBeat update
+func heartBeat(c echo.Context) error {
+
+	ss.mutex.Lock()
+	defer ss.mutex.Unlock()
+
+	var result string
+	var post_service_state dg.ServiceState
+
+	heartbeatkey := c.Param("heartbeatkey")
+	if heartbeatkey == "" {
+		return c.JSON(http.StatusUnauthorized, "Missing heartbeatkey")
+	}
+
+	if !checkHeartBeatKey(heartbeatkey) {
+		return c.JSON(http.StatusUnauthorized, "Check your heartbeatkey")
+	}
+	post_service_state.UpdateKey = "valid"
+
+	host := c.Param("host")
+	if host == "" {
+		return c.JSON(http.StatusBadRequest, "Missing host")
+	}
+
+	post_service_state.Host = host
+
+	nextupdatesec := c.Param("nextupdatesec")
+	if nextupdatesec == "" {
+		return c.JSON(http.StatusBadRequest, "Missing nextupdatesec")
+	}
+
+	sec_number, err := strconv.ParseUint(nextupdatesec, 10, 32)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "nextupdatesec not number")
+	}
+	post_service_state.NextUpdateSec = int(sec_number)
+
+	tags := c.Param("tags")
+	if tags != "" {
+		post_service_state.Tags = parseTags(tags)
+	}
+
+	this_is_now := time.Now().Unix()
+	status, new := iSnewState(post_service_state) // Informs abount state change
+	if status == "" {
+		if new {
+			post_service_state.Status = "ok"
+			post_service_state.Change = this_is_now
+		}
+	} else {
+		post_service_state.Status = status
+		post_service_state.Change = this_is_now
+	}
+	post_service_state.Probe = this_is_now
+
+	post_service_state.From = append(post_service_state.From, "heartbeat")
+	post_service_state.Service = "heartbeat"
+
+	result = post_service_state.Host + post_service_state.Service
+
+	ss.serviceStateList[result] = post_service_state
+	return c.JSON(http.StatusOK, result)
+}
 
 // updateStatus - service update
 func updateStatus(c echo.Context) error {
@@ -29,17 +94,12 @@ func updateStatus(c echo.Context) error {
 	}
 
 	if !checkUpdatekey(post_service_state.UpdateKey) {
-		return c.JSON(http.StatusUnauthorized, "Check your updatekey!")
+		return c.JSON(http.StatusUnauthorized, "Check your updatekey")
 	}
 
 	post_service_state.UpdateKey = "valid"
 	post_service_state = dg.FilterUpdate(post_service_state)
 	post_service_state = runDependOn(post_service_state)
-
-	// TODO
-	// if err := validator.Validate(postService); err != nil {
-	// 	return c.JSON(http.StatusBadRequest, ss.serviceStateList)
-	// }
 
 	host_service := ""
 
@@ -53,24 +113,16 @@ func updateStatus(c echo.Context) error {
 		post_service_state.From = append(post_service_state.From, "127.0.0.1")
 	}
 
-	iSnewState(post_service_state) // Informs abount state change
-
-	if _, ok := ss.serviceStateList[host_service]; ok {
-
-		if post_service_state.Change == 0 {
-			if post_service_state.Status != ss.serviceStateList[host_service].Status {
-				post_service_state.Change = time.Now().Unix()
-			} else {
-				post_service_state.Change = ss.serviceStateList[host_service].Change
-			}
-		} else if post_service_state.Probe <= ss.serviceStateList[host_service].Probe { // Already reported
-			return c.JSON(http.StatusAlreadyReported, "")
+	this_is_now := time.Now().Unix()
+	status, new := iSnewState(post_service_state) // Informs abount state change
+	if status == "" {
+		if new {
+			post_service_state.Change = this_is_now
 		}
+	} else {
+		post_service_state.Change = this_is_now
 	}
-
-	if _, exists := ss.serviceStateList[host_service]; !exists {
-		post_service_state.Change = time.Now().Unix()
-	}
+	post_service_state.Probe = this_is_now
 
 	ss.serviceStateList[host_service] = post_service_state
 
@@ -179,4 +231,16 @@ func health(c echo.Context) error {
 func checkUpdatekey(key string) bool {
 
 	return key == config.UpdateKey
+}
+
+func checkHeartBeatKey(key string) bool {
+
+	return key == config.HeartBeatKey
+}
+
+func parseTags(tags string) []string {
+
+	slice_result := strings.Split(tags, ",")
+
+	return slice_result
 }

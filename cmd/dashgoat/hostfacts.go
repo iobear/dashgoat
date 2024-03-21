@@ -61,6 +61,10 @@ func generateHostFacts() {
 		host_facts.Items.MetricsHistory = true
 		logger.Info("HostFacts", "MetricsHistory", "on")
 	}
+
+	if config.HeartBeatKey == "" {
+		logger.Warn("No HeartBeatKey")
+	}
 }
 
 func getHostIPs() []string {

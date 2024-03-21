@@ -4,8 +4,7 @@ echo
 echo "-- start-single --"
 
 BASE_URL="http://localhost:2000"
-
-./dashgoat $1 &
+HEARTBEATKEY="TmwW8kOO1Cmks54TA" ./dashgoat $1 &
 
 PID=$!  # Get the PID
 echo $PID > PID-SINGLE-$PID

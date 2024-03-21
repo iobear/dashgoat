@@ -128,6 +128,8 @@ func main() {
 	e.GET(add2url(config.WebPath, "/metricshistory/:serviceid/:hours"), getMetricsHistory)
 
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)
+	e.GET(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
+	e.POST(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
 	e.GET(add2url(config.WebPath, "/status/:id"), getStatus)
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)
 	e.GET(add2url(config.WebPath, "/status/listmso"), getStatusListMSO)
@@ -136,8 +138,7 @@ func main() {
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
-	logger.Error("welcome", "Starting dashGoat", readHostFacts().DashGoatVersion)
-	logger.Info("welcome details", "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName)
+	logger.Info("welcome", "dashGoat", readHostFacts().DashGoatVersion, "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName)
 
 	go lostProbeTimer()
 	go ttlHousekeeping()

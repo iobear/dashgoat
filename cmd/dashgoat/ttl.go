@@ -34,8 +34,8 @@ func updateServiceState(key string, serviceState dg.ServiceState) {
 	}()
 
 	ss.mutex.Lock()
-	iSnewState(serviceState)
 	ss.serviceStateList[key] = serviceState
+	iSnewState(serviceState)
 }
 
 func ttlHousekeeping() {

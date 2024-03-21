@@ -36,7 +36,3 @@ fi
 rm -f dashgoat
 ln -s $SOURCE_DIR$DGBIN dashgoat
 
-#Debug
-pwd
-ls
-ls build

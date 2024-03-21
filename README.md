@@ -255,13 +255,14 @@ To include the config file:
 
 ## TODO
 
- * Delete event in dashboard
+ * Delete event on dashboard via mouse
  * MS teams support
  * API tests (in progress)
  * Configuration tests 
  * Save state
  * Tags filter view / filter API
  * Users +gravatar?
+ * Ack event
  * Auth on delete
  * Automatic event cleanup
  * dashGoat client

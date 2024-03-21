@@ -41,5 +41,8 @@ jobs:
     - name: Tags test
       run: ./tests/tags-test.sh
 
+    - name: Heartbeat test
+      run: ./tests/heartbeat-test.sh
+
     - name: End test
       run: ./tests/stop-instances.sh

@@ -12,18 +12,22 @@ import (
 
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
-func iSnewState(checkss dg.ServiceState) (state string, new bool) {
+func iSnewState(checkss dg.ServiceState) (status string, new bool) {
 	hostservice := checkss.Host + checkss.Service
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {
 
+		// no change
 		if ss.serviceStateList[hostservice].Status == checkss.Status {
 			return "", false
 		}
+
+		// change
 		go reportStateChange(ss.serviceStateList[hostservice].Status, checkss)
 		return checkss.Status, false
 	}
 
+	// change, new service
 	go reportStateChange("", checkss)
 	return checkss.Status, true
 }

@@ -14,11 +14,15 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
  * Lightweight
  * HTTP(s) only, no special protocols
 
-## Golang Hello world
+## Golang
 
-`go build  ./cmd/dashgoat`
+`make build` or download a binary from the releases
 
 `./dashgoat -updatekey my-precious!`
+
+## Docker
+
+```docker run -e UPDATEKEY=my-precious! --rm --name=dashgoat analogbear/dashgoat```
 
 curl API example;
 
@@ -195,12 +199,6 @@ pagerdutyconfig:
       tag: customer23
       eapikey: ffff5acc39464b01d0105f123456ffff
 ```
-
-
-## Docker Hello world
-
-```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```
-
 
 ## Buddy system
 

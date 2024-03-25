@@ -14,6 +14,9 @@ all: prepare windows macintel macarm linux rpi
 prepare:
 	cp -R $(WEB_DIR) $(SOURCE_FILE)/web
 
+build: prepare
+	CGO_ENABLED=0 go build $(LDFLAGS) -o . $(SOURCE_FILE)
+
 windows: prepare
 	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o build/$(BINARY_NAME).exe $(SOURCE_FILE)
 

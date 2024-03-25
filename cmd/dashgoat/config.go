@@ -108,7 +108,7 @@ func (conf *Configer) InitConfig(config_path string) error {
 
 	file_exists := isExists(config_path, "file")
 	if !file_exists {
-		result = fmt.Errorf("Cant find Config file " + config_path + ", moving on")
+		logger.Info("Cant find Config file " + config_path + ", moving on")
 		config_path = ""
 	}
 

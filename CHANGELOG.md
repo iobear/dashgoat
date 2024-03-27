@@ -1,8 +1,9 @@
 # Changelog
-## [v1.6.dev] - 2024-03-19
+## [v1.6.dev] - 2024-03-27
 Add:
  - Config element logformat <txt/json>
  - Heartbeat via HTTP GET (uri) /heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags
+ - ack (acknowledge) to ServiceState
 
 ## [v1.6.0] - 2024-03-18
 Add:

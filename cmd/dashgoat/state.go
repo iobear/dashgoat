@@ -6,13 +6,9 @@
 
 package main
 
-import (
-	dg "github.com/iobear/dashgoat/common"
-)
-
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
-func iSnewState(checkss dg.ServiceState) (status string, new bool) {
+func iSnewState(checkss ServiceState) (status string, new bool) {
 	hostservice := checkss.Host + checkss.Service
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {
@@ -33,7 +29,7 @@ func iSnewState(checkss dg.ServiceState) (status string, new bool) {
 }
 
 // ReportStateChange
-func reportStateChange(fromstate string, reportss dg.ServiceState) {
+func reportStateChange(fromstate string, reportss ServiceState) {
 	logger.Info("statechange", "hostservice", reportss.Host+reportss.Service, "from", fromstate, "to", reportss.Status)
 
 	if config.PagerdutyConfig.PdMode != "off" {

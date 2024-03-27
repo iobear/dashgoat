@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	dg "github.com/iobear/dashgoat/common"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,7 +22,7 @@ func heartBeat(c echo.Context) error {
 	defer ss.mutex.Unlock()
 
 	var result string
-	var post_service_state dg.ServiceState
+	var post_service_state ServiceState
 
 	heartbeatkey := c.Param("heartbeatkey")
 	if heartbeatkey == "" {
@@ -87,7 +86,7 @@ func updateStatus(c echo.Context) error {
 	defer ss.mutex.Unlock()
 
 	var result = map[string]string{}
-	var post_service_state dg.ServiceState
+	var post_service_state ServiceState
 
 	if err := c.Bind(&post_service_state); err != nil {
 		return err
@@ -98,7 +97,7 @@ func updateStatus(c echo.Context) error {
 	}
 
 	post_service_state.UpdateKey = "valid"
-	post_service_state = dg.FilterUpdate(post_service_state)
+	post_service_state = FilterUpdate(post_service_state)
 	post_service_state = runDependOn(post_service_state)
 
 	host_service := ""

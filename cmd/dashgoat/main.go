@@ -16,7 +16,6 @@ import (
 	"strings"
 	"sync"
 
-	dg "github.com/iobear/dashgoat/common"
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -31,7 +30,7 @@ type (
 	}
 	Services struct {
 		mutex            sync.RWMutex
-		serviceStateList map[string]dg.ServiceState
+		serviceStateList map[string]ServiceState
 	}
 )
 
@@ -51,7 +50,7 @@ var serviceStateCollector *ServiceStateCollector
 func main() {
 	var configfile string
 
-	ss.serviceStateList = make(map[string]dg.ServiceState)
+	ss.serviceStateList = make(map[string]ServiceState)
 	backlog.buddyBacklog = make(map[string][]string)
 	backlog.StateDown = make(map[string]int64)
 

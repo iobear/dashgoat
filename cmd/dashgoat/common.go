@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package common
+package main
 
 import (
 	"strings"
@@ -24,6 +24,7 @@ type (
 		Probe         int64    `json:"probe"`
 		Change        int64    `json:"change"`
 		From          []string `json:"from"`
+		Ack           string   `json:"ack"`
 		Ttl           int      `json:"ttl"`
 		DependOn      string   `json:"dependon"`
 		UpdateKey     string

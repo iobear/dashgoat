@@ -13,8 +13,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	dg "github.com/iobear/dashgoat/common"
 )
 
 type PagerDutyEvent struct {
@@ -118,7 +116,7 @@ func shouldPagerDutyTrigger(severity_to_check string) bool {
 
 }
 
-func (c *PdClient) CompilePdEvent(fromstate string, dgss dg.ServiceState) {
+func (c *PdClient) CompilePdEvent(fromstate string, dgss ServiceState) {
 	var pdevent PagerDutyEvent
 
 	logger.Info("pdevent", "Severity", dgss.Severity)
@@ -155,7 +153,7 @@ func (c *PdClient) CompilePdEvent(fromstate string, dgss dg.ServiceState) {
 	}
 }
 
-func findKey(dgss dg.ServiceState) (pdkey string, pdmatch string) {
+func findKey(dgss ServiceState) (pdkey string, pdmatch string) {
 
 	var result string
 	var match string

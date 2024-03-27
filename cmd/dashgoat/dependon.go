@@ -9,8 +9,6 @@ package main
 import (
 	"fmt"
 	"strings"
-
-	dg "github.com/iobear/dashgoat/common"
 )
 
 // Looks for service or tag that a second service depends on
@@ -49,7 +47,7 @@ func isDependOnError(search_host_key string) string {
 	return ""
 }
 
-func runDependOn(ss dg.ServiceState) dg.ServiceState {
+func runDependOn(ss ServiceState) ServiceState {
 
 	if ss.Status != "ok" && ss.DependOn != "" {
 		msg := isDependOnError(ss.DependOn)

@@ -22,7 +22,7 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ## Docker
 
-```docker run -e UPDATEKEY=my-precious! --rm --name=dashgoat analogbear/dashgoat```
+```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```
 
 curl API example;
 

@@ -109,7 +109,11 @@ func main() {
 
 	// Add the web path prefix to the routes
 	e.GET(config.WebPath, echo.WrapHandler(assetHandler))
-	e.GET(config.WebPath+"/*", echo.WrapHandler(http.StripPrefix(config.WebPath, assetHandler)))
+	if config.WebPath == "/" {
+		e.GET("/*", echo.WrapHandler(http.StripPrefix(config.WebPath, assetHandler)))
+	} else {
+		e.GET(config.WebPath+"/*", echo.WrapHandler(http.StripPrefix(config.WebPath, assetHandler)))
+	}
 	e.HideBanner = true
 
 	e.Use(middleware.Recover())
@@ -125,6 +129,7 @@ func main() {
 
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)
 	e.GET(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
+	e.POST(add2url(config.WebPath, "/alertmanager"), fromAlertmanager)
 	e.POST(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
 	e.GET(add2url(config.WebPath, "/status/:id"), getStatus)
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)

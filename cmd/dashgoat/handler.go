@@ -149,7 +149,7 @@ func getStatusList(c echo.Context) error {
 	defer ss.mutex.RUnlock()
 
 	if len(ss.serviceStateList) == 0 {
-		return c.JSON(http.StatusNoContent, "")
+		return c.NoContent(http.StatusNoContent)
 	}
 
 	return c.JSON(http.StatusOK, ss.serviceStateList)

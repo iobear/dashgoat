@@ -1,9 +1,13 @@
 # Changelog
-## [v1.6.dev] - 2024-03-27
+## [v1.7.dev] - 2024-04-12
 Add:
  - Config element logformat <txt/json>
  - Heartbeat via HTTP GET (uri) /heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags
  - ack (acknowledge) to ServiceState
+
+Fix:
+ - Missing version number on dashboard
+ - webpath prefix
 
 ## [v1.6.0] - 2024-03-18
 Add:

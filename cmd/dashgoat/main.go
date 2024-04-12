@@ -104,15 +104,12 @@ func main() {
 		config.WebPath = "/" + config.WebPath
 	}
 
-	useOS := false
-	// Serving embedded static files
-	// if len(os.Args) > 1 && os.Args[1] == "live" {
-	// 	useOS = true
-	// }
-	assetHandler := http.FileServer(getFileSystem(useOS))
-	e.GET("/", echo.WrapHandler(assetHandler))
-	e.GET("/*", echo.WrapHandler(http.StripPrefix("/", assetHandler)))
+	dont_embed := false
+	assetHandler := http.FileServer(getFileSystem(dont_embed))
 
+	// Add the web path prefix to the routes
+	e.GET(config.WebPath, echo.WrapHandler(assetHandler))
+	e.GET(config.WebPath+"/*", echo.WrapHandler(http.StripPrefix(config.WebPath, assetHandler)))
 	e.HideBanner = true
 
 	e.Use(middleware.Recover())
@@ -137,7 +134,7 @@ func main() {
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
-	logger.Info("welcome", "dashGoat", readHostFacts().DashGoatVersion, "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName)
+	logger.Info("welcome", "dashGoat", readHostFacts().DashGoatVersion, "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName, "web path", config.WebPath)
 
 	go lostProbeTimer()
 	go ttlHousekeeping()

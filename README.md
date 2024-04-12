@@ -4,7 +4,7 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
-[CHANGELOG](CHANGELOG.md) [API](doc/API.md) [k8s](/deploy)
+[CHANGELOG](CHANGELOG.md) [API](doc/API.md) [k8s](/deploy/kubernetes)
 
 ## Features
 

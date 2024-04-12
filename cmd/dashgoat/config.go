@@ -48,6 +48,11 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("IPPORT") != "" {
 		config.IPport = os.Getenv("IPPORT")
 	}
+	//Look for Azure Functions Port
+	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
+		config.IPport = ":" + val
+		logger.Info("Port", "Found Azure FUNCTIONS_CUSTOMHANDLER_PORT", val)
+	}
 	if os.Getenv("WEBPATH") != "" {
 		conf.WebPath = os.Getenv("WEBPATH")
 	}

@@ -1,0 +1,28 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  },
+  "extensions": {
+    "http": {
+      "routePrefix": ""
+    }
+  },
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[3.*, 4.0.0)"
+  },
+  "customHandler": {
+    "description": {
+      "defaultExecutablePath": "dashgoat.exe",
+      "workingDirectory": "",
+      "arguments": []
+    },
+    "enableForwardingHttpRequest": true
+  }
+}

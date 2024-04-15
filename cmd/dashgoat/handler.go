@@ -24,13 +24,13 @@ func heartBeat(c echo.Context) error {
 	var result string
 	var post_service_state ServiceState
 
-	heartbeatkey := c.Param("heartbeatkey")
-	if heartbeatkey == "" {
-		return c.JSON(http.StatusUnauthorized, "Missing heartbeatkey")
+	urnkey := c.Param("urnkey")
+	if urnkey == "" {
+		return c.JSON(http.StatusUnauthorized, "Missing urnkey")
 	}
 
-	if !checkHeartBeatKey(heartbeatkey) {
-		return c.JSON(http.StatusUnauthorized, "Check your heartbeatkey")
+	if !checkUrnKey(urnkey) {
+		return c.JSON(http.StatusUnauthorized, "Check your urnkey")
 	}
 	post_service_state.UpdateKey = "valid"
 
@@ -97,7 +97,10 @@ func updateStatus(c echo.Context) error {
 	}
 
 	post_service_state.UpdateKey = "valid"
-	post_service_state = FilterUpdate(post_service_state)
+	post_service_state, err := filterUpdate(post_service_state)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, post_service_state)
+	}
 	post_service_state = runDependOn(post_service_state)
 
 	host_service := ""
@@ -232,9 +235,9 @@ func checkUpdatekey(key string) bool {
 	return key == config.UpdateKey
 }
 
-func checkHeartBeatKey(key string) bool {
-
-	return key == config.HeartBeatKey
+func checkUrnKey(key string) bool {
+	//logger.Info("Config urn", "key", config.UrnKey)
+	return key == config.UrnKey
 }
 
 func parseTags(tags string) []string {

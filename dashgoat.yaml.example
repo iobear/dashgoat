@@ -9,6 +9,8 @@ webpath: /
 logformat: txt
 # default changeme
 updatekey: my-precious!
+# default empty (off)
+urnkey:
 # default PromoteToOk, options <Remove/PromoteOnce/PromoteOneStep/PromoteToOk>
 ttlbehavior: PromoteToOk
 ttlokdelete: 300 # seconds to delete

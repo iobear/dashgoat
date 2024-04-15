@@ -85,11 +85,11 @@ curl http://127.0.0.1:2000/heartbeat/hdjsakl678dsa/router01/20/dsl,openwrt,home
 
 The input is as follows
 ```bash
-curl http://127.0.0.1:2000/heartbeat/<heartbeatkey>/<host>/<nextupdatesec>/<tags>
+curl http://127.0.0.1:2000/heartbeat/<urnkey>/<host>/<nextupdatesec>/<tags>
 ```
 
 When using HTTP GET you need to update the config with:
-`heartbeatkey: <key>` or use the enviroment variable `HEARTBEATKEY=<key>`
+`urnkey: <key>` or use the enviroment variable `URNKEY=<key>`
 
 ## TTL
 
@@ -163,6 +163,23 @@ curl --request POST \
 In this case if `loadbalancer-1` is down, all the services that has `"dependon": "loadbalancer-1"` will reduce status to `info` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags.
 <br /> In the above `Tags` example instead of using `dependon:trans-1`, you can use the ch2 tag `dependon:tr-ch2` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with `error` and `critical` and only show "upstream" errors.
 
+## Alertmanager
+
+You can forward the alerts from your diffrent alertmanagers to display on a dashgoat central screen or share with other systems. You need to set the `urnkey` in your dashgoat config for this to work.
+
+In alertmanager config, you need to add a webhook reciever:
+```yaml
+    receivers:
+      - name: Dashgoat
+        webhook_configs:
+        - send_resolved: true
+          url: https://<dashgoat host>/alertmanager/<urnkey>
+	route:
+	  - receiver: Alertmanager
+        repeat_interval: 5m
+        matchers:
+          - alertname != Watchdog
+```
 ## Prometheus
 
 `/metrics` is exposed by default, you can enable to show a host-service timeline in dashGoat by providing a url for your prometheus instance.
@@ -276,5 +293,5 @@ To include the config file:
  * Users +gravatar?
  * Ack event
  * Auth on delete
- * Automatic event cleanup
  * dashGoat client
+ * clean up main.go

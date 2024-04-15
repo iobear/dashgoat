@@ -128,9 +128,9 @@ func main() {
 	e.GET(add2url(config.WebPath, "/metricshistory/:serviceid/:hours"), getMetricsHistory)
 
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)
-	e.GET(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
-	e.POST(add2url(config.WebPath, "/alertmanager"), fromAlertmanager)
-	e.POST(add2url(config.WebPath, "/heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags"), heartBeat)
+	e.GET(add2url(config.WebPath, "/heartbeat/:urnkey/:host/:nextupdatesec/:tags"), heartBeat)
+	e.POST(add2url(config.WebPath, "/alertmanager/:urnkey"), fromAlertmanager)
+	e.POST(add2url(config.WebPath, "/heartbeat/:urnkey/:host/:nextupdatesec/:tags"), heartBeat)
 	e.GET(add2url(config.WebPath, "/status/:id"), getStatus)
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)
 	e.GET(add2url(config.WebPath, "/status/listmso"), getStatusListMSO)

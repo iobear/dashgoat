@@ -7,6 +7,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -32,10 +33,15 @@ type (
 )
 
 // ValidateUpdate
-func FilterUpdate(ss ServiceState) ServiceState {
+func filterUpdate(ss ServiceState) (ServiceState, error) {
 
+	if ss.Host == "" || ss.Service == "" {
+		return ss, fmt.Errorf("missing Host or Service value")
+	}
+
+	this_is_now := time.Now().Unix()
 	if ss.Probe == 0 {
-		ss.Probe = time.Now().Unix()
+		ss.Probe = this_is_now
 	}
 
 	msglength := len(ss.Message)
@@ -69,5 +75,5 @@ func FilterUpdate(ss ServiceState) ServiceState {
 	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
 	ss.Service = strings.ToLower(ss.Service)
 
-	return ss
+	return ss, nil
 }

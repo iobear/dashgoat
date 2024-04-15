@@ -1,9 +1,11 @@
 # Changelog
-## [v1.7.dev] - 2024-04-12
+## [v1.7.dev] - 2024-04-15
 Add:
  - Config element logformat <txt/json>
- - Heartbeat via HTTP GET (uri) /heartbeat/:heartbeatkey/:host/:nextupdatesec/:tags
+ - Heartbeat via HTTP GET (uri) /heartbeat/:urikey/:host/:nextupdatesec/:tags
+ - Alertmanager Webhook
  - ack (acknowledge) to ServiceState
+ - Listen for Azure functions port
 
 Fix:
  - Missing version number on dashboard

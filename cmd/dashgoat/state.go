@@ -8,7 +8,7 @@ package main
 
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
-func iSnewState(checkss ServiceState) (status string, new bool) {
+func iSnewState(checkss ServiceState) (change string, new_service bool) {
 	hostservice := checkss.Host + checkss.Service
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {

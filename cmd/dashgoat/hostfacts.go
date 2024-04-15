@@ -62,7 +62,7 @@ func generateHostFacts() {
 		logger.Info("HostFacts", "MetricsHistory", "on")
 	}
 
-	if config.HeartBeatKey == "" {
+	if config.UrnKey == "" {
 		logger.Warn("No HeartBeatKey")
 	}
 }

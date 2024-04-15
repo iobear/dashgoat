@@ -34,7 +34,7 @@ type (
 		DisableDependOn       bool     `yaml:"disableDependOn"`
 		DisableMetrics        bool     `yaml:"disableMetrics"`
 		Prometheusurl         string   `yaml:"prometheusurl"`
-		HeartBeatKey          string   `yaml:"heartbeatkey"`
+		UrnKey                string   `yaml:"urnkey"`
 		PagerdutyConfig       PdConfig `yaml:"pagerdutyconfig"`
 	}
 )
@@ -48,11 +48,6 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("IPPORT") != "" {
 		config.IPport = os.Getenv("IPPORT")
 	}
-	//Look for Azure Functions Port
-	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
-		config.IPport = ":" + val
-		logger.Info("Port", "Found Azure FUNCTIONS_CUSTOMHANDLER_PORT", val)
-	}
 	if os.Getenv("WEBPATH") != "" {
 		conf.WebPath = os.Getenv("WEBPATH")
 	}
@@ -62,8 +57,8 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("UPDATEKEY") != "" {
 		conf.UpdateKey = os.Getenv("UPDATEKEY")
 	}
-	if os.Getenv("HEARTBEATKEY") != "" {
-		conf.HeartBeatKey = os.Getenv("HEARTBEATKEY")
+	if os.Getenv("URNKEY") != "" {
+		conf.UrnKey = os.Getenv("URNKEY")
 	}
 	if os.Getenv("CHECKBUDDYINTERVALSEC") != "" {
 		conf.CheckBuddyIntervalSec = str2int(os.Getenv("CHECKBUDDYINTERVALSEC"))
@@ -181,7 +176,11 @@ func (conf *Configer) InitConfig(config_path string) error {
 		return err
 	}
 
+	found := mabyeAzureFunction()
+	logger.Info("Azure config", "found", found)
+
 	generateHostFacts()
+
 	return result
 }
 
@@ -201,4 +200,15 @@ func validateBuddyConf() error {
 	}
 
 	return nil
+}
+
+func mabyeAzureFunction() bool {
+
+	//Look for Azure Functions Port
+	if os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT") != "" {
+		config.IPport = ":" + os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT")
+		return true
+	}
+
+	return false
 }

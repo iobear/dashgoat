@@ -2,6 +2,7 @@ VERSION = $(shell git tag -l --sort=-creatordate | head -n 1)
 COMMIT = $(shell git describe --always)
 BUILD_DATE = $(shell date +%Y-%m-%d)
 LDFLAGS = -ldflags="-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.BuildDate=$(BUILD_DATE)'"
+DOCKERFILE_PATH = "build/package/Dockerfile"
 
 .PHONY: all windows macintel macarm linux rpi prepare
 
@@ -31,6 +32,9 @@ linux: prepare
 
 rpi: prepare
 	GOOS=linux GOARCH=arm GOARM=5 go build $(LDFLAGS) -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
+
+docker: prepare
+	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t analogbear/dashgoat:$(VERSION) .
 
 ci:
 	./tests/link-bin.sh

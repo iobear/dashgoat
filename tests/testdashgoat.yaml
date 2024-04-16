@@ -1,0 +1,16 @@
+# default dashGoat
+dashName: TESTdash
+buddyDownStatusMsg: info
+# default :2000
+ipport: :2000
+# default /
+webpath: /
+# default txt, options <txt/json>
+logformat: txt
+# default changeme
+updatekey: changeme
+# default empty (off)
+urnkey: 1TvdcoH5RTTTTKLS6CF
+# default PromoteToOk, options <Remove/PromoteOnce/PromoteOneStep/PromoteToOk>
+ttlbehavior: PromoteToOk
+ttlokdelete: 60 # seconds to delete

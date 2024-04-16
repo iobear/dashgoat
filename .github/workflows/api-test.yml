@@ -44,5 +44,8 @@ jobs:
     - name: Heartbeat test
       run: ./tests/heartbeat-test.sh
 
+    - name: Alertmanager test
+      run: ./tests/alertmanager-test.sh
+
     - name: End test
       run: ./tests/stop-instances.sh

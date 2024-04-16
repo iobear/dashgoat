@@ -36,13 +36,14 @@ rpi: prepare
 docker: prepare
 	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t analogbear/dashgoat:$(VERSION) .
 
-ci:
+test:
 	./tests/link-bin.sh
 	./tests/start-single.sh
 	./tests/ttl-test.sh
 	./tests/nextupdate-test.sh
 	./tests/metrics-test.sh
 	./tests/tags-test.sh
+	./tests/alertmanager-test.sh
 	./tests/stop-instances.sh
 
 clean:

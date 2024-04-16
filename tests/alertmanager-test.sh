@@ -6,10 +6,9 @@ else
   STATUS="resolved"
 fi
 
-# Alertmanager webhook URL
-url="http://localhost:2000/alertmanager/1TvdcoH5RTTTTKLS6CF"
+BASE_URL="http://localhost:2000"
+url=$BASE_URL"/alertmanager/1TvdcoH5RTTTTKLS6CF"
 
-# JSON payload
 data='{
   "version": "4",
   "groupKey": "{}:{}",
@@ -39,5 +38,32 @@ data='{
   ]
 }'
 
-# Send POST request
-curl -v -X POST -H "Content-Type: application/json" -d "${data}" ${url}
+echo "Updating dashgoat with Alertmanager alert"
+curl -X POST -H "Content-Type: application/json" -d "${data}" ${url}
+
+
+RESPONSE=$(curl -s "$BASE_URL/status/list")
+
+echo "Validate the response against the expected values"
+SERVICE=$(echo "$RESPONSE" | jq '.["cluster-0testapp"].service')
+
+if [[ "$SERVICE" != '"testapp"' ]]; then
+  echo "Wrong API response for .service"
+  echo "$SERVICE"
+  exit 1
+fi
+
+HOST=$(echo "$RESPONSE" | jq '.["cluster-0testapp"].host')
+if [[ "$HOST" != '"cluster-0"' ]]; then
+  echo "Wrong API response for .host"
+  echo "$HOST"
+  exit 1
+fi
+
+STATUS=$(echo "$RESPONSE" | jq '.["cluster-0testapp"].status')
+if [[ "$STATUS" != '"error"' ]]; then
+  echo "Wrong API response for .status"
+  exit 1
+fi
+
+echo "Test OK, Service: $SERVICE, Host: $HOST, Status: $STATUS"

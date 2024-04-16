@@ -229,7 +229,7 @@ function selectHeader()
 
 function insertBackendAppData(data)
 {
-	backend_app_data['metrics_history'] = data['MetricsHistory'];
+	backend_app_data['metrics_history'] = data['Prometheus'];
 	document.title = data['DashName'];
 	document.getElementById("dashname").textContent = data['DashName'];
 	document.getElementById("dashversion").textContent = data['DashGoatVersion'];

@@ -139,7 +139,8 @@ func main() {
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 
-	logger.Info("welcome", "dashGoat", readHostFacts().DashGoatVersion, "Go", readHostFacts().GoVersion, "Labstack Echo", echo.Version, "Dashboard name", readHostFacts().DashName, "web path", config.WebPath)
+	logger.Info("welcome", "HostFacts", readHostFacts())
+	logger.Warn("main.go", "web path", config.WebPath)
 
 	go lostProbeTimer()
 	go ttlHousekeeping()

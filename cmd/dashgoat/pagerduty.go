@@ -58,7 +58,7 @@ func validatePagerdutyConf() error {
 	}
 
 	if len(config.PagerdutyConfig.PdServiceMaps) == 0 {
-		logger.Info("no pagerdutyservicemaps, setting pagerdutymode off")
+		logger.Debug("no pagerdutyservicemaps, setting pagerdutymode off")
 		config.PagerdutyConfig.PdMode = "off"
 		return result
 	}

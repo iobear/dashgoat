@@ -19,7 +19,10 @@ type (
 		UpAtEpoch       int64
 		DashGoatVersion string
 		GoVersion       string
+		BuildDate       string
 		MetricsHistory  bool
+		Prometheus      bool
+		Commit          string
 	}
 
 	HostFacts struct {
@@ -39,6 +42,8 @@ func generateHostFacts() {
 	host_facts.Items.UpAt = time.Now()
 	host_facts.Items.DashGoatVersion = Version
 	host_facts.Items.GoVersion = runtime.Version()
+	host_facts.Items.BuildDate = BuildDate
+	host_facts.Items.Commit = Commit
 
 	hostname, _ := os.Hostname()
 	IPhost := ""
@@ -47,19 +52,25 @@ func generateHostFacts() {
 		IPhost = hostname + "_" + ip
 		host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, IPhost)
 	}
+
 	if len(host_facts.Items.Hostnames) == 0 {
 		logger.Error("Cant find an IP address, check ignorePrefix config")
 		os.Exit(1)
 	}
-	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
-	logger.Info("Welcome", "Hostnames found", host_facts.Items.Hostnames)
 
-	if config.DisableMetrics && config.Prometheusurl == "" {
+	host_facts.Items.Hostnames = append(host_facts.Items.Hostnames, config.DashName)
+	logger.Debug("Welcome", "Hostnames found", host_facts.Items.Hostnames)
+
+	if config.DisableMetrics {
 		host_facts.Items.MetricsHistory = false
-		logger.Info("HostFacts", "MetricsHistory", "off")
+		logger.Debug("HostFacts", "MetricsHistory", "off")
 	} else {
 		host_facts.Items.MetricsHistory = true
-		logger.Info("HostFacts", "MetricsHistory", "on")
+		logger.Debug("HostFacts", "MetricsHistory", "on")
+	}
+
+	if config.Prometheusurl == "" {
+		host_facts.Items.Prometheus = false
 	}
 
 	if config.UrnKey == "" {

@@ -4,14 +4,14 @@ echo
 echo "-- heartbeat test --"
 
 BASE_URL="http://localhost:2000"
-HEARTBEAT_KEY="TmwW8kOO1Cmks54TA"
+URNKEY="1TvdcoH5RTTTTKLS6CF"
 
 hosts=("web-1" "mail-1" "storage-1")
 
 for host in "${hosts[@]}"; do
     echo "Updating status for service: $service"
 
-    curl -X POST "$BASE_URL/heartbeat/$HEARTBEAT_KEY/$host/5/help" \
+    curl -X POST "$BASE_URL/heartbeat/$URNKEY/$host/5/help" \
 
 done
 
@@ -35,5 +35,4 @@ for host in "${hosts[@]}"; do
         echo
         exit 1
     fi
-
 done

@@ -6,5 +6,5 @@ vendor/
 
 build/dashgoa*
 tmp
-#app
-#dashgoat
+.vscode
+dashgoat.yaml

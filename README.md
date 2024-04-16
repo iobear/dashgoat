@@ -174,8 +174,8 @@ In alertmanager config, you need to add a webhook reciever:
         webhook_configs:
         - send_resolved: true
           url: https://<dashgoat host>/alertmanager/<urnkey>
-	route:
-	  - receiver: Alertmanager
+    route:
+      - receiver: Alertmanager
         repeat_interval: 5m
         matchers:
           - alertname != Watchdog

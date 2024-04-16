@@ -63,7 +63,7 @@ func generateHostFacts() {
 	}
 
 	if config.UrnKey == "" {
-		logger.Warn("No HeartBeatKey")
+		logger.Warn("No UrnKey")
 	}
 }
 

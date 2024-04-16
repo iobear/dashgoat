@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z $1 ]; then
+  STATUS="firing"
+else
+  STATUS="resolved"
+fi
+
 # Alertmanager webhook URL
 url="http://localhost:2000/alertmanager/1TvdcoH5RTTTTKLS6CF"
 
@@ -7,7 +13,7 @@ url="http://localhost:2000/alertmanager/1TvdcoH5RTTTTKLS6CF"
 data='{
   "version": "4",
   "groupKey": "{}:{}",
-  "status": "firing",
+  "status": "'$STATUS'",
   "receiver": "webhook",
   "groupLabels": {
     "alertname": "TestAlert"

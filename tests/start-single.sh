@@ -4,7 +4,7 @@ echo
 echo "-- start-single --"
 
 BASE_URL="http://localhost:2000"
-HEARTBEATKEY="TmwW8kOO1Cmks54TA" ./dashgoat $1 &
+./dashgoat $1 -configfile tests/testdashgoat.yaml &
 
 PID=$!  # Get the PID
 echo $PID > PID-SINGLE-$PID

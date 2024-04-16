@@ -45,8 +45,6 @@ func fromAlertmanager(c echo.Context) error {
 		logger.Error("updateAlertmanager", "error decoding message", err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	// do something here
-	logger.Info("updateAlertmanager", "[Body]", &message)
 
 	urnkey := c.Param("urnkey")
 	if urnkey == "" {
@@ -117,17 +115,18 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 		//state change
 		if change != "" {
 			post_service_state.Change = this_is_now
+			logger.Debug("there is a change 1")
 		} else {
 			if new_service {
 				//new service, state change
 				post_service_state.Change = this_is_now
+				logger.Debug("New service")
 			}
 		}
 		//No change recorded, setting change time
-		if ss.serviceStateList[host_service].Change == 0 {
-			post_service_state.Change = this_is_now
-		} else {
+		if post_service_state.Change == 0 {
 			post_service_state.Change = ss.serviceStateList[host_service].Change
+			logger.Debug("No change recorded")
 		}
 
 		post_service_state, err = filterUpdate(post_service_state)
@@ -155,6 +154,8 @@ func parseAlertmanagerAlert(alert Alert, service_state ServiceState) (ServiceSta
 }
 
 func printDebugAlertManager(message HookMessage) {
+
+	logger.Info("updateAlertmanager", "[Body]", &message)
 
 	fmt.Println("-start Hook-")
 

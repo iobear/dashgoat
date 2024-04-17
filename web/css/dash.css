@@ -18,7 +18,7 @@ body {
 
 .divTableRow {
   font-weight: inherit;
-  text-transform: capitalize;
+  text-transform: none;
   display: flex;
   margin-top: 8px;
   border-left-width: 0.7em;

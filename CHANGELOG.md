@@ -1,5 +1,5 @@
 # Changelog
-## [v1.7.dev] - 2024-04-15
+## [v1.7.0] - 2024-04-18
 Add:
  - Config element logformat <txt/json>
  - Heartbeat via HTTP GET (uri) /heartbeat/:urikey/:host/:nextupdatesec/:tags

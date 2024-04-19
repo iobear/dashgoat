@@ -1,4 +1,8 @@
 # Changelog
+## [v1.7.1] - 2024-04-19
+Change:
+ - Upgrade Go dependencies
+
 ## [v1.7.0] - 2024-04-18
 Add:
  - Config element logformat <txt/json>

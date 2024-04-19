@@ -89,22 +89,23 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 	post_service_state.Status = status
 	post_service_state.Host = message.CommonLabels["prometheus_cluster"]
 	if post_service_state.Host == "" {
+		post_service_state.Host = message.CommonLabels["cluster"]
+	}
+	if post_service_state.Host == "" {
 		post_service_state.Host = message.CommonLabels["prometheus"]
 	}
 	if post_service_state.Host == "" {
-		err := fmt.Errorf("missing CommonLabels['prometheus_cluster'] or CommonLabels['prometheus']")
+		err := fmt.Errorf("missing CommonLabels['prometheus_cluster'], CommonLabels['cluster'] or CommonLabels['prometheus']")
 		return err
 	}
 	post_service_state.Service = message.CommonLabels["namespace"]
 	if message.CommonLabels["namespace"] == "" {
-		logger.Error("parseAlertmanagerHookMessage", "missing", "CommonLabels['namespace']")
+		logger.Info("parseAlertmanagerHookMessage", "missing", "CommonLabels['namespace']")
 	}
 	post_service_state.From = append(post_service_state.From, post_service_state.Host)
 
-	host_service := post_service_state.Host + post_service_state.Service
-
 	this_is_now := time.Now().Unix()
-	for _, alert := range message.Alerts {
+	for _, alert := range message.Alerts { //parsing the alerts
 
 		post_service_state, err := parseAlertmanagerAlert(alert, post_service_state)
 		if err != nil {
@@ -123,6 +124,9 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 				logger.Debug("New service")
 			}
 		}
+
+		host_service := post_service_state.Host + post_service_state.Service
+
 		//No change recorded, setting change time
 		if post_service_state.Change == 0 {
 			post_service_state.Change = ss.serviceStateList[host_service].Change
@@ -143,10 +147,24 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 
 func parseAlertmanagerAlert(alert Alert, service_state ServiceState) (ServiceState, error) {
 
-	service_state.Message = alert.Labels["alertname"] + " - " + alert.Annotations["summary"]
+	service_state.Message = alert.Labels["alertname"] + " - " + alert.Annotations["summary"] + " - " + alert.Labels["container"]
 	if alert.Annotations["summary"] == "" {
 		err := fmt.Errorf("missing alert Annotations['summary']")
 		logger.Error("parseAlertmanagerAlert", "ServiceState.message", err)
+	}
+
+	//Have found namespace in CommonLabels
+	if service_state.Service == "" {
+		service_state.Service = alert.Labels["namespace"]
+	}
+	if service_state.Service == "" {
+		service_state.Service = alert.Labels["container"]
+	}
+	if service_state.Service == "" {
+		service_state.Service = alert.Labels["alertname"]
+	}
+	if service_state.Service == "" {
+		logger.Error("parseAlertmanagerAlert", "service", "Cant find namespace or container", "alert object", alert.Labels)
 	}
 
 	return service_state, nil
@@ -172,7 +190,6 @@ func printDebugAlertManager(message HookMessage) {
 
 	for _, alert := range message.Alerts {
 		fmt.Println("-start alert-")
-		fmt.Println(alert.Labels)
 		fmt.Println("-Labels-")
 		fmt.Println(alert.Labels)
 		fmt.Println("-Annotations-")

@@ -12,6 +12,7 @@ services_with_tags=(
     '"service": "nginx", "tags": ["web", "production"]'
     '"service": "database", "tags": ["db", "production"]'
     '"service": "cache", "tags": ["cache", "development"]'
+    '"service": "storage", "tags": ["storage", "development"]'
 )
 
 for service_with_tags in "${services_with_tags[@]}"; do

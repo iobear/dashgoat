@@ -130,6 +130,8 @@ func (conf *Configer) InitConfig(config_path string) error {
 
 	if conf.DashName == "" {
 		conf.DashName = "dashGoat"
+	} else {
+		conf.DashName = strings.ToLower(conf.DashName)
 	}
 
 	// Buddy settings
@@ -192,6 +194,8 @@ func validateBuddyConf() error {
 		if buddy.Name == "" {
 			message = fmt.Errorf("Missing buddyname, for " + buddy.Url)
 			return message
+		} else {
+			buddy.Name = strings.ToLower(buddy.Name)
 		}
 
 		if buddy.Key == "" {

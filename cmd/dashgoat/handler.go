@@ -115,16 +115,17 @@ func updateStatus(c echo.Context) error {
 		post_service_state.From = append(post_service_state.From, "127.0.0.1")
 	}
 
-	this_is_now := time.Now().Unix()
-	status, new := iSnewState(post_service_state) // Informs abount state change
-	if status == "" {
-		if new {
-			post_service_state.Change = this_is_now
-		}
-	} else {
-		post_service_state.Change = this_is_now
+	post_service_state, err = filterUpdate(post_service_state)
+	if err != nil {
+		return err
 	}
-	post_service_state.Probe = this_is_now
+
+	status, new := iSnewState(post_service_state) // Informs abount state change
+	if status == "" && !new {
+		post_service_state.Change = ss.serviceStateList[host_service].Change
+	} else {
+		post_service_state.Change = time.Now().Unix()
+	}
 
 	ss.serviceStateList[host_service] = post_service_state
 

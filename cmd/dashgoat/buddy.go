@@ -69,7 +69,7 @@ func talkToBuddyApiDelete(hosturl string, delete string) {
 func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 	my_hostnames := readHostFacts().Hostnames
 
-	my_name := config.DashName
+	my_name := strings.ToLower(config.DashName)
 
 	if host.NSconfig != "" {
 		my_name = my_hostnames[0]
@@ -142,9 +142,9 @@ func findBuddy(buddyConfig []Buddy) {
 	for {
 		for _, bhost := range listBuddies() {
 			if !contains(readHostFacts().Hostnames, bhost.Name) {
-				tellBuddyState(bhost.Name, false, "")
 				healthy := askHealth(bhost)
 				if healthy && firstRound {
+					tellBuddyState(bhost.Name, false, "")
 					firstRound = false
 					err := UpdateFromBuddy(bhost)
 					if err != nil {
@@ -307,7 +307,7 @@ func AskApiFullStatusList(bhost Buddy) error {
 	}
 
 	for servicehost, status := range resultMap {
-		if status.Service != "Buddy" {
+		if status.Service != "buddy" {
 			ss.serviceStateList[servicehost] = status
 		}
 	}
@@ -338,27 +338,46 @@ func serviceListDeleteBuddy(ok_buddies []Buddy) {
 func tellServiceListAboutBuddy(buddyName string, up bool) {
 	var result ServiceState
 
+	if buddyName == readHostFacts().DashName { //do not report my self
+		return
+	}
+
+	time_now := time.Now().Unix()
+
+	ss.mutex.Lock()
+	defer ss.mutex.Unlock()
+
 	serviceName := buddyName + "buddy"
 
-	result.Service = "Buddy"
+	result.Service = "buddy"
 	result.Host = buddyName
-	result.Severity = "error"
-	result.Probe = 0
-	result.Change = time.Now().Unix()
+
+	if ss.serviceStateList[serviceName].Status != result.Status {
+		result.Change = time_now
+	} else if ss.serviceStateList[serviceName].Change == 0 {
+		result.Change = time_now
+	}
+
 	result.From = append(result.From, config.DashName)
 	result.UpdateKey = "valid"
 	if up {
 		result.Status = "ok"
-		result.Message = ""
+		result.Message = "buddy up"
+		result.Severity = "info"
 	} else {
 		result.Status = strings.ToLower(config.BuddyDownStatusMsg)
-		result.Message = "My buddy is down"
+		result.Severity = result.Status
+		result.Message = "buddy is down"
 	}
 
+	result, err := filterUpdate(result)
+	if err != nil {
+		logger.Error("tellServiceListAboutBuddy", "error", err)
+	}
+
+	//	logger.Info("tellServiceListAboutBuddy", "debugger", result)
 	iSnewState(result)
 
-	ss.mutex.Lock()
-	defer ss.mutex.Unlock()
 	ss.serviceStateList[serviceName] = result
 
 }

@@ -123,7 +123,7 @@ func (c *PdClient) CompilePdEvent(fromstate string, dgss ServiceState) {
 
 	pdkey, _ := findKey(dgss)
 	if pdkey == "" {
-		logger.Info("No key found " + dgss.Host)
+		logger.Debug("No match found for PagerDuty " + dgss.Host)
 		return
 	}
 

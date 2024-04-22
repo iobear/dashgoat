@@ -36,6 +36,7 @@ var buddyRunningConfig BuddyConfig
 func initBuddyConf(rawConfig []Buddy) {
 
 	for _, buddy := range rawConfig {
+		buddy.Name = strings.ToLower(buddy.Name)
 		if !buddy.Down {
 			addBuddy(buddy)
 		}
@@ -207,7 +208,7 @@ func lookForIPs() bool {
 	err, new_ip := ipLookup()
 
 	if err != nil {
-		fmt.Println(err)
+		logger.Error("lookForIPs", "error", err)
 	}
 
 	return new_ip
@@ -224,7 +225,7 @@ func findDNSBuddies() {
 func loopFindDNSBuddies() {
 
 	for {
-		fmt.Println("Running loopFindDNSBuddies - sleep 20 Sec")
+		logger.Info("loopFindDNSBuddies", "loop", "sleep 20 Sec")
 		time.Sleep(20 * time.Second)
 		findDNSBuddies()
 	}

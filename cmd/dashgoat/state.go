@@ -6,10 +6,12 @@
 
 package main
 
+import "strings"
+
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
 func iSnewState(checkss ServiceState) (change string, new_service bool) {
-	hostservice := checkss.Host + checkss.Service
+	hostservice := strings.ToLower(checkss.Host) + strings.ToLower(checkss.Service)
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {
 

@@ -37,7 +37,7 @@ func generateHostFacts() {
 	host_facts.mutex.Lock()
 	defer host_facts.mutex.Unlock()
 
-	host_facts.Items.DashName = config.DashName
+	host_facts.Items.DashName = strings.ToLower(config.DashName)
 	host_facts.Items.UpAtEpoch = time.Now().Unix()
 	host_facts.Items.UpAt = time.Now()
 	host_facts.Items.DashGoatVersion = Version

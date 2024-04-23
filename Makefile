@@ -34,7 +34,7 @@ rpi: prepare
 	GOOS=linux GOARCH=arm GOARM=5 go build $(LDFLAGS) -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
 
 docker: prepare
-	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t analogbear/dashgoat:$(VERSION) .
+	docker build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t analogbear/dashgoat:$(VERSION) -t analogbear/dashgoat:latest .
 
 test:
 	./tests/link-bin.sh

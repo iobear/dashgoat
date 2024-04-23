@@ -1,7 +1,12 @@
 # Changelog
-## [v1.7.1] - 2024-04-19
+## [v1.7.3] - 2024-04-23
 Change:
  - Upgrade Go dependencies
+
+Fix:
+ - Buddy state inconsistencies
+ - Buddy state race problems, making the app reset dataset
+ - Change timestamp not updated correctly
 
 ## [v1.7.0] - 2024-04-18
 Add:

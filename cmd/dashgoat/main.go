@@ -50,9 +50,14 @@ var serviceStateCollector *ServiceStateCollector
 func main() {
 	var configfile string
 
+	ss.mutex.Lock()
 	ss.serviceStateList = make(map[string]ServiceState)
+	ss.mutex.Unlock()
+
+	backlog.mutex.Lock()
 	backlog.buddyBacklog = make(map[string][]string)
 	backlog.StateDown = make(map[string]int64)
+	backlog.mutex.Unlock()
 
 	e := echo.New()
 

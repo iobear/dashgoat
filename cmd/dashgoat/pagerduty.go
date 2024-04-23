@@ -112,6 +112,7 @@ func shouldPagerDutyTrigger(severity_to_check string) bool {
 	trigger_level := indexOf(severitys[:], config.PagerdutyConfig.TriggerLevel)
 	to_check := indexOf(severitys[:], severity_to_check)
 
+	logger.Info("shouldPagerDutyTrigger", "severity_to_check", to_check, "trigger_level", trigger_level)
 	return to_check >= trigger_level
 
 }
@@ -148,7 +149,7 @@ func (c *PdClient) CompilePdEvent(fromstate string, dgss ServiceState) {
 
 	err := pdClient.TellPagerDuty(pdevent)
 	if err != nil {
-		logger.Error("Error sending to PagerDuty:", err)
+		logger.Error("CompilePdEvent", "error", "update was not send")
 
 	}
 }
@@ -190,7 +191,7 @@ func (c *PdClient) TellPagerDuty(pdevent PagerDutyEvent) error {
 
 	req, err := http.NewRequest("POST", c.config.URL, payload)
 	if err != nil {
-		logger.Error("PagerDuty POST failed", err)
+		logger.Error("TellPagerDuty", "POST failed", err)
 		return err
 	}
 
@@ -198,13 +199,14 @@ func (c *PdClient) TellPagerDuty(pdevent PagerDutyEvent) error {
 
 	res, err := client.Do(req)
 	if err != nil {
-		logger.Error("PagerDuty error client", err)
+		logger.Error("TellPagerDuty", "Do error", err)
+		return err
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		logger.Error("Failed reading PagerDuty response", err)
+		logger.Error("TellPagerDuty", "ReadAll PagerDuty", err)
 		return err
 	}
 

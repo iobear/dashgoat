@@ -24,6 +24,42 @@ type (
 	}
 )
 
+// setStateDown on buddy backlog
+func setStateDown(host string, data int64) {
+	if host == "" {
+		logger.Info("setStateDown", "error", "no host")
+		return
+	}
+
+	backlog.mutex.Lock()
+	defer backlog.mutex.Unlock()
+	backlog.StateDown[host] = data
+}
+
+// getStateDown on buddy backlog
+func getStateDown() map[string]int64 {
+	backlog.mutex.RLock()
+	defer backlog.mutex.RUnlock()
+
+	copy := make(map[string]int64)
+	for k, v := range backlog.StateDown {
+		copy[k] = v
+	}
+	return copy
+}
+
+// setBacklog on buddy backlog
+func setBacklog(host string, data []string) {
+	if host == "" {
+		logger.Info("setBacklog", "error", "no host")
+		return
+	}
+
+	backlog.mutex.Lock()
+	defer backlog.mutex.Unlock()
+	backlog.buddyBacklog[host] = data
+}
+
 // Update Buddies with newly recieved msg
 func updateBuddy(event ServiceState, delete string) {
 	to_update := listBuddies()
@@ -32,9 +68,7 @@ func updateBuddy(event ServiceState, delete string) {
 		return //No buddy to tell
 	}
 
-	backlog.mutex.RLock()
-	buddyDown := backlog.StateDown
-	backlog.mutex.RUnlock()
+	buddyDown := getStateDown()
 
 	for _, bhost := range to_update {
 		if !contains(event.From, bhost.Name) {
@@ -117,7 +151,7 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 func findBuddy(buddyConfig []Buddy) {
 
 	initBuddyConf(buddyConfig)
-	buddyAmount := len(buddyRunningConfig.Buddies)
+	buddyAmount := len(listBuddies())
 
 	if buddyAmount < 1 {
 		setDashGoatReady(true)
@@ -167,29 +201,30 @@ func findBuddy(buddyConfig []Buddy) {
 
 // report back to UI, stausList
 func tellBuddyState(host string, up bool, servicehost string) {
+	var empty_slice []string
+	var default_int64 int64
 
 	now := time.Now()
-	backlog.mutex.Lock()
-	defer backlog.mutex.Unlock()
 
 	if _, ok := backlog.StateDown[host]; !ok {
-		backlog.StateDown[host] = 0
+		setStateDown(host, default_int64)
 	}
 
 	if up {
-		if backlog.StateDown[host] != 0 {
+		if getStateDown()[host] != 0 {
 			tellServiceListAboutBuddy(host, up)
 		}
-		backlog.StateDown[host] = 0
+		setStateDown(host, default_int64)
 		deliverBacklog(host, backlog.buddyBacklog[host])
-		backlog.buddyBacklog[host] = nil
+		setBacklog(host, empty_slice) //empty backlog for host
 	} else {
 		if servicehost != "" {
-			backlog.buddyBacklog[host] = append(backlog.buddyBacklog[host], servicehost)
+			backlog_tmp := append(backlog.buddyBacklog[host], servicehost)
+			setBacklog(host, backlog_tmp)
 		}
 		if backlog.StateDown[host] == 0 {
 			tellServiceListAboutBuddy(host, up)
-			backlog.StateDown[host] = now.Unix()
+			setStateDown(host, now.Unix())
 		}
 	}
 }
@@ -308,7 +343,9 @@ func AskApiFullStatusList(bhost Buddy) error {
 
 	for servicehost, status := range resultMap {
 		if status.Service != "buddy" {
+			ss.mutex.Lock()
 			ss.serviceStateList[servicehost] = status
+			ss.mutex.Unlock()
 		}
 	}
 
@@ -375,7 +412,6 @@ func tellServiceListAboutBuddy(buddyName string, up bool) {
 		logger.Error("tellServiceListAboutBuddy", "error", err)
 	}
 
-	//	logger.Info("tellServiceListAboutBuddy", "debugger", result)
 	iSnewState(result)
 
 	ss.serviceStateList[serviceName] = result

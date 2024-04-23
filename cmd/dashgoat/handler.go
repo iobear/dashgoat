@@ -76,6 +76,9 @@ func heartBeat(c echo.Context) error {
 	result = post_service_state.Host + post_service_state.Service
 
 	ss.serviceStateList[result] = post_service_state
+
+	go updateBuddy(post_service_state, "")
+
 	return c.JSON(http.StatusOK, result)
 }
 
@@ -237,7 +240,6 @@ func checkUpdatekey(key string) bool {
 }
 
 func checkUrnKey(key string) bool {
-	//logger.Info("Config urn", "key", config.UrnKey)
 	return key == config.UrnKey
 }
 

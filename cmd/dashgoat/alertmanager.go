@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -73,7 +74,7 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 	var post_service_state ServiceState
 
 	post_service_state.UpdateKey = "valid"
-	post_service_state.Severity = message.CommonLabels["severity"]
+	post_service_state.Severity = strings.ToLower(message.CommonLabels["severity"])
 	if message.CommonLabels["severity"] == "" {
 		err := fmt.Errorf("missing CommonLabels[Severity]")
 		logger.Error("parseAlertmanagerHookMessage", "CommonLabels", err)
@@ -98,6 +99,8 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 		err := fmt.Errorf("missing CommonLabels['prometheus_cluster'], CommonLabels['cluster'] or CommonLabels['prometheus']")
 		return err
 	}
+	post_service_state.Host = strings.ToLower(post_service_state.Host)
+
 	post_service_state.Service = message.CommonLabels["namespace"]
 	if message.CommonLabels["namespace"] == "" {
 		logger.Info("parseAlertmanagerHookMessage", "missing", "CommonLabels['namespace']")
@@ -140,6 +143,8 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 		post_service_state = runDependOn(post_service_state)
 
 		ss.serviceStateList[host_service] = post_service_state
+
+		go updateBuddy(post_service_state, "")
 	}
 
 	return nil
@@ -165,8 +170,9 @@ func parseAlertmanagerAlert(alert Alert, service_state ServiceState) (ServiceSta
 	}
 	if service_state.Service == "" {
 		logger.Error("parseAlertmanagerAlert", "service", "Cant find namespace or container", "alert object", alert.Labels)
+	} else {
+		service_state.Service = strings.ToLower(service_state.Service)
 	}
-
 	return service_state, nil
 
 }

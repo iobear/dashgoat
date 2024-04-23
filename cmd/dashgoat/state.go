@@ -15,13 +15,15 @@ func iSnewState(checkss ServiceState) (change string, new_service bool) {
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {
 
+		current_status := ss.serviceStateList[hostservice].Status
+
 		// no change
-		if ss.serviceStateList[hostservice].Status == checkss.Status {
+		if current_status == checkss.Status {
 			return "", false
 		}
 
 		// change
-		go reportStateChange(ss.serviceStateList[hostservice].Status, checkss)
+		go reportStateChange(current_status, checkss)
 		return checkss.Status, false
 	}
 

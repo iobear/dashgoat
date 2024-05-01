@@ -57,18 +57,18 @@ func validatePagerdutyConf() error {
 		return result
 	}
 
+	// Default PdMode
+	config.PagerdutyConfig.PdMode = "push"
+
 	if len(config.PagerdutyConfig.PdServiceMaps) == 0 {
 		logger.Debug("no pagerdutyservicemaps, setting pagerdutymode off")
 		config.PagerdutyConfig.PdMode = "off"
 		return result
 	}
 
-	// Default PdMode
-	pdClient.config.PdMode = "push"
-
 	// Default timeout value
-	if config.PagerdutyConfig.Timeout == 0 {
-		config.PagerdutyConfig.Timeout = 10
+	if config.PagerdutyConfig.Timeout < (3 * time.Second) {
+		config.PagerdutyConfig.Timeout = 10 * time.Second
 	}
 
 	// Default PagerDuty Url US

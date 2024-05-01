@@ -1,4 +1,10 @@
 # Changelog
+## [v1.7.3] - 2024-05-01
+Change:
+ - Low Pagerduty Timeout
+ - Upgrade Echo dependencies
+
+
 ## [v1.7.2] - 2024-04-23
 Fix:
  - Buddy state inconsistencies

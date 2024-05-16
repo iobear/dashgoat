@@ -10,7 +10,7 @@ import "strings"
 
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
-func iSnewState(checkss ServiceState) (change string, new_service bool) {
+func iSnewState(checkss ServiceState) (change bool) {
 	hostservice := strings.ToLower(checkss.Host) + strings.ToLower(checkss.Service)
 
 	if _, ok := ss.serviceStateList[hostservice]; ok {
@@ -19,17 +19,17 @@ func iSnewState(checkss ServiceState) (change string, new_service bool) {
 
 		// no change
 		if current_status == checkss.Status {
-			return "", false
+			return false
 		}
 
 		// change
 		go reportStateChange(current_status, checkss)
-		return checkss.Status, false
+		return true
 	}
 
 	// change, new service
 	go reportStateChange("", checkss)
-	return checkss.Status, true
+	return true
 }
 
 // ReportStateChange

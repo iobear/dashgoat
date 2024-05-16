@@ -1,3 +1,9 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package main
 
 import (
@@ -115,17 +121,9 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 			return err
 		}
 
-		change, new_service := iSnewState(post_service_state) // Informs abount state change
-		//state change
-		if change != "" {
+		change := iSnewState(post_service_state) // Informs abount state change
+		if change {
 			post_service_state.Change = this_is_now
-			logger.Debug("there is a change 1")
-		} else {
-			if new_service {
-				//new service, state change
-				post_service_state.Change = this_is_now
-				logger.Debug("New service")
-			}
 		}
 
 		host_service := post_service_state.Host + post_service_state.Service

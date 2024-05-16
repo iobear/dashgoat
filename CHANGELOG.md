@@ -1,4 +1,9 @@
 # Changelog
+## [v1.7.4] - 2024-05-16
+Fix:
+ - Heartbeat Change behavior
+ - Tests to check for change behavior
+
 ## [v1.7.3] - 2024-05-01
 Change:
  - Low Pagerduty Timeout

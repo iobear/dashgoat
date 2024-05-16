@@ -40,6 +40,7 @@ func heartBeat(c echo.Context) error {
 	}
 
 	post_service_state.Host = host
+	post_service_state.Service = "heartbeat"
 
 	nextupdatesec := c.Param("nextupdatesec")
 	if nextupdatesec == "" {
@@ -56,22 +57,18 @@ func heartBeat(c echo.Context) error {
 	if tags != "" {
 		post_service_state.Tags = parseTags(tags)
 	}
+	post_service_state.Status = "ok"
 
 	this_is_now := time.Now().Unix()
-	status, new := iSnewState(post_service_state) // Informs abount state change
-	if status == "" {
-		if new {
-			post_service_state.Status = "ok"
-			post_service_state.Change = this_is_now
-		}
-	} else {
-		post_service_state.Status = status
+
+	change := iSnewState(post_service_state) // Informs abount state change
+	if change {
+		post_service_state.Status = "ok"
 		post_service_state.Change = this_is_now
 	}
 	post_service_state.Probe = this_is_now
 
 	post_service_state.From = append(post_service_state.From, "heartbeat")
-	post_service_state.Service = "heartbeat"
 
 	result = post_service_state.Host + post_service_state.Service
 
@@ -123,10 +120,8 @@ func updateStatus(c echo.Context) error {
 		return err
 	}
 
-	status, new := iSnewState(post_service_state) // Informs abount state change
-	if status == "" && !new {
-		post_service_state.Change = ss.serviceStateList[host_service].Change
-	} else {
+	change := iSnewState(post_service_state) // Informs abount state change
+	if change {
 		post_service_state.Change = time.Now().Unix()
 	}
 

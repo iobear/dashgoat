@@ -44,6 +44,10 @@ func filterUpdate(ss ServiceState) (ServiceState, error) {
 		ss.Probe = this_is_now
 	}
 
+	if ss.Change == 0 {
+		ss.Change = this_is_now
+	}
+
 	msglength := len(ss.Message)
 	if msglength > 254 {
 		ss.Message = string(ss.Message[0:254])

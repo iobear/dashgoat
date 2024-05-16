@@ -21,7 +21,6 @@ func heartBeat(c echo.Context) error {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 
-	var result string
 	var post_service_state ServiceState
 
 	urnkey := c.Param("urnkey")
@@ -53,30 +52,38 @@ func heartBeat(c echo.Context) error {
 	}
 	post_service_state.NextUpdateSec = int(sec_number)
 
+	host_service := post_service_state.Host + post_service_state.Service
+
 	tags := c.Param("tags")
 	if tags != "" {
 		post_service_state.Tags = parseTags(tags)
 	}
 	post_service_state.Status = "ok"
 
-	this_is_now := time.Now().Unix()
+	post_service_state.From = append(post_service_state.From, "heartbeat")
 
+	post_service_state, err = filterUpdate(post_service_state)
+	if err != nil {
+		logger.Error("filterUpdate", "msg", err)
+		return err
+	}
+
+	this_is_now := time.Now().Unix()
 	change := iSnewState(post_service_state) // Informs abount state change
 	if change {
 		post_service_state.Status = "ok"
 		post_service_state.Change = this_is_now
+	} else {
+		post_service_state.Change = ss.serviceStateList[host_service].Change
 	}
-	post_service_state.Probe = this_is_now
 
-	post_service_state.From = append(post_service_state.From, "heartbeat")
+	post_service_state = runDependOn(post_service_state)
 
-	result = post_service_state.Host + post_service_state.Service
-
-	ss.serviceStateList[result] = post_service_state
+	ss.serviceStateList[host_service] = post_service_state //commit change to service state
 
 	go updateBuddy(post_service_state, "")
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, host_service)
 }
 
 // updateStatus - service update
@@ -117,12 +124,15 @@ func updateStatus(c echo.Context) error {
 
 	post_service_state, err = filterUpdate(post_service_state)
 	if err != nil {
+		logger.Error("filterUpdate", "msg", err)
 		return err
 	}
 
 	change := iSnewState(post_service_state) // Informs abount state change
 	if change {
 		post_service_state.Change = time.Now().Unix()
+	} else {
+		post_service_state.Change = ss.serviceStateList[host_service].Change
 	}
 
 	ss.serviceStateList[host_service] = post_service_state

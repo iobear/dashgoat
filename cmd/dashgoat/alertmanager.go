@@ -121,15 +121,12 @@ func parseAlertmanagerHookMessage(message HookMessage) error {
 			return err
 		}
 
+		host_service := post_service_state.Host + post_service_state.Service
+
 		change := iSnewState(post_service_state) // Informs abount state change
 		if change {
 			post_service_state.Change = this_is_now
-		}
-
-		host_service := post_service_state.Host + post_service_state.Service
-
-		//No change recorded, setting change time
-		if post_service_state.Change == 0 {
+		} else {
 			post_service_state.Change = ss.serviceStateList[host_service].Change
 			logger.Debug("No change recorded")
 		}

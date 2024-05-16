@@ -2,6 +2,7 @@
 
 echo
 echo "-- tags test --"
+echo
 
 BASE_URL="http://localhost:2000"
 CONTENT_TYPE="application/json"
@@ -39,4 +40,10 @@ for service_with_tags in "${services_with_tags[@]}"; do
             exit 1
         fi
     done
+done
+
+echo "cleaning up data"
+
+for service in "${services[@]}"; do
+    curl -s --request DELETE --url $BASE_URL/service/host-1${service}
 done

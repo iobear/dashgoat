@@ -2,6 +2,7 @@
 
 echo
 echo "-- start multiple --"
+echo
 
 MAX=6
 

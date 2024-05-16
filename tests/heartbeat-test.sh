@@ -2,6 +2,7 @@
 
 echo
 echo "-- heartbeat test --"
+echo
 
 BASE_URL="http://localhost:2000"
 URNKEY="1TvdcoH5RTTTTKLS6CF"
@@ -13,6 +14,46 @@ for host in "${hosts[@]}"; do
 
     curl -X POST "$BASE_URL/heartbeat/$URNKEY/$host/5/help" \
 
+done
+
+for host in "${hosts[@]}"; do
+
+    echo "Checking probe and change is the same ${host}"
+    PROBE=$(curl -s "$BASE_URL/status/${host}heartbeat" | jq '.probe')
+    CHANGE=$(curl -s "$BASE_URL/status/${host}heartbeat" | jq '.change')
+
+    if [[ $PROBE -ne $CHANGE ]]; then
+        echo $PROBE $CHANGE
+        echo "Unexpected API response for .change and .probe ${host}"
+        exit 1
+    else
+        echo "OK"
+    fi
+done
+
+sleep 1
+
+for host in "${hosts[@]}"; do
+    echo "Updating status for service: $service"
+
+    curl -X POST "$BASE_URL/heartbeat/$URNKEY/$host/5/help" \
+
+done
+
+
+for host in "${hosts[@]}"; do
+
+    echo "Checking probe and change is not the same ${host}"
+    PROBE=$(curl -s "$BASE_URL/status/${host}heartbeat" | jq '.probe')
+    CHANGE=$(curl -s "$BASE_URL/status/${host}heartbeat" | jq '.change')
+
+    if [[ $PROBE -gt $CHANGE ]]; then
+        echo "OK"
+    else
+        echo $PROBE $CHANGE
+        echo "Unexpected API response for .change and .probe ${host}"
+        exit 1
+    fi
 done
 
 
@@ -35,4 +76,11 @@ for host in "${hosts[@]}"; do
         echo
         exit 1
     fi
+done
+
+
+echo "cleaning up data"
+
+for host in "${hosts[@]}"; do
+    curl -s --request DELETE --url $BASE_URL/service/${host}heartbeat
 done

@@ -2,6 +2,7 @@
 
 echo
 echo "-- start-single --"
+echo
 
 BASE_URL="http://localhost:2000"
 ./dashgoat $1 -configfile tests/testdashgoat.yaml &

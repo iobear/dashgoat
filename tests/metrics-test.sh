@@ -2,6 +2,7 @@
 
 echo
 echo "-- metrics test --"
+echo
 
 BASE_URL="http://localhost:2000"
 CONTENT_TYPE="application/json"
@@ -46,3 +47,8 @@ else
     echo "$service found at /metrics - ERROR"
     exit 1
 fi
+
+echo "cleaning up data"
+
+curl -s --request DELETE --url $BASE_URL/service/host-1mail
+curl -s --request DELETE --url $BASE_URL/service/host-1storage

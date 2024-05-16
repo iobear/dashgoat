@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo
+echo "-- alertmanager test --"
+echo
+
 if [ -z $1 ]; then
   STATUS="firing"
 else
@@ -62,8 +66,55 @@ fi
 
 STATUS=$(echo "$RESPONSE" | jq '.["cluster-0testapp"].status')
 if [[ "$STATUS" != '"error"' ]]; then
-  echo "Wrong API response for .status"
+  echo "Unexpected API response for .status"
   exit 1
 fi
 
-echo "Test OK, Service: $SERVICE, Host: $HOST, Status: $STATUS"
+echo "Service: $SERVICE, Host: $HOST, Status: $STATUS"
+echo "OK"
+
+echo "Checking probe and change is the same"
+PROBE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].probe')
+CHANGE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].change')
+
+if [[ $PROBE -ne $CHANGE ]]; then
+  echo "Unexpected API response for .change and .probe"
+  echo $PROBE $CHANGE
+  exit 1
+else
+  echo "OK"
+fi
+
+sleep 2
+
+echo "Second run, sending Alertmanager alert"
+curl -X POST -H "Content-Type: application/json" -d "${data}" ${url}
+
+RESPONSE=$(curl -s "$BASE_URL/status/list")
+
+echo "Validate the response against the expected values"
+SERVICE=$(echo "$RESPONSE" | jq '.["cluster-0testapp"].service')
+
+if [[ "$SERVICE" != '"testapp"' ]]; then
+  echo "Unexpected API response for .service"
+  echo "$SERVICE"
+  exit 1
+fi
+echo "OK"
+
+echo "Checking probe beeing updated, not change"
+PROBE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].probe')
+CHANGE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].change')
+
+
+if [[ $PROBE -gt $CHANGE ]]; then
+    echo "OK"
+else
+  echo "Unexpected API response for .change"
+  echo $PROBE $CHANGE
+  exit 1
+fi
+
+
+echo "cleaning up data"
+curl -s --request DELETE --url $BASE_URL/service/cluster-0testapp

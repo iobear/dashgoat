@@ -2,6 +2,7 @@
 
 echo
 echo "-- link bin --"
+echo
 
 SOURCE_DIR="build/"
 

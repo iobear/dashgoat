@@ -2,6 +2,7 @@
 
 echo
 echo "-- ttl test --"
+echo
 
 BASE_URL="http://localhost:2000"
 CONTENT_TYPE="application/json"
@@ -35,4 +36,10 @@ for service in "${services[@]}"; do
         exit 1
     fi
 
+done
+
+echo "cleaning up data"
+
+for service in "${services[@]}"; do
+    curl -s --request DELETE --url $BASE_URL/service/host-1${service}
 done

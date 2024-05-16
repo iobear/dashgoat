@@ -97,7 +97,8 @@ func main() {
 	config.ReadEnv()
 	err := config.InitConfig(configfile)
 	if err != nil {
-		logger.Error("cant initialize config", err)
+		logger.Error("cant initialize config")
+		os.Exit(1)
 	}
 
 	if config.LogFormat == "json" {

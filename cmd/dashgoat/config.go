@@ -100,7 +100,6 @@ func (conf *Configer) ReadEnv() {
 
 // InitConfig initiates a new decoded Config struct Alex style
 func (conf *Configer) InitConfig(config_path string) error {
-	var result error
 
 	if config_path == "" {
 		config_path = "dashgoat.yaml"
@@ -108,13 +107,14 @@ func (conf *Configer) InitConfig(config_path string) error {
 
 	file_exists := isExists(config_path, "file")
 	if !file_exists {
-		logger.Info("Cant find Config file " + config_path + ", moving on")
+		logger.Info("Cant find Config file " + config_path + ", using ENV / CLI args")
 		config_path = ""
 	}
 
 	if config_path != "" {
 		file, err := os.Open(config_path)
 		if err != nil {
+			logger.Error("Open config file", "mgs", err)
 			return err
 		}
 
@@ -123,13 +123,14 @@ func (conf *Configer) InitConfig(config_path string) error {
 		d := yaml.NewDecoder(file)
 
 		if err := d.Decode(&config); err != nil {
+			logger.Error("Decode config file", "mgs", err)
 			return err
 		}
-		logger.Error("Using settings from " + config_path + " ignoring cli args")
+		logger.Error("InitConfig", "msg,", "Using settings from "+config_path+" ignoring CLI args")
 	}
 
 	if conf.DashName == "" {
-		conf.DashName = "dashGoat"
+		conf.DashName = "dashgoat"
 	} else {
 		conf.DashName = strings.ToLower(conf.DashName)
 	}
@@ -145,8 +146,8 @@ func (conf *Configer) InitConfig(config_path string) error {
 		if len(conf.BuddyHosts) > 0 {
 			err := validateBuddyConf()
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				logger.Error("validateBuddyConf", "msg", err)
+				return err
 			}
 		}
 	}
@@ -175,15 +176,16 @@ func (conf *Configer) InitConfig(config_path string) error {
 
 	err := validatePagerdutyConf()
 	if err != nil {
+		logger.Error("validatePagerdutyConf", "msg", err)
 		return err
 	}
 
 	found := mabyeAzureFunction()
-	logger.Info("Azure config", "found", found)
+	logger.Info("mabyeAzureFunction", "Azure config found", found)
 
 	generateHostFacts()
 
-	return result
+	return nil
 }
 
 func validateBuddyConf() error {

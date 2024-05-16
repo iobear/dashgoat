@@ -1,14 +1,16 @@
 # Changelog
 ## [v1.7.4] - 2024-05-16
 Fix:
- - Heartbeat Change behavior
+ - Heartbeat change behavior
  - Tests to check for change behavior
+
+Add:
+ - Pagerduty retry
 
 ## [v1.7.3] - 2024-05-01
 Change:
  - Low Pagerduty Timeout
  - Upgrade Echo dependencies
-
 
 ## [v1.7.2] - 2024-04-23
 Fix:

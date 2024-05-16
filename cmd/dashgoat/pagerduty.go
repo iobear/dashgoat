@@ -117,41 +117,61 @@ func shouldPagerDutyTrigger(severity_to_check string) bool {
 
 }
 
-func (c *PdClient) CompilePdEvent(fromstate string, dgss ServiceState) {
+func CompilePdEvent(fromstate string, reportss ServiceState) PagerDutyEvent {
 	var pdevent PagerDutyEvent
 
-	logger.Info("pdevent", "Severity", dgss.Severity)
-
-	pdkey, _ := findKey(dgss)
-	if pdkey == "" {
-		logger.Debug("No match found for PagerDuty " + dgss.Host)
-		return
-	}
+	logger.Info("pdevent", "Severity", reportss.Severity)
 
 	action := "resolve"
 
-	if shouldPagerDutyTrigger(dgss.Status) {
+	if shouldPagerDutyTrigger(reportss.Status) {
 		action = "trigger"
 	}
 
-	changetimeTime := time.Unix(dgss.Probe, 0).UTC()
+	changetimeTime := time.Unix(reportss.Probe, 0).UTC()
 	formattedTime := changetimeTime.Format("2006-01-02T15:04:05.000+0000")
 
 	pdevent.Payload.Timestamp = formattedTime
-	pdevent.Payload.Severity = dgss.Severity
+	pdevent.Payload.Severity = reportss.Severity
 	pdevent.Payload.Source = readHostFacts().DashName
-	pdevent.Payload.Summary = dgss.Host + " " + dgss.Service + " " + dgss.Message
-	pdevent.Payload.Component = dgss.Service
+	pdevent.Payload.Summary = reportss.Host + " " + reportss.Service + " " + reportss.Message
+	pdevent.Payload.Component = reportss.Service
 	pdevent.EventAction = action
-	pdevent.DedupKey = dgss.Host + dgss.Service + "dashgoat"
-	pdevent.RoutingKey = pdkey
+	pdevent.DedupKey = reportss.Host + reportss.Service + "dashgoat"
+	pdevent.RoutingKey = reportss.UpdateKey
 	pdevent.Client = "dashgoat"
 
-	err := pdClient.TellPagerDuty(pdevent)
-	if err != nil {
-		logger.Error("CompilePdEvent", "error", "update was not send")
+	return pdevent
 
+}
+
+func (c *PdClient) pagerDutyShipper(fromstate string, reportss ServiceState) {
+
+	pdkey, _ := findKey(reportss)
+	if pdkey == "" {
+		logger.Debug("pagerDutyShipper", "mgs", "No match found for PagerDuty "+reportss.Host)
+		return
 	}
+
+	reportss.UpdateKey = pdkey
+	pdevent := CompilePdEvent(fromstate, reportss)
+
+	retry := 3
+	for retry >= 1 {
+
+		err := pdClient.TellPagerDutyApi(pdevent)
+		if err == nil {
+			break
+		} else {
+			logger.Error("pagerDutyShipper", "error", err, "msg", "retrying..")
+		}
+
+		time.Sleep(3 * time.Second)
+		retry--
+	}
+
+	logger.Error("pagerDutyShipper", "msg", "update was not send - giving up")
+
 }
 
 func findKey(dgss ServiceState) (pdkey string, pdmatch string) {
@@ -175,7 +195,7 @@ func findKey(dgss ServiceState) (pdkey string, pdmatch string) {
 }
 
 // TellPagerDuty updates PagerDuty via HTTP
-func (c *PdClient) TellPagerDuty(pdevent PagerDutyEvent) error {
+func (c *PdClient) TellPagerDutyApi(pdevent PagerDutyEvent) error {
 
 	client := &http.Client{
 		Timeout: c.config.Timeout,

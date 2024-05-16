@@ -38,7 +38,7 @@ func reportStateChange(fromstate string, reportss ServiceState) {
 
 	if config.PagerdutyConfig.PdMode != "off" {
 		//if len(reportss.From) == 1 { // Check if I'm the first to know
-		pdClient.CompilePdEvent(fromstate, reportss)
+		pdClient.pagerDutyShipper(fromstate, reportss)
 		//}
 	}
 }

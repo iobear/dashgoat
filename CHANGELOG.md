@@ -3,6 +3,7 @@
 Fix:
  - Heartbeat change behavior
  - Tests to check for change behavior
+ - Prometheus config error
 
 Add:
  - Pagerduty retry

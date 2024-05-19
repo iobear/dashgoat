@@ -69,8 +69,8 @@ func generateHostFacts() {
 		logger.Debug("HostFacts", "MetricsHistory", "on")
 	}
 
-	if config.Prometheusurl == "" {
-		host_facts.Items.Prometheus = false
+	if config.Prometheusurl != "" {
+		host_facts.Items.Prometheus = true
 	}
 
 	if config.UrnKey == "" {

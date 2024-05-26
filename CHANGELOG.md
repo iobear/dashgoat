@@ -1,4 +1,8 @@
 # Changelog
+## [v1.7.5] - 2024-05-26
+Fix:
+ - Pagerduty timeout
+
 ## [v1.7.4] - 2024-05-16
 Fix:
  - Heartbeat change behavior

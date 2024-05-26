@@ -1,18 +1,117 @@
 # default dashGoat
 dashName: dashGoat
-buddyDownStatusMsg: info
+
+# Define the IP and port PagerDuty should listen to, e.g., 192.168.1.4:2999
+# If only the port is defined, dashGoat listens on all IPs
 # default :2000
+
 ipport: :2000
+
+# Define the webpath of your dashGoat instance.
+# If your dashGoat instance is located at http://web.server-1.net/mydashboard, your config should be:
+# webpath: /mydashboard
 # default /
-webpath: /
-# default txt, options <txt/json>
-logformat: txt
+
+# webpath: /
+
+# logformat is either txt or json format.
+# default txt
+
+# logformat: txt
+
+# updatekey is for POST'ing updates to dashGoat
 # default changeme
-updatekey: my-precious!
+
+# updatekey: my-precious!
+
+# urnkey is for updates, where the key is defined as part of the URL, like heartbeat or alertmanager
 # default empty (off)
-urnkey:
-# default PromoteToOk, options <Remove/PromoteOnce/PromoteOneStep/PromoteToOk>
-ttlbehavior: PromoteToOk
-ttlokdelete: 300 # seconds to delete
-buddynsconfig: dashgoat-headless-svc
-prometheusurl: http://localhost:9090
+
+# urnkey:
+
+# After ttl (auto resolve) is not renewed within the given amount of seconds, the behavior will be:
+# options Remove, PromoteOnce, PromoteOneStep, PromoteToOk
+# default PromoteToOk
+
+# ttlbehavior: PromoteToOk
+
+# After the event changed to OK, when should it be deleted
+# default 3600
+
+# ttlokdelete: 3600
+
+## BUDDY ##
+
+# If buddy name is the same as dashName, the buddy will be ignored.
+# buddy
+# - name <buddy name>
+#   url <url to buddy>
+#   key <if key is different from your own updatekey>
+# - name <other buddy name>
+#   url <url to other buddy>
+#   key <if key is different from your own updatekey>
+
+# minimum setup example
+# buddy:
+#  - name: west1
+#    url: https://west.dashgoat.example
+
+# You can discover your fellow dashGoat instances via DNS. In Kubernetes, dashGoat will look for dashgoat-headless-svc in your namespace.
+# You can also use multiple A records / CNAMEs like:
+# buddy.dashgoat.net > A 10.10.10.30
+#                    > A 10.10.10.40
+#                    > A 10.10.10.60
+
+# buddynsconfig: dashgoat-headless-svc
+
+# If a buddy goes down, on what level should this be reported in e.g., info, warning, error, or critical
+# default warning
+
+# buddyDownStatusMsg: warning
+
+# Time in sec between checking if your buddy is running
+# default 11
+
+# checkBuddyIntervalSec: 11
+
+## PROMETHEUS ##
+
+# Prometheus can scrape dashGoat's /metrics for retaining the history of the services monitored and the app's performance.
+# default false
+
+# disableMetrics: false
+
+# If you want to display a history timeline per service, use Prometheus
+# Point to the instance which is set up to scrape /metrics of your dashGoat instance
+# default is <empty>
+
+# prometheusurl: http://localhost:9090
+
+## PAGERDUTY ##
+
+# You can send alerts to your users based on tags or a concatenation of host and service.
+# triggerlevel, only alert with severity of error and critical will be forwarded pr default.
+
+# pagerdutyconfig:
+#  url: https://events.pagerduty.com/v2/enqueue # default
+#  triggerlevel: error # default
+#  timeout: 3 # default
+#  retries: 3 # default
+#  pagerdutyservicemaps:
+#    - hostservice: <host><service> #match on hostservice
+#      tag: <tag> # match on tags from events
+#      eapikey: <pagerduty Events API V2 key>
+#    - hostservice: <host><service> #match on hostservice
+#      tag: <tag> # match on tags from events
+#      eapikey: <pagerduty Events API V2 key>
+
+# if hostservice and tag is empty, it will match on all services and tags
+#    - hostservice:
+#      tag:
+#      eapikey: 1234567890ABCDEFG
+
+# minimum config example
+# pagerdutyconfig:
+#  pagerdutyservicemaps:
+#    - hostservice:
+#      eapikey: 1234567890ABCDEFG

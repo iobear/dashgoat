@@ -91,7 +91,7 @@ curl http://127.0.0.1:2000/heartbeat/<urnkey>/<host>/<nextupdatesec>/<tags>
 When using HTTP GET you need to update the config with:
 `urnkey: <key>` or use the enviroment variable `URNKEY=<key>`
 
-## TTL
+## TTL - auto resolve
 
 If you want your event to change state/disappear after a set amount of seconds, use the `ttl` parameter, like this.
 

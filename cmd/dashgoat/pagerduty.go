@@ -31,9 +31,10 @@ type PagerDutyEvent struct {
 
 type PdConfig struct {
 	URL           string         `yaml:"url"`
-	Timeout       time.Duration  `yaml:"timeout"`
+	Timeout       int            `yaml:"timeout"`
 	PdMode        string         `yaml:"pagerdutymode"`
 	TriggerLevel  string         `yaml:"triggerlevel"`
+	Retries       int            `yaml:"retries"`
 	PdServiceMaps []PdServiceMap `yaml:"pagerdutyservicemaps"`
 }
 
@@ -67,8 +68,8 @@ func validatePagerdutyConf() error {
 	}
 
 	// Default timeout value
-	if config.PagerdutyConfig.Timeout < (3 * time.Second) {
-		config.PagerdutyConfig.Timeout = 10 * time.Second
+	if config.PagerdutyConfig.Timeout == 0 {
+		config.PagerdutyConfig.Timeout = 3
 	}
 
 	// Default PagerDuty Url US
@@ -79,6 +80,11 @@ func validatePagerdutyConf() error {
 	// Default PagerDuty trigger level
 	if config.PagerdutyConfig.TriggerLevel == "" {
 		config.PagerdutyConfig.TriggerLevel = "error"
+	}
+
+	// Default PagerDuty retry amount
+	if config.PagerdutyConfig.Retries == 0 {
+		config.PagerdutyConfig.Retries = 3
 	}
 
 	for key, val := range config.PagerdutyConfig.PdServiceMaps {
@@ -156,7 +162,7 @@ func (c *PdClient) pagerDutyShipper(fromstate string, reportss ServiceState) {
 	reportss.UpdateKey = pdkey
 	pdevent := CompilePdEvent(fromstate, reportss)
 
-	retry := 3
+	retry := config.PagerdutyConfig.Retries
 	for retry >= 1 {
 
 		err := pdClient.TellPagerDutyApi(pdevent)
@@ -198,7 +204,7 @@ func findKey(dgss ServiceState) (pdkey string, pdmatch string) {
 func (c *PdClient) TellPagerDutyApi(pdevent PagerDutyEvent) error {
 
 	client := &http.Client{
-		Timeout: c.config.Timeout,
+		Timeout: time.Duration(c.config.Timeout) * time.Second,
 	}
 
 	json_data, err := json.Marshal(pdevent)

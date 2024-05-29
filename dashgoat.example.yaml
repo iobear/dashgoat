@@ -67,12 +67,12 @@ ipport: :2000
 # If a buddy goes down, on what level should this be reported in e.g., info, warning, error, or critical
 # default warning
 
-# buddyDownStatusMsg: warning
+# buddyDownStatus: warning
 
 # Time in sec between checking if your buddy is running
-# default 11
+# default 3
 
-# checkBuddyIntervalSec: 11
+# checkBuddyIntervalSec: 3
 
 ## PROMETHEUS ##
 

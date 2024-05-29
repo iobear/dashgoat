@@ -26,9 +26,9 @@ func lostProbeTimer() {
 		count, check_slice := listProbeTimeout()
 
 		if count > 0 {
-			timeNow := time.Now().Unix()
+			time_now := time.Now().Unix()
 			for _, value := range check_slice {
-				if timeNow > value.TimeoutEpoch {
+				if time_now > value.TimeoutEpoch {
 					updateEventLostProbe(value.HostService)
 				}
 			}
@@ -64,23 +64,28 @@ func listProbeTimeout() (int, []TimerEpoch) {
 }
 
 // updateEventLostProbe - sets Message , Severity and Status accordingly
-func updateEventLostProbe(hostService string) {
+func updateEventLostProbe(host_service string) {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 
-	tmpStruct := ss.serviceStateList[hostService]
-	tmpStruct.Message = "Lost probe heartbeat"
-	tmpStruct.Severity = "error"
-	tmpStruct.Status = "error"
+	tmp_struct := ss.serviceStateList[host_service]
+	tmp_struct.Message = "Lost probe heartbeat"
+	tmp_struct.Severity = config.ProbeTimeoutStatus
+	tmp_struct.Status = config.ProbeTimeoutStatus
 
-	iSnewState(tmpStruct)
+	change := iSnewState(tmp_struct) // Informs abount state change
+	if change {
+		tmp_struct.Change = time.Now().Unix()
+	} else {
+		tmp_struct.Change = ss.serviceStateList[host_service].Change
+	}
 
-	ss.serviceStateList[hostService] = tmpStruct
+	ss.serviceStateList[host_service] = tmp_struct
 }
 
 func findProbeInterval() int {
 	interval_max := 60
-	interval_min := 4
+	interval_min := 2
 	result := interval_min
 
 	result_slice := uniqList("nextupdatesec")

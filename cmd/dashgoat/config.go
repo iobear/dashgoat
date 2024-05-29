@@ -25,7 +25,8 @@ type (
 		LogFormat             string   `yaml:"logformat"`
 		UpdateKey             string   `yaml:"updatekey"`
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
-		BuddyDownStatusMsg    string   `yaml:"buddyDownStatusMsg"`
+		BuddyDownStatus       string   `yaml:"buddyDownStatus"`
+		ProbeTimeoutStatus    string   `yaml:"probeTimeoutStatus"`
 		BuddyHosts            []Buddy  `yaml:"buddy"`
 		BuddyNsConfig         string   `yaml:"buddynsconfig"`
 		IgnorePrefix          []string `yaml:"ignorePrefix"`
@@ -63,8 +64,8 @@ func (conf *Configer) ReadEnv() {
 	if os.Getenv("CHECKBUDDYINTERVALSEC") != "" {
 		conf.CheckBuddyIntervalSec = str2int(os.Getenv("CHECKBUDDYINTERVALSEC"))
 	}
-	if os.Getenv("BUDDYDOWNSTATUSMSG") != "" {
-		conf.BuddyDownStatusMsg = os.Getenv("BUDDYDOWNSTATUSMSG")
+	if os.Getenv("BUDDYDOWNSTATUS") != "" {
+		conf.BuddyDownStatus = os.Getenv("BUDDYDOWNSTATUS")
 	}
 	if os.Getenv("BUDDYNAME") != "" && os.Getenv("BUDDYURL") != "" {
 		tmp_buddy.Name = os.Getenv("BUDDYNAME")
@@ -135,13 +136,19 @@ func (conf *Configer) InitConfig(config_path string) error {
 		conf.DashName = strings.ToLower(conf.DashName)
 	}
 
+	if conf.ProbeTimeoutStatus == "" {
+		conf.ProbeTimeoutStatus = "error"
+	} else {
+		conf.ProbeTimeoutStatus = strings.ToLower(conf.ProbeTimeoutStatus)
+	}
+
 	// Buddy settings
 	if config_path == "" {
 		if buddy_cli.Url != "" && buddy_cli.Url != "0" {
 			conf.BuddyHosts = append(conf.BuddyHosts, buddy_cli)
 		}
 
-		conf.CheckBuddyIntervalSec = 11
+		conf.CheckBuddyIntervalSec = 3
 
 		if len(conf.BuddyHosts) > 0 {
 			err := validateBuddyConf()
@@ -153,8 +160,8 @@ func (conf *Configer) InitConfig(config_path string) error {
 	}
 
 	// Default status when Buddy is down
-	if conf.BuddyDownStatusMsg == "" {
-		conf.BuddyDownStatusMsg = "warning"
+	if conf.BuddyDownStatus == "" {
+		conf.BuddyDownStatus = "warning"
 	}
 
 	// Default TTL bahaviour

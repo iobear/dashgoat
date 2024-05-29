@@ -168,7 +168,7 @@ func findBuddy(buddyConfig []Buddy) {
 	buddyWelcome := fmt.Sprintf("%d %s ", buddyAmount, buddyTxt)
 	logger.Info(buddyWelcome)
 
-	waitfor := 10
+	waitfor := 3
 	if config.CheckBuddyIntervalSec > 1 {
 		waitfor = config.CheckBuddyIntervalSec
 	}
@@ -402,7 +402,7 @@ func tellServiceListAboutBuddy(buddyName string, up bool) {
 		result.Message = "buddy up"
 		result.Severity = "info"
 	} else {
-		result.Status = strings.ToLower(config.BuddyDownStatusMsg)
+		result.Status = strings.ToLower(config.BuddyDownStatus)
 		result.Severity = result.Status
 		result.Message = "buddy is down"
 	}

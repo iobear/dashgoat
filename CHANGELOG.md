@@ -1,4 +1,14 @@
 # Changelog
+## [v1.7.6] - 2024-05-29
+Change:
+ - buddyDownStatusMsg to buddyDownStatus in config
+
+Add:
+ - probeTimeoutStatus in config
+
+Fix:
+ - Change time, after ttl timeout
+
 ## [v1.7.5] - 2024-05-26
 Fix:
  - Pagerduty timeout

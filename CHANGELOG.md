@@ -1,4 +1,9 @@
 # Changelog
+## [v1.7.7] - 2024-06-03
+Change:
+ - Upgrade Go dependencies
+ - JSON return from API
+
 ## [v1.7.6] - 2024-05-29
 Change:
  - buddyDownStatusMsg to buddyDownStatus in config

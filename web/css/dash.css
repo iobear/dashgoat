@@ -63,11 +63,11 @@ body {
   margin-top: 8px;
 }
 
-.divTable .critical  {
+.divTable .critical {
   background: #423232;
   border-left-color: #ef1b11;
 }
-.divTable .error  {
+.divTable .error {
   background: #3a3026;
   border-left-color: #db7600;
 }

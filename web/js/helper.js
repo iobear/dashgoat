@@ -26,15 +26,15 @@ function timeDiff(unixtime)
 }
 
 function unix2timeDay(unixTimestamp) {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const date = new Date(unixTimestamp * 1000);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const dayName = daysOfWeek[date.getDay()];
+	const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	const date = new Date(unixTimestamp * 1000);
+	const hours = date.getHours().toString().padStart(2, '0');
+	const minutes = date.getMinutes().toString().padStart(2, '0');
+	const dayName = daysOfWeek[date.getDay()];
 
 	const formattedDateTime = `${hours}:${minutes} ${dayName}`;
 
-    return formattedDateTime;
+	return formattedDateTime;
 }
 
 
@@ -49,14 +49,14 @@ function updateFaviconColor(color) {
 }
 
 function getStatusColor(statusStr) {
-    switch (statusStr) {
-        case 'critical': return '#ef1b11'; // Red
-        case 'error': return '#ef8511'; // Orange
-        case 'warning': return '#e2dc0c'; // Yellow
-        case 'info': return '#14a7c9'; // Blue
-        case 'ok': return '#33ff00'; // Green
-        default: return '#808080'; // Gray
-    }
+	switch (statusStr) {
+		case 'critical': return '#ef1b11'; // Red
+		case 'error': return '#ef8511'; // Orange
+		case 'warning': return '#e2dc0c'; // Yellow
+		case 'info': return '#14a7c9'; // Blue
+		case 'ok': return '#33ff00'; // Green
+		default: return '#808080'; // Gray
+	}
 }
 
 function onDashboardStateChange(newState)
@@ -70,7 +70,7 @@ function isInt(value)
 {
 	if (isNaN(value))
 	{
-	  return false;
+		return false;
 	}
 	var x = parseFloat(value);
 

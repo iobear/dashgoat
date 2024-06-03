@@ -83,7 +83,7 @@ func heartBeat(c echo.Context) error {
 
 	go updateBuddy(post_service_state, "")
 
-	return c.JSON(http.StatusOK, host_service)
+	return c.JSON(http.StatusOK, post_service_state)
 }
 
 // updateStatus - service update
@@ -92,7 +92,6 @@ func updateStatus(c echo.Context) error {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 
-	var result = map[string]string{}
 	var post_service_state ServiceState
 
 	if err := c.Bind(&post_service_state); err != nil {
@@ -139,9 +138,7 @@ func updateStatus(c echo.Context) error {
 
 	go updateBuddy(post_service_state, "")
 
-	result["id"] = host_service
-
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, post_service_state)
 }
 
 // getStatus - get status of service with service id

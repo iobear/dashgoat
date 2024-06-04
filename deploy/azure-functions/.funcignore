@@ -20,3 +20,4 @@ go.sum
 *.sh
 *.txt
 *.example
+dashgoat.example.yaml

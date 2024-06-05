@@ -89,7 +89,7 @@ curl http://127.0.0.1:2000/heartbeat/<urnkey>/<host>/<nextupdatesec>/<tags>
 ```
 
 When using HTTP GET you need to update the config with:
-`urnkey: <key>` or use the enviroment variable `URNKEY=<key>`
+`urnkey: <key>` or use the environment variable `URNKEY=<key>`
 
 ## TTL - auto resolve
 
@@ -108,7 +108,7 @@ curl --request POST \
 	"ttl": 10
 }'
 ```
-Default behaviour (PromoteToOk)
+Default behavior (PromoteToOk)
  * if status == "ok" the event vil disappear, after ttl expire.
  * if status != "ok", state vil change to "ok", after ttl expire.
 Via config there are three other modes
@@ -120,12 +120,12 @@ PromoteOnce
  * If ttl expires, status moved one to the right on the list `["critical", "error", "warning", "info", "ok"]` If status becomes `ok` serviceStatus waits for  `TtlOkDelete` expires.
 
 PromoteOneStep
- * Like promoteOnce but status keeps promoting along the list everytime ttl expires until it ends at `"ok"`
+ * Like promoteOnce but status keeps promoting along the list every time ttl expires until it ends at `"ok"`
 
 ## Tags
 !! TODO - Frontend is not done, no filter API !!
 
-Tags are used to filter sevices depending on their tags, this way you can, as an example list services associated with specific customers or departments. You could also ad tags related to the service the server is running. Lets say you are running a transcoder service, the service is transcoding 4 channels, these channels can then be added as a list, like this:
+Tags are used to filter services depending on their tags, this way you can, as an example list services associated with specific customers or departments. You could also ad tags related to the service the server is running. Lets say you are running a transcoder service, the service is transcoding 4 channels, these channels can then be added as a list, like this:
 
 ```bash
 curl --request POST \
@@ -145,7 +145,7 @@ You do that to all your transcoders, and now you can list them according to thei
 
 ## DependOn
 
-DepenOn is a parameter you can add to your service updates, this will reduce the important alerts to the systems the services depend on. Like this:
+DependOn is a parameter you can add to your service updates, this will reduce the important alerts to the systems the services depend on. Like this:
 
 ```bash
 curl --request POST \
@@ -165,9 +165,9 @@ In this case if `loadbalancer-1` is down, all the services that has `"dependon":
 
 ## Alertmanager
 
-You can forward the alerts from your diffrent alertmanagers to display on a dashgoat central screen or share with other systems. You need to set the `urnkey` in your dashgoat config for this to work.
+You can forward the alerts from your different alertmanagers to display on a dashGoat central screen or share with other systems. You need to set the `urnkey` in your dashGoat config for this to work.
 
-In alertmanager config, you need to add a webhook reciever:
+In alertmanager config, you need to add a webhook receiver:
 ```yaml
     receivers:
       - name: Dashgoat
@@ -183,7 +183,7 @@ In alertmanager config, you need to add a webhook reciever:
 ## Prometheus
 
 `/metrics` is exposed by default, you can enable to show a host-service timeline in dashGoat by providing a url for your prometheus instance.
-Either by using a enviroment variable,
+Either by using a environment variable,
  `PROMETHEUSURL=http://localhost:9090 ./dashgoat`
 Or adding a line to the `dashgoat.yaml`
  `prometheusurl: http://localhost:9090`
@@ -192,7 +192,7 @@ To show the timeline in dashGoat select the change time and the timeline will ap
 
 ## PagerDuty
 
-You can forward events to PagerDutys diffrent tecnical services depending on hosts + services, tags and severity, there is also a catch all.
+You can forward events to PagerDutys different technical services depending on hosts + services, tags and severity, there is also a catch all.
 <br />Minimum config, catch all:
 ```yaml
 pagerdutyconfig:
@@ -201,7 +201,7 @@ pagerdutyconfig:
       tag:
       eapikey: 12345acc39464b01d0105f1234567890
 ```
-All options looks like this, first matching the host `host-1` and service `cache` to one technical service key, second matching all services with tag `customer23` to another tecnical service key. Both only being forwarded to PageDuty if severity is `error` or higher.
+All options looks like this, first matching the host `host-1` and service `cache` to one technical service key, second matching all services with tag `customer23` to another technical service key. Both only being forwarded to PageDuty if severity is `error` or higher.
 ```yaml
 pagerdutyconfig:
   url: https://events.pagerduty.com/v2/enqueue

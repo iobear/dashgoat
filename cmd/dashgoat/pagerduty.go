@@ -167,7 +167,8 @@ func (c *PdClient) pagerDutyShipper(fromstate string, reportss ServiceState) {
 
 		err := pdClient.TellPagerDutyApi(pdevent)
 		if err == nil {
-			break
+			logger.Info("pagerDutyShipper", "msg", "pagerduty updated")
+			return
 		} else {
 			logger.Error("pagerDutyShipper", "error", err, "msg", "retrying..")
 		}

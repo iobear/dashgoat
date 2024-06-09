@@ -1,6 +1,6 @@
 module github.com/iobear/dashgoat
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/labstack/echo-contrib v0.17.1

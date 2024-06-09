@@ -1,4 +1,13 @@
 # Changelog
+## [v1.7.8] - 2024-06-09
+Fix:
+ - Buddy config unintended behavior, not ignoring own instance name from config file
+ - Buddy config unintended behavior, not using dashGoat 'updatekey' when none given for buddy.
+ - Some spelling
+
+Change:
+ - Upgrade Go to v1.22.4
+
 ## [v1.7.7] - 2024-06-03
 Change:
  - Upgrade Go dependencies

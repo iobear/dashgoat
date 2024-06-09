@@ -8,8 +8,9 @@ dashGoat - A simple HTTP dashboard, easy to deploy.
 
 ## Features
 
- * Easy to use
- * Configuration management friendly
+ * Single binary
+ * Simple JSON API
+ * Minimal App configuration, the client is in charge.
  * Non hierarchical cluster option
  * Lightweight
  * HTTP(s) only, no special protocols

@@ -172,30 +172,30 @@ func parseAlertmanagerAlert(alert Alert, service_state ServiceState) (ServiceSta
 
 }
 
-func printDebugAlertManager(message HookMessage) {
+// func printDebugAlertManager(message HookMessage) {
 
-	logger.Info("updateAlertmanager", "[Body]", &message)
+// 	logger.Info("updateAlertmanager", "[Body]", &message)
 
-	fmt.Println("-start Hook-")
+// 	fmt.Println("-start Hook-")
 
-	fmt.Println(message.Version)
-	fmt.Println(message.GroupKey)
-	fmt.Println(message.Status)
-	fmt.Println(message.Receiver)
-	fmt.Println(message.GroupLabels)
-	fmt.Println(message.CommonLabels)
-	fmt.Println(message.CommonAnnotations)
-	fmt.Println(message.ExternalURL)
+// 	fmt.Println(message.Version)
+// 	fmt.Println(message.GroupKey)
+// 	fmt.Println(message.Status)
+// 	fmt.Println(message.Receiver)
+// 	fmt.Println(message.GroupLabels)
+// 	fmt.Println(message.CommonLabels)
+// 	fmt.Println(message.CommonAnnotations)
+// 	fmt.Println(message.ExternalURL)
 
-	fmt.Println("-end Hook-")
+// 	fmt.Println("-end Hook-")
 
-	for _, alert := range message.Alerts {
-		fmt.Println("-start alert-")
-		fmt.Println("-Labels-")
-		fmt.Println(alert.Labels)
-		fmt.Println("-Annotations-")
-		fmt.Println(alert.Annotations)
-		fmt.Println(" -end- ")
-	}
+// 	for _, alert := range message.Alerts {
+// 		fmt.Println("-start alert-")
+// 		fmt.Println("-Labels-")
+// 		fmt.Println(alert.Labels)
+// 		fmt.Println("-Annotations-")
+// 		fmt.Println(alert.Annotations)
+// 		fmt.Println(" -end- ")
+// 	}
 
-}
+// }

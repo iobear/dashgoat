@@ -248,6 +248,18 @@ Now try doing the same updates as before, and you should see both dashGoat insta
 
 If you want more buddies, you can define them in a list, in the dashgoat.yaml file, instead of using the -buddyurl parameter.
 
+Config file example
+```yaml
+dashName: dashlocal
+updatekey: 9fDybo!pXmA=h8qDYetWHEMd
+buddyDownStatus: info
+buddy:
+  - name: dashlocal
+    url: https://dash.myintra.net
+  - name: dashcloud
+    url: https://dash.mycloud.net/mysystem
+```
+
 ### Docker, Buddy Hello world
 
 So for docker you can't use localhost, as every Docker container has it own .. So to compensate, use the IP on your network card instead.

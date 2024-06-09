@@ -30,7 +30,7 @@ type ServiceStatus struct {
 }
 
 func status2int(status string) float64 {
-	return float64(indexOf(severitysReverse[:], status))
+	return float64(indexOf(severitiesReverse[:], status))
 }
 
 func int2status(status float64) string {
@@ -38,7 +38,7 @@ func int2status(status float64) string {
 		return "unknown"
 	}
 
-	return severitysReverse[int(status)]
+	return severitiesReverse[int(status)]
 }
 
 // NewServiceStateCollector creates a new ServiceStateCollector

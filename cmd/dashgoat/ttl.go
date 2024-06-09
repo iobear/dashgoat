@@ -71,9 +71,9 @@ func promoteStatus(serviceState ServiceState, currentUnixTimestamp int64) Servic
 	}
 
 	// Default PromoteOneStep
-	for i, status := range severitysReverse {
-		if serviceState.Status == status && i < len(severitysReverse)-1 {
-			serviceState.Status = severitysReverse[i+1]
+	for i, status := range severitiesReverse {
+		if serviceState.Status == status && i < len(severitiesReverse)-1 {
+			serviceState.Status = severitiesReverse[i+1]
 			serviceState.Probe = currentUnixTimestamp
 			break
 		}

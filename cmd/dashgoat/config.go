@@ -14,8 +14,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var severitys = [5]string{"ok", "info", "warning", "error", "critical"}
-var severitysReverse = [5]string{"critical", "error", "warning", "info", "ok"}
+var severities = [5]string{"ok", "info", "warning", "error", "critical"}
+var severitiesReverse = [5]string{"critical", "error", "warning", "info", "ok"}
 
 type (
 	Configer struct {
@@ -149,13 +149,13 @@ func (conf *Configer) InitConfig(config_path string) error {
 		}
 
 		conf.CheckBuddyIntervalSec = 3
+	}
 
-		if len(conf.BuddyHosts) > 0 {
-			err := validateBuddyConf()
-			if err != nil {
-				logger.Error("validateBuddyConf", "msg", err)
-				return err
-			}
+	if len(conf.BuddyHosts) > 0 {
+		err := validateBuddyConf()
+		if err != nil {
+			logger.Error("validateBuddyConf", "msg", err)
+			return err
 		}
 	}
 
@@ -164,7 +164,7 @@ func (conf *Configer) InitConfig(config_path string) error {
 		conf.BuddyDownStatus = "warning"
 	}
 
-	// Default TTL bahaviour
+	// Default TTL behavior
 	if conf.TtlBehavior == "" {
 		conf.TtlBehavior = "promotetook"
 	} else {
@@ -187,8 +187,8 @@ func (conf *Configer) InitConfig(config_path string) error {
 		return err
 	}
 
-	found := mabyeAzureFunction()
-	logger.Info("mabyeAzureFunction", "Azure config found", found)
+	found := maybeAzureFunction()
+	logger.Info("maybeAzureFunction", "Azure config found", found)
 
 	generateHostFacts()
 
@@ -215,7 +215,7 @@ func validateBuddyConf() error {
 	return nil
 }
 
-func mabyeAzureFunction() bool {
+func maybeAzureFunction() bool {
 
 	//Look for Azure Functions Port
 	if os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT") != "" {

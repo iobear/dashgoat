@@ -37,7 +37,8 @@ func initBuddyConf(rawConfig []Buddy) {
 
 	for _, buddy := range rawConfig {
 		buddy.Name = strings.ToLower(buddy.Name)
-		if !buddy.Down {
+		if !buddy.Down && buddy.Name != config.DashName {
+			logger.Info("initBuddyConf", "Adding buddy", buddy.Name)
 			addBuddy(buddy)
 		}
 	}
@@ -131,11 +132,11 @@ func ipLookup() (error, bool) {
 		return err, new_ip
 	}
 	new_ip = true
-	ajustBuddyConfig(ips)
+	adjustBuddyConfig(ips)
 	return err, new_ip
 }
 
-func ajustBuddyConfig(ips []net.IP) {
+func adjustBuddyConfig(ips []net.IP) {
 	time_now := time.Now().Unix()
 
 	//add buddies found via IP slice
@@ -169,7 +170,7 @@ func compileBuddyConfig(ip string, time_now int64) (Buddy, bool) {
 	result.Key = config.UpdateKey
 	result.Url = "http://" + ip + ":" + strings.Split(config.IPport, ":")[1] //TODO - needs some work
 
-	if my_self { //If the host is added erlier
+	if my_self { //If the host is added earlier
 		delBuddy(result)
 	}
 

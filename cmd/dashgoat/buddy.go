@@ -60,7 +60,7 @@ func setBacklog(host string, data []string) {
 	backlog.buddyBacklog[host] = data
 }
 
-// Update Buddies with newly recieved msg
+// Update Buddies with newly received msg
 func updateBuddy(event ServiceState, delete string) {
 	to_update := listBuddies()
 
@@ -101,6 +101,7 @@ func talkToBuddyApiDelete(hosturl string, delete string) {
 }
 
 func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
+	logger.Info("talkToBuddyApi", "to Buddy", host.Name)
 	my_hostnames := readHostFacts().Hostnames
 
 	my_name := strings.ToLower(config.DashName)
@@ -109,13 +110,19 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 		my_name = my_hostnames[0]
 	}
 
-	if delete != "" {
-		talkToBuddyApiDelete(host.Url, delete)
+	if my_name == host.Name {
+		//I'm the sender of this message, I'm not telling my self
+		logger.Info("talkToBuddyApi", "msg", "Should not happen, Not sending buddy msg to my self")
 		return
 	}
 
 	if contains(event.From, my_name) {
-		//I have already sendt this message once, dont repeat
+		//I have already send this message once, don't repeat
+		return
+	}
+
+	if delete != "" {
+		talkToBuddyApiDelete(host.Url, delete)
 		return
 	}
 
@@ -155,7 +162,7 @@ func findBuddy(buddyConfig []Buddy) {
 
 	if buddyAmount < 1 {
 		setDashGoatReady(true)
-		logger.Info("Buddy not found")
+		//logger.Info("findBuddy", "msg", "0 Buddy found")
 	}
 
 	firstRound := true
@@ -165,8 +172,7 @@ func findBuddy(buddyConfig []Buddy) {
 		buddyTxt = "Buddies"
 	}
 
-	buddyWelcome := fmt.Sprintf("%d %s ", buddyAmount, buddyTxt)
-	logger.Info(buddyWelcome)
+	logger.Info(buddyTxt, "count", buddyAmount)
 
 	waitfor := 3
 	if config.CheckBuddyIntervalSec > 1 {
@@ -199,7 +205,7 @@ func findBuddy(buddyConfig []Buddy) {
 
 }
 
-// report back to UI, stausList
+// report back to UI, statusList
 func tellBuddyState(host string, up bool, servicehost string) {
 	var empty_slice []string
 	var default_int64 int64

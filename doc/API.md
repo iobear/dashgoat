@@ -55,6 +55,14 @@ All requests should include the `Content-Type: application/json` header unless o
   - **Description**: Retrieves a list of all status updates.
   - **Headers**:
     - `Accept: application/json`
+```json
+{
+"demo2buddy":
+  {"service":"buddy","host":"demo2","status":"ok","message":"buddy up","severity":"info","nextupdatesec":0,"tags":null,"probe":1718304779,"change":1718304779,"from":["demo"],"ack":"","ttl":0,"dependon":"","UpdateKey":"valid"},
+"gateway-1heartbeat":
+  {"service":"heartbeat","host":"gateway-1","status":"ok","message":"","severity":"info","nextupdatesec":66,"tags":["router","demo"],"probe":1718306581,"change":1718304781,"from":["heartbeat"],"ack":"","ttl":0,"dependon":"","UpdateKey":"valid"}
+}
+```
 
 ### List Known Hosts
 
@@ -62,18 +70,59 @@ All requests should include the `Content-Type: application/json` header unless o
   - **Description**: Retrieves a list of all known hosts.
   - **Headers**:
     - `Accept: application/json`
+```json
+[
+ "demo2",
+ "gateway-1",
+ "mailserver-1",
+ "nas-1"
+]
+```
 
 ### List Known Services
 
 - **GET** `/list/status`
-  - **Description**: Retrieves a list of all known services.
+  - **Description**: Retrieves a list of all current status'
   - **Headers**:
     - `Accept: application/json`
+
+```json
+[
+ "ok",
+ "error"
+]
+```
 
 ### Delete Service Status
 
 - **DELETE** `/service/{host}{service}`
   - **Description**: Deletes the status of a specific service for a host.
+
+### Metrics
+
+- **Metrics** `/metrics`
+  - **Description**: Shows Prometheus metrics
+
+### Health
+
+- **Health** `/health`
+  - **Description**: Returns HTTP 200 when ready and healthy, A JSON object is also returned
+
+  ```json
+  {
+   "Hostnames":["demo_65.109.171.87","demo"],
+   "DashName":"demo",
+   "Ready":true,
+   "UpAt":"2024-06-13T18:52:47.039958109Z",
+   "UpAtEpoch":1718304767,
+   "DashGoatVersion":"v1.7.8",
+   "GoVersion":"go1.22.4","
+   BuildDate":"2024-06-09",
+   "MetricsHistory":true,
+   "Prometheus":true,
+   "Commit":"dee8dac"
+  }
+  ```
 
 ## Getting Started
 

@@ -116,8 +116,8 @@ All requests should include the `Content-Type: application/json` header unless o
    "UpAt":"2024-06-13T18:52:47.039958109Z",
    "UpAtEpoch":1718304767,
    "DashGoatVersion":"v1.7.8",
-   "GoVersion":"go1.22.4","
-   BuildDate":"2024-06-09",
+   "GoVersion":"go1.22.4",
+   "BuildDate":"2024-06-09",
    "MetricsHistory":true,
    "Prometheus":true,
    "Commit":"dee8dac"

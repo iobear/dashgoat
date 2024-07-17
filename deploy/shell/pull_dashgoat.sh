@@ -3,8 +3,15 @@
 # Define variables
 REPO="iobear/dashgoat"
 API_URL="https://api.github.com/repos/$REPO/releases/latest"
-BINARY_PATH="./dashgoat"
+DEFAULT_BINARY_PATH="./dashgoat"
 DOWNLOAD_URL="https://github.com/iobear/dashgoat/releases/download"
+
+# Check if a command line argument is provided for the destination path
+if [ -z "$1" ]; then
+  BINARY_PATH=$DEFAULT_BINARY_PATH
+else
+  BINARY_PATH="$1"
+fi
 
 # Fetch the latest release information from GitHub API
 response=$(curl -s $API_URL)
@@ -45,4 +52,3 @@ else
     echo "Failed to download the latest version. Please check the URL and try again."
   fi
 fi
-

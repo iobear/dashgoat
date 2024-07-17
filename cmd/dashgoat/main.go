@@ -10,6 +10,7 @@ import (
 	"context"
 	"embed"
 	"flag"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -92,7 +93,14 @@ func main() {
 	flag.StringVar(&buddy_cli.Key, "buddykey", "", "Buddy update key, empty for same key")
 	flag.StringVar(&buddy_cli.Name, "buddyname", "", "Buddy name")
 	flag.StringVar(&buddy_nsconfig, "buddynsconfig", "", "Configure buddies via DNS/k8s namespace")
+	versionFlag := flag.Bool("version", false, "Print the version information and exit")
+
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Printf("Version: %s\nCommit: %s\nBuild Date: %s\n", Version, Commit, BuildDate)
+		os.Exit(0)
+	}
 
 	config.ReadEnv()
 	err := config.InitConfig(configfile)

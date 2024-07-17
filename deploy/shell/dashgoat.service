@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# should be in /etc/systemd/system/dashgoat.service
+
+[Unit]
+Description=dashgoat
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Restart=always
+RestartSec=10
+#Type=simple
+
+User=dashgoat
+Group=dashgoat
+
+TimeoutStopSec=15
+WorkingDirectory=/opt/dc/dashgoat/
+
+# Prepare dashgoat
+ExecStartPre=cp /home/dashgoat/dashgoat /opt/dc/dashgoat/
+
+# Start dashgoat
+ExecStart=/opt/dc/dashgoat/dashgoat dashgoat.yaml
+
+[Install]
+WantedBy=default.target
+RequiredBy=network.target

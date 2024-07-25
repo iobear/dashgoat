@@ -131,7 +131,7 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 
 	jsonMapAsStringFormat, err := json.Marshal(event)
 	if err != nil {
-		logger.Error("talkToBuddyApi json marshall", err)
+		logger.Error("talkToBuddyApi", "JSON marshall", err)
 		return
 	}
 
@@ -146,7 +146,7 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logger.Error("talkToBuddyApi problems talking to "+host.Url, err)
+		logger.Error("talkToBuddyApi", "Problems talking to "+host.Url, err)
 		tellBuddyState(host.Name, false, event.Host)
 		return
 	}

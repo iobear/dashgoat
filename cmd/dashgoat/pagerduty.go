@@ -210,7 +210,7 @@ func (c *PdClient) TellPagerDutyApi(pdevent PagerDutyEvent) error {
 
 	json_data, err := json.Marshal(pdevent)
 	if err != nil {
-		logger.Error("Error marshaling to JSON", err)
+		logger.Error("TellPagerDutyApi", "Error marshaling to JSON", err)
 		return err
 	}
 
@@ -218,7 +218,7 @@ func (c *PdClient) TellPagerDutyApi(pdevent PagerDutyEvent) error {
 
 	req, err := http.NewRequest("POST", c.config.URL, payload)
 	if err != nil {
-		logger.Error("TellPagerDuty", "POST failed", err)
+		logger.Error("TellPagerDutyApi", "POST failed", err)
 		return err
 	}
 
@@ -226,14 +226,14 @@ func (c *PdClient) TellPagerDutyApi(pdevent PagerDutyEvent) error {
 
 	res, err := client.Do(req)
 	if err != nil {
-		logger.Error("TellPagerDuty", "Do error", err)
+		logger.Error("TellPagerDutyApi", "Do error", err)
 		return err
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		logger.Error("TellPagerDuty", "ReadAll PagerDuty", err)
+		logger.Error("TellPagerDutyApi", "ReadAll PagerDuty", err)
 		return err
 	}
 

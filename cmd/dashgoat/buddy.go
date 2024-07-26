@@ -20,20 +20,29 @@ type (
 	Backlog struct {
 		mutex        sync.RWMutex
 		buddyBacklog map[string][]string
-		StateDown    map[string]int64
+		StateDown    map[string]int64 //host, timestamp
 	}
 )
 
 // setStateDown on buddy backlog
-func setStateDown(host string, data int64) {
+func setStateDown(host string, down bool) {
+	var empty_timestamp int64
+	var down_at int64
+
 	if host == "" {
 		logger.Info("setStateDown", "error", "no host")
 		return
 	}
 
+	if down {
+		down_at = time.Now().Unix()
+	} else {
+		down_at = empty_timestamp
+	}
+
 	backlog.mutex.Lock()
 	defer backlog.mutex.Unlock()
-	backlog.StateDown[host] = data
+	backlog.StateDown[host] = down_at
 }
 
 // getStateDown on buddy backlog
@@ -215,19 +224,16 @@ func findBuddy(buddyConfig []Buddy) {
 // report back to UI, statusList
 func tellBuddyState(host string, up bool, host_service string) {
 	var empty_slice []string
-	var default_int64 int64
-
-	now := time.Now()
 
 	if _, ok := backlog.StateDown[host]; !ok {
-		setStateDown(host, default_int64)
+		setStateDown(host, false)
 	}
 
 	if up {
 		if getStateDown()[host] != 0 {
 			tellServiceListAboutBuddy(host, up)
 		}
-		setStateDown(host, default_int64)
+		setStateDown(host, false)
 		deliverBacklog(host, backlog.buddyBacklog[host])
 		setBacklog(host, empty_slice) //empty backlog for host
 	} else {
@@ -237,7 +243,7 @@ func tellBuddyState(host string, up bool, host_service string) {
 		}
 		if backlog.StateDown[host] == 0 {
 			tellServiceListAboutBuddy(host, up)
-			setStateDown(host, now.Unix())
+			setStateDown(host, true)
 		}
 	}
 }

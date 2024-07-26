@@ -82,22 +82,26 @@ func updateBuddy(event ServiceState, delete string) {
 
 }
 
-// Remove service from Buddies
-func talkToBuddyApiDelete(hosturl string, delete string) {
-	url := hosturl + "/service/" + delete
+// talkToBuddyApiDelete removes a service from Buddies
+func talkToBuddyApiDelete(hostURL, serviceName string) error {
+	url := hostURL + "/service/" + serviceName
 
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return
+		return fmt.Errorf("creating request: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return
+		return fmt.Errorf("executing request: %w", err)
 	}
-
 	defer res.Body.Close()
 
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected status code: %d", res.StatusCode)
+	}
+
+	return nil
 }
 
 func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
@@ -122,7 +126,10 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 	}
 
 	if delete != "" {
-		talkToBuddyApiDelete(host.Url, delete)
+		err := talkToBuddyApiDelete(host.Url, delete)
+		if err != nil {
+			logger.Error("talkToBuddyApi", "delete", err)
+		}
 		return
 	}
 
@@ -158,25 +165,25 @@ func talkToBuddyApi(event ServiceState, host Buddy, delete string) {
 func findBuddy(buddyConfig []Buddy) {
 
 	initBuddyConf(buddyConfig)
-	buddyAmount := len(listBuddies())
+	buddy_amount := len(listBuddies())
 
-	if buddyAmount < 1 {
+	if buddy_amount < 1 {
 		setDashGoatReady(true)
 		//logger.Info("findBuddy", "msg", "0 Buddy found")
 	}
 
 	firstRound := true
 
-	buddyTxt := "Buddy"
-	if buddyAmount > 1 {
-		buddyTxt = "Buddies"
+	buddy_txt := "Buddy"
+	if buddy_amount > 1 {
+		buddy_txt = "Buddies"
 	}
 
-	logger.Info(buddyTxt, "count", buddyAmount)
+	logger.Info("findBuddy", "buddy name", buddy_txt, "count", buddy_amount)
 
-	waitfor := 3
+	wait_for := 3
 	if config.CheckBuddyIntervalSec > 1 {
-		waitfor = config.CheckBuddyIntervalSec
+		wait_for = config.CheckBuddyIntervalSec
 	}
 
 	for {
@@ -199,14 +206,14 @@ func findBuddy(buddyConfig []Buddy) {
 			setDashGoatReady(true)
 		}
 
-		time.Sleep(time.Duration(waitfor) * time.Second)
+		time.Sleep(time.Duration(wait_for) * time.Second)
 		firstRound = false
 	}
 
 }
 
 // report back to UI, statusList
-func tellBuddyState(host string, up bool, servicehost string) {
+func tellBuddyState(host string, up bool, host_service string) {
 	var empty_slice []string
 	var default_int64 int64
 
@@ -224,8 +231,8 @@ func tellBuddyState(host string, up bool, servicehost string) {
 		deliverBacklog(host, backlog.buddyBacklog[host])
 		setBacklog(host, empty_slice) //empty backlog for host
 	} else {
-		if servicehost != "" {
-			backlog_tmp := append(backlog.buddyBacklog[host], servicehost)
+		if host_service != "" {
+			backlog_tmp := append(backlog.buddyBacklog[host], host_service)
 			setBacklog(host, backlog_tmp)
 		}
 		if backlog.StateDown[host] == 0 {
@@ -259,22 +266,25 @@ func deleteBuddyBacklog(valid_buddies []Buddy) {
 
 // Update buddy with messages that could not be delivered
 func deliverBacklog(hostname string, backlog []string) {
-	var hostToUse Buddy
+	var buddy_to_use Buddy
 
 	for _, bhost := range listBuddies() {
 		if bhost.Name == hostname {
-			hostToUse = bhost
+			buddy_to_use = bhost
 		}
 	}
 
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
-	for _, hoststate := range backlog {
-		if _, ok := ss.serviceStateList[hoststate]; ok {
-			talkToBuddyApi(ss.serviceStateList[hoststate], hostToUse, "")
+	for _, host_service := range backlog {
+		if _, ok := ss.serviceStateList[host_service]; ok {
+			talkToBuddyApi(ss.serviceStateList[host_service], buddy_to_use, "")
 		} else {
-			talkToBuddyApiDelete(hostToUse.Url, hoststate)
+			err := talkToBuddyApiDelete(buddy_to_use.Url, host_service)
+			if err != nil {
+				logger.Error("deliverBacklog", "delete", err)
+			}
 		}
 	}
 }
@@ -304,7 +314,7 @@ func askHealth(bhost Buddy) bool {
 	return healthy
 }
 
-// Fetch statuslist from buddy
+// UpdateFromBuddy Fetch statuslist from buddy
 func UpdateFromBuddy(bhost Buddy) error {
 	err := AskApiFullStatusList(bhost)
 	if err != nil {
@@ -347,10 +357,10 @@ func AskApiFullStatusList(bhost Buddy) error {
 		return err
 	}
 
-	for servicehost, status := range resultMap {
+	for host_service, status := range resultMap {
 		if status.Service != "buddy" {
 			ss.mutex.Lock()
-			ss.serviceStateList[servicehost] = status
+			ss.serviceStateList[host_service] = status
 			ss.mutex.Unlock()
 		}
 	}
@@ -378,10 +388,10 @@ func serviceListDeleteBuddy(ok_buddies []Buddy) {
 
 }
 
-func tellServiceListAboutBuddy(buddyName string, up bool) {
+func tellServiceListAboutBuddy(buddy_name string, up bool) {
 	var result ServiceState
 
-	if buddyName == readHostFacts().DashName { //do not report my self
+	if buddy_name == readHostFacts().DashName { //do not report my self
 		return
 	}
 
@@ -390,16 +400,18 @@ func tellServiceListAboutBuddy(buddyName string, up bool) {
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 
-	serviceName := buddyName + "buddy"
+	host_service := buddy_name + "buddy"
 
 	result.Service = "buddy"
-	result.Host = buddyName
+	result.Host = buddy_name
 
-	if ss.serviceStateList[serviceName].Status != result.Status {
+	if ss.serviceStateList[host_service].Status != result.Status {
 		result.Change = time_now
-	} else if ss.serviceStateList[serviceName].Change == 0 {
+	} else if ss.serviceStateList[host_service].Change == 0 {
 		result.Change = time_now
 	}
+
+	result.Probe = time_now
 
 	result.From = append(result.From, config.DashName)
 	result.UpdateKey = "valid"
@@ -420,6 +432,6 @@ func tellServiceListAboutBuddy(buddyName string, up bool) {
 
 	iSnewState(result)
 
-	ss.serviceStateList[serviceName] = result
+	ss.serviceStateList[host_service] = result
 
 }

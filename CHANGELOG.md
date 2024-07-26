@@ -1,4 +1,12 @@
 # Changelog
+## [v1.7.9] - 2024-07-26
+Change:
+ - Improved error handling in buddy config
+ - Updated dependencies
+
+Fix:
+ - Resolved issue with incorrect buddy timestamp
+
 ## [v1.7.8] - 2024-06-09
 Fix:
  - Buddy config unintended behavior, not ignoring own instance name from config file

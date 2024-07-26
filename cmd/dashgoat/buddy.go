@@ -242,10 +242,10 @@ func tellBuddyState(host string, up bool, host_service string) {
 			setBacklog(host, backlog_tmp)
 		}
 		if backlog.StateDown[host] == 0 {
-			tellServiceListAboutBuddy(host, up)
 			setStateDown(host, true)
 		}
 	}
+	tellServiceListAboutBuddy(host, up)
 }
 
 func deleteBuddyBacklog(valid_buddies []Buddy) {

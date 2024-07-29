@@ -436,7 +436,12 @@ func tellServiceListAboutBuddy(buddy_name string, up bool) {
 		logger.Error("tellServiceListAboutBuddy", "error", err)
 	}
 
-	iSnewState(result)
+	change := iSnewState(result) // Informs about state change
+	if change {
+		result.Change = time_now
+	} else {
+		result.Change = ss.serviceStateList[host_service].Change
+	}
 
 	ss.serviceStateList[host_service] = result
 

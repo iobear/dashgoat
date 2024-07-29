@@ -69,7 +69,7 @@ func heartBeat(c echo.Context) error {
 	}
 
 	this_is_now := time.Now().Unix()
-	change := iSnewState(post_service_state) // Informs abount state change
+	change := iSnewState(post_service_state) // Informs about state change
 	if change {
 		post_service_state.Status = "ok"
 		post_service_state.Change = this_is_now

@@ -29,14 +29,9 @@ type (
 		Items HostFact
 		mutex sync.RWMutex
 	}
-	DGshutdown struct {
-		shutdown bool
-		mutex    sync.RWMutex
-	}
 )
 
 var host_facts HostFacts
-var dg_shutdown DGshutdown
 
 func generateHostFacts() {
 	host_facts.mutex.Lock()
@@ -134,21 +129,4 @@ func setDashGoatReady(ready bool) {
 	host_facts.mutex.Lock()
 	defer host_facts.mutex.Unlock()
 	host_facts.Items.Ready = ready
-}
-
-func isDashGoatShutdown() bool {
-	dg_shutdown.mutex.RLock()
-	defer dg_shutdown.mutex.RUnlock()
-	return dg_shutdown.shutdown
-}
-
-func setDashGoatShutdown(state bool) {
-	dg_shutdown.mutex.Lock()
-	defer dg_shutdown.mutex.Unlock()
-	dg_shutdown.shutdown = state
-
-	if state {
-		setDashGoatReady(false)
-	}
-
 }

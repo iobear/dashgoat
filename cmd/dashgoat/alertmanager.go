@@ -44,10 +44,6 @@ type (
 
 func fromAlertmanager(c echo.Context) error {
 
-	if !isDashGoatReady() {
-		return c.NoContent(http.StatusServiceUnavailable)
-	}
-
 	dec := json.NewDecoder(c.Request().Body)
 	defer c.Request().Body.Close()
 

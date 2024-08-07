@@ -41,6 +41,9 @@ func ttlHousekeeping() {
 	defer ticker.Stop()
 
 	for range ticker.C {
+		if isDashGoatShutdown() {
+			break
+		}
 		statusList := readStatusList()
 		currentUnixTimestamp := time.Now().Unix()
 		for key, serviceState := range statusList {

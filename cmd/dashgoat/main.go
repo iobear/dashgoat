@@ -14,8 +14,11 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
+	"time"
 
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
@@ -87,6 +90,7 @@ func main() {
 	flag.StringVar(&config.IPport, "ipport", ":2000", "Specify <ip>:<port>")
 	flag.StringVar(&config.WebPath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
 	flag.StringVar(&config.UpdateKey, "updatekey", "changeme", "Specify key to API update")
+	flag.StringVar(&config.UrnKey, "urnkey", "", "Specify key for Heartbeat and Alertmanager")
 	flag.StringVar(&config.DashName, "dashname", "", "Dashboard name")
 	flag.StringVar(&configfile, "configfile", "dashgoat.yaml", "Name of configfile")
 	flag.StringVar(&buddy_cli.Url, "buddyurl", "", "Buddy url")
@@ -161,7 +165,19 @@ func main() {
 	go findBuddy(config.BuddyHosts)
 	go initPagerDuty()
 
+	//catch interrupt or sigterm
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+	go func() {
+		for sig := range sigs {
+			logger.Error("main", "signal", sig)
+			fmt.Println(sig)
+			setDashGoatShutdown(true)
+			time.Sleep(2 * time.Second)
+			os.Exit(0)
+		}
+	}()
+
 	// Start server
 	e.Logger.Fatal(e.Start(config.IPport))
-
 }

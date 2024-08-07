@@ -18,6 +18,10 @@ import (
 // heartBeat update
 func heartBeat(c echo.Context) error {
 
+	if !isDashGoatReady() {
+		return c.NoContent(http.StatusServiceUnavailable)
+	}
+
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()
 
@@ -88,6 +92,10 @@ func heartBeat(c echo.Context) error {
 
 // updateStatus - service update
 func updateStatus(c echo.Context) error {
+
+	if !isDashGoatReady() {
+		return c.NoContent(http.StatusServiceUnavailable)
+	}
 
 	ss.mutex.Lock()
 	defer ss.mutex.Unlock()

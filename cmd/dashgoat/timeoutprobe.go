@@ -34,6 +34,9 @@ func lostProbeTimer() {
 			}
 		}
 		time.Sleep(time.Duration(interval) * time.Second)
+		if isDashGoatShutdown() {
+			return
+		}
 	}
 
 }

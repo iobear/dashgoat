@@ -10,11 +10,15 @@ import (
 	"context"
 	"embed"
 	"flag"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
+	"time"
 
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
@@ -154,7 +158,19 @@ func main() {
 	go findBuddy(config.BuddyHosts)
 	go initPagerDuty()
 
+	//catch interrupt or sigterm
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+	go func() {
+		for sig := range sigs {
+			logger.Error("main", "signal", sig)
+			fmt.Println(sig)
+			setDashGoatShutdown(true)
+			time.Sleep(2 * time.Second)
+			os.Exit(0)
+		}
+	}()
+
 	// Start server
 	e.Logger.Fatal(e.Start(config.IPport))
-
 }

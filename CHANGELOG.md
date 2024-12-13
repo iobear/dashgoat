@@ -1,4 +1,8 @@
 # Changelog
+## [v1.7.10] - 2024-12-13
+Change:
+ - Go update dependencies
+
 ## [v1.7.9] - 2024-07-26
 Change:
  - Improved error handling in buddy config

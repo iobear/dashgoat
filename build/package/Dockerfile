@@ -18,7 +18,7 @@ ENV BUILD_DATE=$BUILD_DATE
 
 ARG LDFLAGS="-X 'main.Version=${VERSION}' -X 'main.Commit=${COMMIT}' -X 'main.BuildDate=${BUILD_DATE}'"
 
-RUN go get -d -v github.com/labstack/echo/...
+RUN go get -v github.com/labstack/echo/...
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -a -installsuffix cgo -o dashgoat .
 
 # Final stage

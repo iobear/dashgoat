@@ -1,4 +1,4 @@
-VERSION = $(shell git tag -l --sort=-creatordate | head -n 1)
+VERSION = $(shell git tag --sort=-v:refname | head -n 1)
 COMMIT = $(shell git describe --always)
 BUILD_DATE = $(shell date +%Y-%m-%d)
 LDFLAGS = -ldflags="-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.BuildDate=$(BUILD_DATE)'"

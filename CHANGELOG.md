@@ -1,4 +1,8 @@
 # Changelog
+## [1.7.11] - 2024-12-19
+Change:
+ - Go Echo update
+
 ## [v1.7.10] - 2024-12-13
 Change:
  - Go update dependencies

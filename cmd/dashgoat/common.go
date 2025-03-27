@@ -76,6 +76,15 @@ func filterUpdate(ss ServiceState) (ServiceState, error) {
 
 	ss.Host = strings.Replace(ss.Host, " ", "", -1)
 	ss.Host = strings.ToLower(ss.Host)
+
+	//Replace non alpha numeric characters with -
+	ss.Host = strings.Map(func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' || r == '.' {
+			return r
+		}
+		return '-' // Replace all other characters with '-'
+	}, ss.Host)
+
 	ss.Service = strings.Replace(ss.Service, " ", "-", -1)
 	ss.Service = strings.ToLower(ss.Service)
 

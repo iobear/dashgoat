@@ -1,4 +1,4 @@
-module github.com/iobear/dashgoat
+module codeberg.org/iobear/dashgoat
 
 go 1.24
 

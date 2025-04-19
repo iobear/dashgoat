@@ -33,22 +33,19 @@ jobs:
       run: ./tests/link-bin.sh
 
     - name: TTL test
-      run: ./tests/start-single.sh && ./tests/ttl-test.sh
+      run: ./tests/start-single.sh && ./tests/ttl-test.sh && ./tests/stop-instances.sh
 
     - name: Nextupdate test
-      run: ./tests/start-single.sh && ./tests/nextupdate-test.sh
+      run: ./tests/start-single.sh && ./tests/nextupdate-test.sh && ./tests/stop-instances.sh
 
     - name: Metrics test
-      run: ./tests/start-single.sh && ./tests/metrics-test.sh
+      run: ./tests/start-single.sh && ./tests/metrics-test.sh && ./tests/stop-instances.sh
 
     - name: Tags test
-      run: ./tests/start-single.sh && ./tests/tags-test.sh
+      run: ./tests/start-single.sh && ./tests/tags-test.sh && ./tests/stop-instances.sh
 
     - name: Heartbeat test
-      run: ./tests/start-single.sh && ./tests/heartbeat-test.sh
+      run: ./tests/start-single.sh && ./tests/heartbeat-test.sh && ./tests/stop-instances.sh
 
     - name: Alertmanager test
-      run: ./tests/start-single.sh && ./tests/alertmanager-test.sh
-
-    - name: End test
-      run: ./tests/stop-instances.sh
+      run: ./tests/start-single.sh && ./tests/alertmanager-test.sh && ./tests/stop-instances.sh

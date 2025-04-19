@@ -10,14 +10,14 @@ on:
 
 jobs:
   build:
-    runs-on: lxc-bookworm
+    runs-on: codeberg-tiny
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: https://code.forgejo.org/actions/checkout@v4
 
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: https://code.forgejo.org/actions/setup-go@v5
       with:
         go-version: '1.24'
 

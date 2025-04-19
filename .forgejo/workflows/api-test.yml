@@ -32,23 +32,23 @@ jobs:
     - name: Link binary
       run: ./tests/link-bin.sh
 
-    - name: Start Web Service
+    - name: TTL test
       run: ./tests/start-single.sh && ./tests/ttl-test.sh
 
     - name: Nextupdate test
-      run: ./tests/nextupdate-test.sh
+      run: ./tests/start-single.sh && ./tests/nextupdate-test.sh
 
     - name: Metrics test
-      run: ./tests/metrics-test.sh
+      run: ./tests/start-single.sh && ./tests/metrics-test.sh
 
     - name: Tags test
-      run: ./tests/tags-test.sh
+      run: ./tests/start-single.sh && ./tests/tags-test.sh
 
     - name: Heartbeat test
-      run: ./tests/heartbeat-test.sh
+      run: ./tests/start-single.sh && ./tests/heartbeat-test.sh
 
     - name: Alertmanager test
-      run: ./tests/alertmanager-test.sh
+      run: ./tests/start-single.sh && ./tests/alertmanager-test.sh
 
     - name: End test
       run: ./tests/stop-instances.sh

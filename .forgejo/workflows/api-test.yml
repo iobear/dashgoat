@@ -33,8 +33,7 @@ jobs:
       run: ./tests/link-bin.sh
 
     - name: Start Web Service
-      run: ./tests/start-single.sh
-      run: ./tests/ttl-test.sh
+      run: ./tests/start-single.sh && ./tests/ttl-test.sh
 
     - name: Nextupdate test
       run: ./tests/nextupdate-test.sh

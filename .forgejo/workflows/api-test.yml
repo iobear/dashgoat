@@ -34,8 +34,6 @@ jobs:
 
     - name: Start Web Service
       run: ./tests/start-single.sh
-
-    - name: TTL test
       run: ./tests/ttl-test.sh
 
     - name: Nextupdate test

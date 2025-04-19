@@ -16,6 +16,10 @@ for service in "${services[@]}"; do
     curl -X POST "$BASE_URL/update" \
          -H "Content-Type: $CONTENT_TYPE" \
          --data "{\"host\": \"host-1\", \"service\": \"$service\", \"status\": \"error\", \"message\": \"Service $service running\",\"ttl\": 5, \"updatekey\": \"$UPDATE_KEY\"}"
+    if [ $? -ne 0 ]; then
+        echo "Error updating status for service: $service"
+        exit 1
+    fi
 
 done
 

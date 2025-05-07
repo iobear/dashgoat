@@ -149,7 +149,7 @@ func main() {
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)
 	e.GET(add2url(config.WebPath, "/status/listmso"), getStatusListMSO)
 	e.GET(add2url(config.WebPath, "/list/:serviceitem"), getUniq)
-	e.GET(add2url(config.WebPath, "/servicefilter/:item/:itemval"), serviceFilter)
+	e.GET(add2url(config.WebPath, "/status/listsearch/:search_string"), listSearch)
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 

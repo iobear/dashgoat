@@ -184,13 +184,33 @@ func getStatusListMSO(c echo.Context) error {
 
 }
 
-// serviceFilter - list services with item value of..
-func serviceFilter(c echo.Context) error {
-	//placeholder func
+// listSearch - list services with item value of..
+func listSearch(c echo.Context) error {
+
+	search_str := c.Param("search_string")
+	if search_str == "" {
+		return c.JSON(http.StatusBadRequest, "Missing search_string")
+	}
+
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
 
-	return c.JSON(http.StatusOK, ss.serviceStateList)
+	service_state_list := make(map[string]ServiceState)
+
+	for index, event := range ss.serviceStateList {
+
+		if strings.Contains(event.Service, search_str) || strings.Contains(event.Host, search_str) {
+			service_state_list[index] = event
+		}
+	}
+
+	if len(service_state_list) == 0 {
+		msg := "{\"status\": \"error\", \"message\": \"No services found matching the search criteria\"}"
+		return c.JSON(http.StatusNotFound, msg)
+	} else {
+		return c.JSON(http.StatusOK, service_state_list)
+	}
+
 }
 
 // getUniq - list unique values of service items

@@ -118,8 +118,10 @@ func main() {
 		config.WebPath = "/" + config.WebPath
 	}
 
-	dont_embed := false
-	assetHandler := http.FileServer(getFileSystem(dont_embed))
+	embed_web_dir := true //set to false for web development
+
+	use_os_httpdir := !embed_web_dir //do not change
+	assetHandler := http.FileServer(getFileSystem(use_os_httpdir))
 
 	// Add the web path prefix to the routes
 	e.GET(config.WebPath, echo.WrapHandler(assetHandler))

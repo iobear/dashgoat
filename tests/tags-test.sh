@@ -44,6 +44,9 @@ done
 
 echo "cleaning up data"
 
-for service in "${services[@]}"; do
+for service_with_tags in "${services_with_tags[@]}"; do
+    service=$(echo {"$service_with_tags"} | jq -r '.service')
+
+    echo "Cleaning up data for service: $service"
     curl -s --request DELETE --url $BASE_URL/service/host-1${service}
 done

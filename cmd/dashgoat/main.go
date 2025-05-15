@@ -118,10 +118,9 @@ func main() {
 		config.WebPath = "/" + config.WebPath
 	}
 
-	embed_web_dir := true //set to false for web development
+	use_local_dir := false // use local directory for static web files
 
-	use_os_httpdir := !embed_web_dir //do not change
-	assetHandler := http.FileServer(getFileSystem(use_os_httpdir))
+	assetHandler := http.FileServer(getFileSystem(use_local_dir))
 
 	// Add the web path prefix to the routes
 	e.GET(config.WebPath, echo.WrapHandler(assetHandler))
@@ -130,7 +129,7 @@ func main() {
 	} else {
 		e.GET(config.WebPath+"/*", echo.WrapHandler(http.StripPrefix(config.WebPath, assetHandler)))
 	}
-	e.HideBanner = true
+	e.HideBanner = true // hide the echo banner
 
 	e.Use(middleware.Recover())
 
@@ -144,14 +143,19 @@ func main() {
 	e.GET(add2url(config.WebPath, "/metricshistory/:serviceid/:hours"), getMetricsHistory)
 
 	e.POST(add2url(config.WebPath, "/update"), updateStatus)
+
 	e.GET(add2url(config.WebPath, "/heartbeat/:urnkey/:host/:nextupdatesec/:tags"), heartBeat)
-	e.POST(add2url(config.WebPath, "/alertmanager/:urnkey"), fromAlertmanager)
 	e.POST(add2url(config.WebPath, "/heartbeat/:urnkey/:host/:nextupdatesec/:tags"), heartBeat)
+
+	e.POST(add2url(config.WebPath, "/alertmanager/:urnkey"), fromAlertmanager)
+
 	e.GET(add2url(config.WebPath, "/status/:id"), getStatus)
 	e.GET(add2url(config.WebPath, "/status/list"), getStatusList)
 	e.GET(add2url(config.WebPath, "/status/listmso"), getStatusListMSO)
+
 	e.GET(add2url(config.WebPath, "/list/:serviceitem"), getUniq)
 	e.GET(add2url(config.WebPath, "/status/listsearch/:search_string"), listSearch)
+
 	e.DELETE(add2url(config.WebPath, "/service/:id"), deleteServiceHandler)
 	e.GET(add2url(config.WebPath, "/health"), health)
 

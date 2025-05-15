@@ -1,4 +1,8 @@
 # Changelog
+## [1.7.14] - 2025-05-15
+Add:
+ - Search parameter in your GET request
+
 ## [1.7.13] - 2025-04-17
 Change:
  - Update dependencies

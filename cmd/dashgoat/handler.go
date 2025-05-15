@@ -8,6 +8,7 @@ package main
 
 import (
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -192,8 +193,17 @@ func listSearch(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Missing search_string")
 	}
 
+	// check if string only has a-zA-Z0-9 and +,-_
+	if !regexp.MustCompile(`^[a-zA-Z0-9+,-_]+$`).MatchString(search_str) {
+		return c.JSON(http.StatusBadRequest, "Invalid search string")
+	}
+
 	ss.mutex.RLock()
 	defer ss.mutex.RUnlock()
+
+	if len(ss.serviceStateList) == 0 {
+		return c.NoContent(http.StatusNoContent)
+	}
 
 	service_state_list := make(map[string]ServiceState)
 
@@ -205,8 +215,7 @@ func listSearch(c echo.Context) error {
 	}
 
 	if len(service_state_list) == 0 {
-		msg := "{\"status\": \"error\", \"message\": \"No services found matching the search criteria\"}"
-		return c.JSON(http.StatusNotFound, msg)
+		return c.NoContent(http.StatusNoContent)
 	} else {
 		return c.JSON(http.StatusOK, service_state_list)
 	}

@@ -4,8 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-const host = window.location;
-const status_list_uri = 'status/list';
+const host = window.location.origin + window.location.pathname;
+let status_list_uri = 'status/list';
 const health_uri = 'health';
 const sleep = (sec) => {
 	return new Promise(resolve => setTimeout(resolve, sec * 1000))
@@ -13,13 +13,22 @@ const sleep = (sec) => {
 
 function askAPI()
 {
-	const url = host + status_list_uri;
+	search = getSearchQuery();
+	var url = host + status_list_uri;
+
+	if (search != '') {
+		url = 'status/listsearch/' + getSearchQuery();
+	}
 
 	fetch(url)
 		.then(function(response)
 		{
 			if (response.status == 204){
-				return tellDashboard("Waiting for first update", "info");
+				if (search === '') {
+					return tellDashboard("Waiting for first update", "info");
+				} else {
+					return tellDashboard("Empty search result", "info");
+				}
 			}
 			return response.json();
 		})

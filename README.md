@@ -1,10 +1,14 @@
 # dashGoat
 
-dashGoat - A simple HTTP dashboard, easy to deploy.
+dashGoat - A simple HTTP dashboard and API, easy to deploy.
 
 ![Alt dashgoat](doc/dashgoat.png?raw=true "DashGoat")
 
 [CHANGELOG](CHANGELOG.md) [API](doc/API.md) [k8s](/iobear/dashgoat/src/branch/master/deploy/kubernetes)
+
+## Why?
+
+We had a quite a few scripts that were running on our servers, but we didn't have a way to monitor them easily. dashGoat should solve this by having a simple API with features like heartbeat, auto resolve and dependencies.
 
 ## Features
 
@@ -164,6 +168,10 @@ curl --request POST \
 In this case if `loadbalancer-1` is down, all the services that has `"dependon": "loadbalancer-1"` will reduce status to `info` until its up again. If you have more that one server your service depends on then you can also use tags, the value is checked for matches with both hosts and tags.
 <br /> In the above `Tags` example instead of using `dependon:trans-1`, you can use the ch2 tag `dependon:tr-ch2` and dashGoat will check if there is other services with the same tag that is up, and will only say 1/X is down. When setup correctly, this reduces events with `error` and `critical` and only show "upstream" errors.
 
+## Searching
+
+You can search for services by using the `search` parameter in your GET request. For example, to search for all services that contain "nginx", you would use the following URL:  `/?search=nginx`. This will return a list of services, hosts and messages that contain "nginx" in their service or host name.
+
 ## Alertmanager
 
 You can forward the alerts from your different alertmanagers to display on a dashGoat central screen or share with other systems. You need to set the `urnkey` in your dashGoat config for this to work.
@@ -299,10 +307,9 @@ To include the config file:
 
  * Delete event on dashboard via mouse
  * MS teams support
- * API tests (in progress)
+ * More API tests
  * Configuration tests 
  * Save state
- * Tags filter view / filter API
  * Users +gravatar?
  * Ack event
  * Auth on delete

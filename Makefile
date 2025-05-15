@@ -45,6 +45,7 @@ test:
 	./tests/tags-test.sh
 	./tests/alertmanager-test.sh
 	./tests/heartbeat-test.sh
+	./tests/search-test.sh
 	./tests/stop-instances.sh
 
 clean:

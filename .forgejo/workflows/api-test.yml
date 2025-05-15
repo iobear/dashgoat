@@ -49,3 +49,6 @@ jobs:
 
     - name: Alertmanager test
       run: ./tests/start-single.sh && ./tests/alertmanager-test.sh && ./tests/stop-instances.sh
+
+    - name: Search test
+      run: ./tests/start-single.sh && ./tests/search-test.sh && ./tests/stop-instances.sh

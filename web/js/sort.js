@@ -155,3 +155,29 @@ function sortListByValue(list_to_sort, list_count)
 
 	return new_list;
 }
+
+function getSearchQuery() {
+
+	const urlParams = new URLSearchParams(window.location.search);
+	let searchParam = urlParams.get('search');
+	if (searchParam === null) {
+		console.log("No search parameter found");
+		return '';
+	} else {
+		searchParam = decodeURIComponent(searchParam); // Decode the URI component to handle special characters
+	}
+
+	searchParam = searchParam.replace(/ /g, '+'); // Replace spaces with plus signs for URL encoding
+
+	// allow only  a-zA-Z0-9 and +,-_, delete non ascii characters
+
+	let new_search_param = '';
+	for (let i = 0; i < searchParam.length; i++) {
+		if ((searchParam[i] >= 'A' && searchParam[i] <= 'Z') || (searchParam[i] >= 'a' && searchParam[i] <= 'z') || (searchParam[i] >= '0' && searchParam[i] <= '9') || searchParam[i] === '+' || searchParam[i] === '-' || searchParam[i] === '_' || searchParam[i] === ',') {
+			new_search_param += searchParam[i];
+		}
+	}
+
+	return new_search_param;
+
+}

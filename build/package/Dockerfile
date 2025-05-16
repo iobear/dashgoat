@@ -1,6 +1,6 @@
 # Run this file Makefile command "make docker"
 # Build stage
-FROM golang:alpine AS build-env
+FROM docker.io/golang:alpine AS build-env
 RUN apk add build-base git
 WORKDIR /go/src/dashgoatbuild
 
@@ -22,7 +22,7 @@ RUN go get -v github.com/labstack/echo/...
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -a -installsuffix cgo -o dashgoat .
 
 # Final stage
-FROM alpine:latest
+FROM docker.io/alpine:latest
 COPY --from=build-env /go/src/dashgoatbuild/dashgoat /app/dashgoat
 
 EXPOSE 2000

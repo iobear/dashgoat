@@ -35,7 +35,7 @@ rpi: prepare
 	GOOS=linux GOARCH=arm GOARM=5 go build $(LDFLAGS) -o build/$(BINARY_NAME)-rpi $(SOURCE_FILE)
 
 podman: prepare
-	podman build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t analogbear/dashgoat:$(VERSION) -t analogbear/dashgoat:latest .
+	podman build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t docker.io/analogbear/dashgoat:$(VERSION) -t docker.io/analogbear/dashgoat:latest .
 
 test:
 	./tests/link-bin.sh

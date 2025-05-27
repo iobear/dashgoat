@@ -1,17 +1,17 @@
 # Changelog
-## [1.7.14] - 2025-05-15
+## [v1.7.14] - 2025-05-15
 Add:
  - Search parameter in your GET request
 
-## [1.7.13] - 2025-04-17
+## [v1.7.13] - 2025-04-17
 Change:
  - Update dependencies
 
-## [1.7.12] - 2025-03-13
+## [v1.7.12] - 2025-03-13
 Change:
  - Go update, plus dependencies
 
-## [1.7.11] - 2024-12-19
+## [v1.7.11] - 2024-12-19
 Change:
  - Go Echo update
 

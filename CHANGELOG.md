@@ -1,4 +1,8 @@
 # Changelog
+## [v1.7.15] - 2025-08-14
+Change:
+ - Go update, plus dependencies
+
 ## [v1.7.14] - 2025-05-15
 Add:
  - Search parameter in your GET request

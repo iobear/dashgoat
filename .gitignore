@@ -4,8 +4,10 @@ vendor/
 # macOS
 .DS_Store
 
+#stuff
 build/dashgoa*
 tmp
 .vscode
 dashgoat.yaml
 cmd/dashgoat/web
+dashgoat

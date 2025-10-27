@@ -20,9 +20,14 @@ function askAPI()
 		url = 'status/listsearch/' + getSearchQuery();
 	}
 
-	fetch(url)
+	// Create AbortController for timeout
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+
+	fetch(url, { signal: controller.signal })
 		.then(function(response)
 		{
+			clearTimeout(timeoutId); // Clear timeout on successful response
 			if (response.status == 204){
 				if (search === '') {
 					return tellDashboard("Waiting for first update", "info");
@@ -36,6 +41,7 @@ function askAPI()
 		{
 			prepareData(data);
 		}).catch(err =>{
+			clearTimeout(timeoutId); // Clear timeout on error
 			console.log(err);
 			waitForBackend();
 		});

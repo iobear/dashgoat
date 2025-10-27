@@ -1,4 +1,11 @@
 # Changelog
+## [v1.7.16] - 2025-10-27
+Change:
+ - Update dependencies
+
+Add
+ - JS timeout for backend fetch()
+
 ## [v1.7.15] - 2025-08-14
 Change:
  - Go update, plus dependencies

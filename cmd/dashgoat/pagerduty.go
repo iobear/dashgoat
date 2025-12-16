@@ -99,6 +99,7 @@ func validatePagerdutyConf() error {
 	return result
 }
 
+// initPagerDuty initializes PagerDuty client
 func initPagerDuty() {
 	logger.Info("PagerDuty mode is " + config.PagerdutyConfig.PdMode)
 
@@ -114,6 +115,7 @@ func initPagerDuty() {
 
 }
 
+// shouldPagerDutyTrigger checks if the severity_to_check meets or exceeds the trigger level
 func shouldPagerDutyTrigger(severity_to_check string) bool {
 	trigger_level := indexOf(severities[:], config.PagerdutyConfig.TriggerLevel)
 	to_check := indexOf(severities[:], severity_to_check)
@@ -123,6 +125,7 @@ func shouldPagerDutyTrigger(severity_to_check string) bool {
 
 }
 
+// CompilePdEvent creates a PagerDuty event from a ServiceState
 func CompilePdEvent(fromstate string, reportss ServiceState) PagerDutyEvent {
 	var pdevent PagerDutyEvent
 
@@ -151,6 +154,7 @@ func CompilePdEvent(fromstate string, reportss ServiceState) PagerDutyEvent {
 
 }
 
+// pagerDutyShipper sends updates to TellPagerDutyApi
 func (c *PdClient) pagerDutyShipper(fromstate string, reportss ServiceState) {
 
 	pdkey, _ := findKey(reportss)
@@ -181,6 +185,7 @@ func (c *PdClient) pagerDutyShipper(fromstate string, reportss ServiceState) {
 
 }
 
+// findKey looks for matching hostservice or tag in PagerDuty config and returns the eapikey
 func findKey(dgss ServiceState) (pdkey string, pdmatch string) {
 
 	var result string

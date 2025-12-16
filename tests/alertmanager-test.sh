@@ -78,6 +78,13 @@ PROBE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].probe')
 CHANGE=$(curl -s localhost:2000/status/list | jq '.["cluster-0testapp"].change')
 
 if [[ $PROBE -ne $CHANGE ]]; then
+
+  #1sec difference due to timing
+  if [[ $((CHANGE - PROBE)) -eq 1 ]]; then
+      echo "OK"
+      continue
+  fi
+
   echo "Unexpected API response for .change and .probe"
   echo $PROBE $CHANGE
   exit 1

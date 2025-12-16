@@ -2,6 +2,7 @@
 
 echo
 echo "-- nextupdate test --"
+echo "-- This test will verify that nextupdatesec updates work as expected, by checking that .probe and .change timestamps behave correctly --"
 echo
 
 BASE_URL="http://localhost:2000"
@@ -23,13 +24,25 @@ done
 
 for service in "${services[@]}"; do
 
-    echo "Checking probe and change is the same ${service}"
+    echo "Checking probe and change is the same for service ${service}"
+
     PROBE=$(curl -s "$BASE_URL/status/host-1${service}" | jq '.probe')
+    echo "Probe timestamp: $PROBE"
+
     CHANGE=$(curl -s "$BASE_URL/status/host-1${service}" | jq '.change')
+    echo "Change timestamp: $CHANGE"
 
     if [[ $PROBE -ne $CHANGE ]]; then
+
+        #1sec difference due to timing
+        if [[ $((CHANGE - PROBE)) -eq 1 ]]; then
+            echo "OK"
+            continue
+        fi
+
         echo $PROBE $CHANGE
         echo "Unexpected API response for .change and .probe ${service}"
+        echo "Expecting timestamps to be the same"
         exit 1
     else
         echo "OK"

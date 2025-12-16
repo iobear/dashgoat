@@ -1,4 +1,10 @@
 # Changelog
+## [v1.7.17] - 2025-12-16
+Change:
+ - PagerDuty alert delay
+ - Alertmanager and Updatenext tests
+ - Update dependencies
+
 ## [v1.7.16] - 2025-10-27
 Change:
  - Update dependencies

@@ -25,6 +25,8 @@ We had a quite a few scripts that were running on our servers, but we didn't hav
 
 `./dashgoat -updatekey my-precious!`
 
+`make test` will run API tests on the binary
+
 ## Docker
 
 ```docker run -e UPDATEKEY=my-precious! -p 2000:2000 --rm --name=dashgoat analogbear/dashgoat```

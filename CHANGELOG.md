@@ -154,7 +154,7 @@ Change:
 
 ## [v1.4.2] - 2023-12-14
 Fix:
- - Check for nextupdatesec, always beeing 19sec.
+ - Check for nextupdatesec, always being 19sec.
 
 Change:
  - ttlHousekeeping() to more readable code.
@@ -177,11 +177,11 @@ New:
 - TtlOkDelete, seconds before deleting a service with state "ok".
 
 Change:
- - TTL behaviour, 4 config modes: Remove, PromoteOnce, PromoteOneStep, PromoteToOk (default).
+ - TTL behavior, 4 config modes: Remove, PromoteOnce, PromoteOneStep, PromoteToOk (default).
 
 ## [v1.3.0] - 2023-09-13
 New:
- - k8s aware buddies and by extention, DNS aware buddies. DashGoat pods shoud be able to find each other, in the same namespace, provided there is a headless service called dashgoat-headless-svc.
+ - k8s aware buddies and by extension, DNS aware buddies. DashGoat pods should be able to find each other, in the same namespace, provided there is a headless service called dashgoat-headless-svc.
 
 ## [v1.2.9] - 2023-03-01
 Change:
@@ -194,7 +194,7 @@ Change:
 
 ## [v1.2.6] - 2022-07-02
 Change:
- - TTL feature, add option to only change state to ok, instead of beeing deleted
+ - TTL feature, add option to only change state to ok, instead of being deleted
 
 ## [v1.2.0] - 2022-03-18
 New:

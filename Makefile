@@ -37,7 +37,7 @@ rpi: prepare
 podman: prepare
 	podman build --build-arg VERSION=$(VERSION) --build-arg COMMIT=$(COMMIT) --build-arg BUILD_DATE=$(BUILD_DATE)  -f $(DOCKERFILE_PATH) -t docker.io/analogbear/dashgoat:$(VERSION) -t docker.io/analogbear/dashgoat:latest .
 
-test:
+test: build
 	./tests/link-bin.sh
 	./tests/start-single.sh
 	./tests/ttl-test.sh

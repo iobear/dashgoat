@@ -6,7 +6,10 @@
 
 package main
 
-import "strings"
+import (
+	"strings"
+	"time"
+)
 
 // iSnewState checks if state is changing
 // Only call this method if you have ss.mutex lock
@@ -24,11 +27,15 @@ func iSnewState(checkss ServiceState) (change bool) {
 
 		// change
 		go reportStateChange(current_status, checkss)
+		time.Sleep(100 * time.Millisecond)
+
 		return true
 	}
 
 	// change, new service
 	go reportStateChange("", checkss)
+	time.Sleep(100 * time.Millisecond)
+
 	return true
 }
 

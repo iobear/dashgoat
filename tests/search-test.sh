@@ -45,6 +45,38 @@ else
     exit 1
 fi
 
+echo "Searching by host name: host-1 should match all three services"
+
+SERVICE=$(curl -s "$BASE_URL/status/listsearch/host-1")
+COUNT=$(echo "$SERVICE" | jq '[.[] | .host] | length')
+if [ "$COUNT" -eq "${#services[@]}" ]; then
+    echo "All ${#services[@]} services found via host search - OK"
+else
+    echo "Expected ${#services[@]} results searching by host, got $COUNT - ERROR"
+    exit 1
+fi
+
+echo "Searching by partial host name: host should match all services on host-1"
+
+SERVICE=$(curl -s "$BASE_URL/status/listsearch/host")
+COUNT=$(echo "$SERVICE" | jq '[.[] | .host] | length')
+if [ "$COUNT" -ge "${#services[@]}" ]; then
+    echo "Services matched via partial host name - OK"
+else
+    echo "Expected at least ${#services[@]} results for partial host search, got $COUNT - ERROR"
+    exit 1
+fi
+
+echo "Searching for non-existent term should return no results"
+
+RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/status/listsearch/zzz-no-match")
+if [ "$RESPONSE" = "204" ] || [ "$RESPONSE" = "200" ]; then
+    echo "Non-matching search returned $RESPONSE - OK"
+else
+    echo "Expected 204 or 200 for non-matching search, got $RESPONSE - ERROR"
+    exit 1
+fi
+
 echo "cleaning up data"
 
 for service in "${services[@]}"; do

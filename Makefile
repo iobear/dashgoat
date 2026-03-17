@@ -47,6 +47,7 @@ test: build
 	./tests/alertmanager-test.sh
 	./tests/heartbeat-test.sh
 	./tests/search-test.sh
+	./tests/dependon-test.sh
 	./tests/stop-instances.sh
 
 clean:

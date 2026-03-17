@@ -2,724 +2,444 @@
 	"info": {
 		"_postman_id": "",
 		"name": "dashGoat",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "1337"
+		"description": "dashGoat API collection. Set the collection variables before use:\n- `dashgoat_host`: base URL of your dashGoat instance\n- `dashgoat_updatekey`: write key for POST /update\n- `dashgoat_urnkey`: key for heartbeat and alertmanager endpoints\n- `dashgoat_buddy1` / `dashgoat_buddy2`: base URLs for buddy instances",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Update ok",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
+			"name": "Status Updates",
+			"description": "POST /update — submit or update the status of a host/service pair.",
+			"item": [
+				{
+					"name": "Update ok",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"ok\",\n  \"message\": \"All good\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "Update info",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"info\",\n  \"message\": \"Informational\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update warning",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"warning\",\n  \"message\": \"Degraded performance\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update error",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"error\",\n  \"message\": \"Service failing\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update critical",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"critical\",\n  \"message\": \"Service down\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update with nextupdatesec (watchdog)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"rsync\",\n  \"status\": \"ok\",\n  \"message\": \"Backup completed\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"nextupdatesec\": 3600\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update with TTL (auto-resolve)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"uptime\",\n  \"status\": \"ok\",\n  \"message\": \"Server rebooted — message clears in 60s\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"ttl\": 60\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update with tags",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"nginx\",\n  \"status\": \"ok\",\n  \"message\": \"Serving traffic\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"tags\": [\"production\", \"uk\", \"customer\"]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update with dependon",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"nginx\",\n  \"status\": \"error\",\n  \"message\": \"No requests\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"dependon\": \"loadbalancer-1\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update full example",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"MyApp\",\n  \"status\": \"ok\",\n  \"message\": \"Running v2.3.1\",\n  \"severity\": \"info\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"nextupdatesec\": 120,\n  \"ttl\": 600,\n  \"tags\": [\"production\", \"eu-west\"],\n  \"dependon\": \"database-1\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_host}}/update", "host": ["{{dashgoat_host}}"], "path": ["update"] }
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update MyApp ok",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
+			"name": "Heartbeat",
+			"description": "GET /heartbeat — lightweight keep-alive for devices where POST is not available.",
+			"item": [
+				{
+					"name": "Heartbeat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dashgoat_host}}/heartbeat/{{dashgoat_urnkey}}/router01/60/router,home",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["heartbeat", "{{dashgoat_urnkey}}", "router01", "60", "router,home"]
+						},
+						"description": "Sets host=router01 service=heartbeat to ok. Warns if no update arrives within 60s. Tags: router, home."
+					},
+					"response": []
 				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"MyApp\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update host-2 ok",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-2\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
+			"name": "Read Status",
+			"description": "Read-only endpoints — no authentication required.",
+			"item": [
+				{
+					"name": "Status list (full)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/status/list", "host": ["{{dashgoat_host}}"], "path": ["status", "list"] },
+						"description": "Returns all tracked service states keyed by {host}{service}."
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "Status list MSO (simplified)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/status/listmso", "host": ["{{dashgoat_host}}"], "path": ["status", "listmso"] },
+						"description": "Returns a simplified {status, message} map for MSO/HPO integrations."
+					},
+					"response": []
+				},
+				{
+					"name": "Status by ID",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": {
+							"raw": "{{dashgoat_host}}/status/host-1HTTP",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["status", "host-1HTTP"]
+						},
+						"description": "Returns the state for a single service. ID format: {host}{service}."
+					},
+					"response": []
+				},
+				{
+					"name": "Search status",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": {
+							"raw": "{{dashgoat_host}}/status/listsearch/nginx",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["status", "listsearch", "nginx"]
+						},
+						"description": "Returns service states whose host or service name contains the search string."
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update Info",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"info\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
+			"name": "List Unique Values",
+			"description": "GET /list/:field — returns a sorted array of unique values for a given field.",
+			"item": [
+				{
+					"name": "List hosts",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/list/host", "host": ["{{dashgoat_host}}"], "path": ["list", "host"] }
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "List services",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/list/service", "host": ["{{dashgoat_host}}"], "path": ["list", "service"] }
+					},
+					"response": []
+				},
+				{
+					"name": "List statuses",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/list/status", "host": ["{{dashgoat_host}}"], "path": ["list", "status"] }
+					},
+					"response": []
+				},
+				{
+					"name": "List tags",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": { "raw": "{{dashgoat_host}}/list/tags", "host": ["{{dashgoat_host}}"], "path": ["list", "tags"] }
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update Warning",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
+			"name": "Delete",
+			"description": "DELETE /service/:id — remove a service from state tracking.",
+			"item": [
+				{
+					"name": "Delete service",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dashgoat_host}}/service/host-1HTTP",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["service", "host-1HTTP"]
+						},
+						"description": "Deletes the service state for host-1 / HTTP. Returns 204 on success, 404 if not found."
+					},
+					"response": []
 				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"warning\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update Error",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"error\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
+			"name": "Alertmanager",
+			"description": "POST /alertmanager/:urnkey — receive Prometheus Alertmanager webhooks.",
+			"item": [
+				{
+					"name": "Alertmanager webhook (firing)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"4\",\n  \"groupKey\": \"{}:{alertname=\\\"HighErrorRate\\\"}\",\n  \"status\": \"firing\",\n  \"receiver\": \"dashgoat\",\n  \"groupLabels\": { \"alertname\": \"HighErrorRate\" },\n  \"commonLabels\": {\n    \"alertname\": \"HighErrorRate\",\n    \"severity\": \"error\",\n    \"namespace\": \"production\"\n  },\n  \"commonAnnotations\": { \"summary\": \"Error rate above threshold\" },\n  \"externalURL\": \"http://alertmanager:9093\",\n  \"alerts\": [\n    {\n      \"status\": \"firing\",\n      \"labels\": {\n        \"alertname\": \"HighErrorRate\",\n        \"namespace\": \"production\",\n        \"container\": \"api\"\n      },\n      \"annotations\": { \"summary\": \"Error rate above threshold\" },\n      \"startsAt\": \"2024-06-13T18:52:47Z\",\n      \"endsAt\": \"0001-01-01T00:00:00Z\",\n      \"generatorURL\": \"http://prometheus:9090/graph\"\n    }\n  ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{dashgoat_host}}/alertmanager/{{dashgoat_urnkey}}",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["alertmanager", "{{dashgoat_urnkey}}"]
+						}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "Alertmanager webhook (resolved)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"version\": \"4\",\n  \"groupKey\": \"{}:{alertname=\\\"HighErrorRate\\\"}\",\n  \"status\": \"resolved\",\n  \"receiver\": \"dashgoat\",\n  \"groupLabels\": { \"alertname\": \"HighErrorRate\" },\n  \"commonLabels\": {\n    \"alertname\": \"HighErrorRate\",\n    \"severity\": \"error\",\n    \"namespace\": \"production\"\n  },\n  \"commonAnnotations\": { \"summary\": \"Error rate back to normal\" },\n  \"externalURL\": \"http://alertmanager:9093\",\n  \"alerts\": [\n    {\n      \"status\": \"resolved\",\n      \"labels\": {\n        \"alertname\": \"HighErrorRate\",\n        \"namespace\": \"production\",\n        \"container\": \"api\"\n      },\n      \"annotations\": { \"summary\": \"Error rate back to normal\" },\n      \"startsAt\": \"2024-06-13T18:52:47Z\",\n      \"endsAt\": \"2024-06-13T19:00:00Z\",\n      \"generatorURL\": \"http://prometheus:9090/graph\"\n    }\n  ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{dashgoat_host}}/alertmanager/{{dashgoat_urnkey}}",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["alertmanager", "{{dashgoat_urnkey}}"]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update Critical",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"critical\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
+			"name": "Observability",
+			"description": "Health check, Prometheus metrics, and metrics history.",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{dashgoat_host}}/health", "host": ["{{dashgoat_host}}"], "path": ["health"] },
+						"description": "Returns 200 OK when ready, 503 otherwise. Response body includes version, uptime, and feature flags."
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "Prometheus metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{dashgoat_host}}/metrics", "host": ["{{dashgoat_host}}"], "path": ["metrics"] },
+						"description": "Exposes Prometheus metrics in text format."
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics history",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json", "type": "text" }],
+						"url": {
+							"raw": "{{dashgoat_host}}/metricshistory/host-1HTTP/24",
+							"host": ["{{dashgoat_host}}"],
+							"path": ["metricshistory", "host-1HTTP", "24"]
+						},
+						"description": "Fetches 24h of historical status for service ID host-1HTTP from Prometheus. Requires prometheusurl to be configured."
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update Nextupdatesec 20",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello Nextupdatesec 20 sec\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"nextupdatesec\": 20\n}"
+			"name": "Buddy",
+			"description": "Test requests targeting buddy instances directly.",
+			"item": [
+				{
+					"name": "Buddy 1 — update ok",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"ok\",\n  \"message\": \"Hello from buddy 1\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_buddy1}}/update", "host": ["{{dashgoat_buddy1}}"], "path": ["update"] }
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update TTL 10",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"TTL test 10 sec\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"ttl\": 10\n}"
+				{
+					"name": "Buddy 2 — update info",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"info\",\n  \"message\": \"Hello from buddy 2\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_buddy2}}/update", "host": ["{{dashgoat_buddy2}}"], "path": ["update"] }
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{dashgoat_host}}/update",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"update"
-					]
+				{
+					"name": "Buddy 2 — update with nextupdatesec",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"host\": \"host-1\",\n  \"service\": \"HTTP\",\n  \"status\": \"ok\",\n  \"message\": \"Watchdog via buddy 2\",\n  \"updatekey\": \"{{dashgoat_updatekey}}\",\n  \"nextupdatesec\": 20\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{dashgoat_buddy2}}/update", "host": ["{{dashgoat_buddy2}}"], "path": ["update"] }
+					},
+					"response": []
+				},
+				{
+					"name": "Buddy 1 — delete host-1 MyApp",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dashgoat_buddy1}}/service/host-1MyApp",
+							"host": ["{{dashgoat_buddy1}}"],
+							"path": ["service", "host-1MyApp"]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "dashGoat health",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/health",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"health"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Status List",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/status/list",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"status",
-						"list"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Simple Status List",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/status/listmso",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"status",
-						"listmso"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Status/host-1HTTP",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/status/host-1HTTP",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"status",
-						"host-1HTTP"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List known hosts",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/list/host",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"list",
-						"host"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List known service",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/list/status",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"list",
-						"status"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List known status",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true,
-					"accept": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/list/status",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"list",
-						"status"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete host-1 HTTP",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_host}}/service/host-1HTTP",
-					"host": [
-						"{{dashgoat_host}}"
-					],
-					"path": [
-						"service",
-						"host-1HTTP"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Buddy1 ok",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_buddy1}}/update",
-					"host": [
-						"{{dashgoat_buddy1}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Buddy2 info",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"info\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\"\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_buddy2}}/update",
-					"host": [
-						"{{dashgoat_buddy2}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Buddy2 Nextupdatesec 20",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"host-1\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"{{dashgoat_updatekey}}\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_buddy2}}/update",
-					"host": [
-						"{{dashgoat_buddy2}}"
-					],
-					"path": [
-						"update"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Buddy1 delete host-1 MyApp",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"host\": \"myhost01\",\n\"service\": \"HTTP\",\n\"status\": \"ok\",\n\"message\": \"Hello World\",\n\"updatekey\": \"my-precious!\",\n\"nextupdatesec\": 20\n}"
-				},
-				"url": {
-					"raw": "{{dashgoat_buddy1}}/service/host-1MyApp",
-					"host": [
-						"{{dashgoat_buddy1}}"
-					],
-					"path": [
-						"service",
-						"host-1MyApp"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"script": { "type": "text/javascript", "exec": [""] }
 		},
 		{
 			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
+			"script": { "type": "text/javascript", "exec": [""] }
 		}
 	],
 	"variable": [
@@ -734,12 +454,19 @@
 			"type": "string"
 		},
 		{
-			"key": "dashgoat_buddy2",
-			"value": "http://localhost:2002"
+			"key": "dashgoat_urnkey",
+			"value": "my-urnkey",
+			"type": "string"
 		},
 		{
 			"key": "dashgoat_buddy1",
-			"value": "http://localhost:2001"
+			"value": "http://localhost:2001",
+			"type": "string"
+		},
+		{
+			"key": "dashgoat_buddy2",
+			"value": "http://localhost:2002",
+			"type": "string"
 		}
 	]
 }

@@ -1,129 +1,292 @@
-# dashGoat API Documentation
+# dashGoat API
 
-dashGoat API documentation! Below you will find a list of available endpoints, including required headers, request bodies, and examples.
+dashGoat exposes a simple HTTP/JSON API for submitting and querying service status, heartbeats, and alert integrations.
 
 ## Base URL
 
-The base URL for all API requests is `http://localhost:2000`.
+```
+http://localhost:2000
+```
+
+The base path can be changed via the `webpath` config option.
+
+---
 
 ## Authentication
 
-All requests to the dashGoat API require an `updatekey` for authentication. Include your `updatekey` in the request body as shown in the examples below.
+Two key types are used depending on the endpoint:
 
-## Content-Type
+| Key | Config / Flag | Env var | Used by |
+|-----|--------------|---------|---------|
+| `updatekey` | `-updatekey` / `updatekey:` | `UPDATEKEY` | `POST /update` (in request body) |
+| `urnkey` | `-urnkey` / `urnkey:` | `URNKEY` | `GET /heartbeat/…`, `POST /alertmanager/…` (in URL path) |
 
-All requests should include the `Content-Type: application/json` header unless otherwise specified.
+Read (GET) and delete endpoints require no authentication.
 
-## API Endpoints
+---
 
-### Update Status
+## Endpoints
 
-- **POST** `/update`
-  - **Description**: Updates the status of a given host and service.
-  - **Headers**:
-    - `Content-Type: application/json`
-  - **Body**:
-    ```json
-    {
-      "host": "host-1",
-      "service": "HTTP",
-      "status": "ok", // <ok/info/warning/error/critical>
-      "message": "Hello World",
-      "severity": "info", // (optional)
-      "nextupdatesec": 601, // expect update within 601 seconds (optional)
-      "ttl": 600, // If no new update, assume system ok after 600 seconds (optional)
-      "tags": ["production","uk","customer"], // (optional)
-      "probe": 1610839637, // last seen unix timestamp (optional)
-      "from": ["uptimeprobe-uk"], // (optional)
-      "dependon": "loadbalancer-uk-1", // My service depends on loadbalancer-uk-1 (optional)
-      "updatekey": "your_updatekey_here"
-    }
-    ```
-  - **Notes**: Replace `your_updatekey_here` with your actual `dashgoat_updatekey`.
-  <br/>(*) Is optional
+### Status updates
 
-### Health Check
+#### `POST /update`
 
-- **GET** `/health`
-  - **Description**: Checks the health of the dashGoat service.
-  - **Headers**:
-    - `Content-Type: application/json`
+Submit or update the status of a host/service pair.
 
-### Status List
+**Request body** (`application/json`):
 
-- **GET** `/status/list`
-  - **Description**: Retrieves a list of all status updates.
-  - **Headers**:
-    - `Accept: application/json`
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `updatekey` | string | ✅ | API write key |
+| `host` | string | ✅ | Host identifier |
+| `service` | string | ✅ | Service name |
+| `status` | string | ✅ | `ok` · `info` · `warning` · `error` · `critical` |
+| `message` | string | | Human-readable description |
+| `severity` | string | | Override display severity |
+| `nextupdatesec` | int | | Watchdog interval in seconds — warn if no update arrives within this window |
+| `ttl` | int | | Auto-resolve after N seconds (see TTL modes in README) |
+| `tags` | string[] | | Labels for grouping / dependency matching |
+| `probe` | int | | Last-seen Unix timestamp (set by probe, not dashGoat) |
+| `from` | string[] | | Source identifiers |
+| `dependon` | string | | Host or tag this service depends on — reduces severity when upstream is down |
+
+**Response:** `201 Created` — the stored `ServiceState` object.
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:2000/update \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "host": "host-1",
+    "service": "nginx",
+    "status": "ok",
+    "message": "All good",
+    "updatekey": "my-precious!",
+    "nextupdatesec": 60,
+    "tags": ["production", "uk"]
+  }'
+```
+
+---
+
+### Heartbeat (watchdog via GET)
+
+#### `GET /heartbeat/:urnkey/:host/:nextupdatesec/:tags`
+
+Lightweight keep-alive endpoint, useful when only HTTP GET is available (e.g. routers, embedded devices). Sets the service `heartbeat` on the given host to `ok`.
+
+| Param | Description |
+|-------|-------------|
+| `urnkey` | URN authentication key |
+| `host` | Host identifier |
+| `nextupdatesec` | Watchdog interval in seconds |
+| `tags` | Comma-separated tags (e.g. `router,home`) |
+
+**Response:** `200 OK` — the stored `ServiceState` object.
+
+**Example:**
+
+```bash
+curl http://localhost:2000/heartbeat/my-urnkey/router01/30/router,home
+```
+
+---
+
+### Read status
+
+#### `GET /status/list`
+
+Returns all tracked service states as a JSON object keyed by `{host}{service}`.
+
+**Response:** `200 OK` · `204 No Content` (when empty)
+
 ```json
 {
-"demo2buddy":
-  {"service":"buddy","host":"demo2","status":"ok","message":"buddy up","severity":"info","nextupdatesec":0,"tags":null,"probe":1718304779,"change":1718304779,"from":["demo"],"ack":"","ttl":0,"dependon":"","UpdateKey":"valid"},
-"gateway-1heartbeat":
-  {"service":"heartbeat","host":"gateway-1","status":"ok","message":"","severity":"info","nextupdatesec":66,"tags":["router","demo"],"probe":1718306581,"change":1718304781,"from":["heartbeat"],"ack":"","ttl":0,"dependon":"","UpdateKey":"valid"}
+  "demo2buddy": {
+    "service": "buddy",
+    "host": "demo2",
+    "status": "ok",
+    "message": "buddy up",
+    "severity": "info",
+    "nextupdatesec": 0,
+    "tags": null,
+    "probe": 1718304779,
+    "change": 1718304779,
+    "from": ["demo"],
+    "ack": "",
+    "ttl": 0,
+    "dependon": "",
+    "UpdateKey": "valid"
+  }
 }
 ```
 
-### List Known Hosts
+---
 
-- **GET** `/list/host`
-  - **Description**: Retrieves a list of all known hosts.
-  - **Headers**:
-    - `Accept: application/json`
-```json
-[
- "demo2",
- "gateway-1",
- "mailserver-1",
- "nas-1"
-]
-```
+#### `GET /status/:id`
 
-### List Known Services
+Returns a single service state by its ID (`{host}{service}`).
 
-- **GET** `/list/status`
-  - **Description**: Retrieves a list of all current status'
-  - **Headers**:
-    - `Accept: application/json`
+**Response:** `200 OK`
+
+---
+
+#### `GET /status/listmso`
+
+Returns a simplified status list in MSO/HPO format.
+
+**Response:** `200 OK`
 
 ```json
-[
- "ok",
- "error"
-]
-```
-
-### Delete Service Status
-
-- **DELETE** `/service/{host}{service}`
-  - **Description**: Deletes the status of a specific service for a host.
-
-### Metrics
-
-- **Metrics** `/metrics`
-  - **Description**: Shows Prometheus metrics
-
-### Health
-
-- **Health** `/health`
-  - **Description**: Returns HTTP 200 when ready and healthy, A JSON object is also returned
-
-  ```json
-  {
-   "Hostnames":["demo_65.109.171.87","demo"],
-   "DashName":"demo",
-   "Ready":true,
-   "UpAt":"2024-06-13T18:52:47.039958109Z",
-   "UpAtEpoch":1718304767,
-   "DashGoatVersion":"v1.7.8",
-   "GoVersion":"go1.22.4",
-   "BuildDate":"2024-06-09",
-   "MetricsHistory":true,
-   "Prometheus":true,
-   "Commit":"dee8dac"
+{
+  "host-1nginx": {
+    "status": "ok",
+    "message": "[ok] nginx host-1 - All good"
   }
-  ```
+}
+```
 
-## Getting Started
+---
 
-To get started with the dashGoat API, ensure you have the correct `dashgoat_updatekey` and make a request to one of the endpoints listed above using the specified method, headers, and body format.
+#### `GET /status/listsearch/:search_string`
+
+Search service states by host or service name. Allowed characters: `a-z A-Z 0-9 + , - _`
+
+**Response:** `200 OK` · `204 No Content` (no matches)
+
+**Example:**
+
+```bash
+curl http://localhost:2000/status/listsearch/nginx
+```
+
+---
+
+### List unique values
+
+#### `GET /list/:field`
+
+Returns a sorted array of unique values for a given field across all service states.
+
+Common values for `field`: `host`, `service`, `status`, `tags`
+
+**Response:** `200 OK`
+
+**Examples:**
+
+```bash
+curl http://localhost:2000/list/host
+# ["demo2","gateway-1","mailserver-1","nas-1"]
+
+curl http://localhost:2000/list/status
+# ["error","ok"]
+```
+
+---
+
+### Delete
+
+#### `DELETE /service/:id`
+
+Removes a service state. The ID is `{host}{service}` (spaces converted to hyphens).
+
+**Response:** `204 No Content` · `404 Not Found`
+
+**Example:**
+
+```bash
+curl -X DELETE http://localhost:2000/service/host-1nginx
+```
+
+---
+
+### Alertmanager integration
+
+#### `POST /alertmanager/:urnkey`
+
+Accepts a Prometheus Alertmanager webhook payload and converts it to dashGoat service states. Requires `urnkey` to be configured.
+
+**Request body:** Standard [Alertmanager webhook payload](https://prometheus.io/docs/alerting/latest/configuration/#webhook_config) (version 4).
+
+**Response:** `201 Created`
+
+**Alertmanager config snippet:**
+
+```yaml
+receivers:
+  - name: dashgoat
+    webhook_configs:
+      - send_resolved: true
+        url: https://<dashgoat-host>/alertmanager/<urnkey>
+route:
+  receiver: dashgoat
+  repeat_interval: 5m
+  matchers:
+    - alertname != Watchdog
+```
+
+---
+
+### Observability
+
+#### `GET /health`
+
+Returns `200 OK` when dashGoat is ready; `503 Service Unavailable` otherwise.
+
+**Response body:**
+
+```json
+{
+  "Hostnames": ["demo_65.109.171.87", "demo"],
+  "DashName": "demo",
+  "Ready": true,
+  "UpAt": "2024-06-13T18:52:47.039958109Z",
+  "UpAtEpoch": 1718304767,
+  "DashGoatVersion": "v1.7.8",
+  "GoVersion": "go1.22.4",
+  "BuildDate": "2024-06-09",
+  "MetricsHistory": true,
+  "Prometheus": true,
+  "Commit": "dee8dac"
+}
+```
+
+---
+
+#### `GET /metrics`
+
+Exposes Prometheus metrics (can be disabled with `disablemetrics: true` in config).
+
+---
+
+#### `GET /metricshistory/:serviceid/:hours`
+
+Fetches historical status data for a service from a connected Prometheus instance.
+
+| Param | Description |
+|-------|-------------|
+| `serviceid` | Service identifier (`{host}{service}`) |
+| `hours` | Number of hours to look back |
+
+**Requirements:** `prometheusurl` must be configured.
+
+**Response:** `200 OK` — array of `ServiceStatus` with timestamps.
+
+---
+
+## Status values
+
+| Value | Meaning |
+|-------|---------|
+| `ok` | Service is healthy |
+| `info` | Informational, no action needed |
+| `warning` | Degraded, attention recommended |
+| `error` | Service is failing |
+| `critical` | Service is down / critical failure |
+
+---
+
+## Full request reference
+
+A Postman / Insomnia collection is available at `doc/dashGoat.postman_collection.json`.

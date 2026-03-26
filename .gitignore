@@ -8,6 +8,7 @@ vendor/
 build/dashgoa*
 tmp
 .vscode
+.github
 dashgoat.yaml
 cmd/dashgoat/web
 dashgoat

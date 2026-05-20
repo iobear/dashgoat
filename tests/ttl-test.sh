@@ -79,7 +79,7 @@ for service in "${services[@]}"; do
 done
 
 # -----------------------------------------------------------------------
-PORT=2009
+PORT=2000
 BASE_URL="http://localhost:$PORT"
 
 echo

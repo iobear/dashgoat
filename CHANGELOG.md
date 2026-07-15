@@ -1,4 +1,15 @@
 # Changelog
+## [v1.8.0] - 2026-07-15
+Add:
+ - Logfile config option for structured logging
+
+Change:
+ - Update Go dependencies
+ - Update workflow dependencies
+
+Remove:
+ - Azure functions port support
+
 ## [v1.7.17] - 2025-12-16
 Change:
  - PagerDuty alert delay

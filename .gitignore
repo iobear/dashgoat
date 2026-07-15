@@ -10,4 +10,4 @@ tmp
 .vscode
 dashgoat.yaml
 cmd/dashgoat/web
-dashgoat/
+dashgoat

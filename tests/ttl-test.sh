@@ -151,8 +151,8 @@ curl -s -X POST "$BASE_URL/update" \
      -H "Content-Type: $CONTENT_TYPE" \
      --data "{\"host\": \"host-1\", \"service\": \"web\", \"status\": \"critical\", \"message\": \"test\", \"ttl\": 5, \"updatekey\": \"$UPDATE_KEY\"}" > /dev/null
 
-echo "Waiting for first TTL step (10s)..."
-sleep 10
+echo "Waiting for first TTL step (5s)..."
+sleep 5
 
 STATUS=$(curl -s "$BASE_URL/status/host-1web" | jq -r '.status')
 if [[ "$STATUS" != "error" ]]; then
@@ -162,8 +162,8 @@ if [[ "$STATUS" != "error" ]]; then
 fi
 echo "OK: First step: critical → error"
 
-echo "Waiting for second TTL step (10s)..."
-sleep 10
+echo "Waiting for second TTL step (6s)..."
+sleep 6
 
 STATUS=$(curl -s "$BASE_URL/status/host-1web" | jq -r '.status')
 if [[ "$STATUS" != "warning" ]]; then

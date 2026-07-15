@@ -5,7 +5,11 @@ echo "-- start-single --"
 echo
 
 BASE_URL="http://localhost:2000"
-./dashgoat $1 -configfile tests/testdashgoat.yaml &
+LOGFILE_FLAG=""
+if [ -n "$TEST_LOGFILE" ]; then
+    LOGFILE_FLAG="-logfile $TEST_LOGFILE"
+fi
+./dashgoat $LOGFILE_FLAG -configfile tests/testdashgoat.yaml &
 
 PID=$!  # Get the PID
 echo $PID > PID-SINGLE-$PID
@@ -18,7 +22,7 @@ then
     exit 1
 fi
 
-if [ "$2" = "no-health-test" ]
+if [ "$NO_HEALTH_TEST" = "1" ]
 then
     echo "No /health test"
     exit 0

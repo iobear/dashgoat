@@ -39,16 +39,14 @@ podman: prepare
 
 test: build
 	./tests/link-bin.sh
-	./tests/start-single.sh
-	./tests/ttl-test.sh
-	./tests/nextupdate-test.sh
-	./tests/metrics-test.sh
-	./tests/tags-test.sh
-	./tests/alertmanager-test.sh
-	./tests/heartbeat-test.sh
-	./tests/search-test.sh
-	./tests/dependon-test.sh
-	./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/ttl-test.log ./tests/start-single.sh && ./tests/ttl-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/nextupdate-test.log ./tests/start-single.sh && ./tests/nextupdate-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/metrics-test.log ./tests/start-single.sh && ./tests/metrics-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/tags-test.log ./tests/start-single.sh && ./tests/tags-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/heartbeat-test.log ./tests/start-single.sh && ./tests/heartbeat-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/alertmanager-test.log ./tests/start-single.sh && ./tests/alertmanager-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/search-test.log ./tests/start-single.sh && ./tests/search-test.sh && ./tests/stop-instances.sh
+	TEST_LOGFILE=/tmp/dependon-test.log ./tests/start-single.sh && ./tests/dependon-test.sh && ./tests/stop-instances.sh
 
 clean:
 	./tests/stop-instances.sh

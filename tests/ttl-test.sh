@@ -78,6 +78,10 @@ for service in "${services[@]}"; do
     curl -s --request DELETE --url "$BASE_URL/service/host-1${service}" > /dev/null
 done
 
+# Stop the original instance started by start-single.sh before switching modes
+./tests/stop-instances.sh > /dev/null 2>&1
+sleep 1
+
 # -----------------------------------------------------------------------
 PORT=2000
 BASE_URL="http://localhost:$PORT"

@@ -23,6 +23,7 @@ type (
 		IPport                string   `yaml:"ipport"`
 		WebPath               string   `yaml:"webpath"`
 		LogFormat             string   `yaml:"logformat"`
+		LogFile               string   `yaml:"logfile"`
 		UpdateKey             string   `yaml:"updatekey"`
 		CheckBuddyIntervalSec int      `yaml:"checkBuddyIntervalSec"`
 		BuddyDownStatus       string   `yaml:"buddyDownStatus"`
@@ -54,6 +55,9 @@ func (conf *Configer) ReadEnv() {
 	}
 	if os.Getenv("LOGFORMAT") != "" {
 		conf.LogFormat = os.Getenv("LOGFORMAT")
+	}
+	if os.Getenv("LOGFILE") != "" {
+		conf.LogFile = os.Getenv("LOGFILE")
 	}
 	if os.Getenv("UPDATEKEY") != "" {
 		conf.UpdateKey = os.Getenv("UPDATEKEY")

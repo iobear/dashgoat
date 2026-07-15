@@ -35,8 +35,6 @@ type (
 	}
 )
 
-var logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
-
 //go:embed web
 var embededFiles embed.FS
 
@@ -88,6 +86,7 @@ func main() {
 	flag.StringVar(&config.WebPath, "webpath", "/", "Specify added url http://host:port/<path> Default: /")
 	flag.StringVar(&config.UpdateKey, "updatekey", "changeme", "Specify key to API update")
 	flag.StringVar(&config.DashName, "dashname", "", "Dashboard name")
+	flag.StringVar(&config.LogFile, "logfile", "", "Log file path (e.g., /tmp/test.log)")
 	flag.StringVar(&configfile, "configfile", "dashgoat.yaml", "Name of configfile")
 	flag.StringVar(&buddy_cli.Url, "buddyurl", "", "Buddy url")
 	flag.StringVar(&buddy_cli.Key, "buddykey", "", "Buddy update key, empty for same key")
@@ -102,16 +101,23 @@ func main() {
 		os.Exit(0)
 	}
 
-	config.ReadEnv()
-	err := config.InitConfig(configfile)
+		err := config.InitConfig(configfile)
 	if err != nil {
 		logger.Error("cant initialize config")
 		os.Exit(1)
 	}
 
-	if config.LogFormat == "json" {
-		logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	// Apply env overrides after YAML config so env vars take precedence
+	config.ReadEnv()
+
+	// Apply logger (logfile from flag or config)
+	setupLogger(config.LogFile, config.LogFormat)
+	if logFile != nil {
+		defer logFile.Close()
 	}
+
+	// Wire Echo's internal logger to the same destination
+	e.Logger = &slogAdapter{}
 
 	pathStartsWith := strings.HasPrefix(config.WebPath, "/")
 	if !pathStartsWith {

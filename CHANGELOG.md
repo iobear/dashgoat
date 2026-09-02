@@ -1,4 +1,8 @@
 # Changelog
+## [v1.8.1] - 2026-09-02
+Change:
+ - Update Go dependencies (prometheus/client_golang, prometheus/common)
+
 ## [v1.8.0] - 2026-07-15
 Add:
  - Logfile config option for structured logging

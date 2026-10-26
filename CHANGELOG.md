@@ -1,4 +1,10 @@
 # Changelog
+## [v1.8.2] - 2026-10-26
+Change:
+ - Update Go dependencies (prometheus/client_golang v1.25.0)
+ - Adapt Prometheus QueryRange call to new API signature
+ - Add working rules to AGENTS.md
+
 ## [v1.8.1] - 2026-09-02
 Change:
  - Update Go dependencies (prometheus/client_golang, prometheus/common)

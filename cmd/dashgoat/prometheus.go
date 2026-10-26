@@ -100,7 +100,7 @@ func queryPrometheus(hours int, serviceID string) ([]ServiceStatus, error) {
 	defer cancel()
 
 	query := fmt.Sprintf(`dashgoat_service_status{service="%s"}`, serviceID)
-	result, warnings, err := v1api.QueryRange(ctx, query, v1.Range{
+	result, warnings, _, err := v1api.QueryRange(ctx, query, v1.Range{
 		Start: time.Now().Add(time.Duration(-hours) * time.Hour),
 		End:   time.Now(),
 		Step:  time.Minute, // Adjust the step to suit your needs

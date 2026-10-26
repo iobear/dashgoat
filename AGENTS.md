@@ -1,5 +1,11 @@
 # dashGoat - Agent Instructions
 
+## Working Rules
+
+- Do only what the user asked. If a task reveals a problem (build error, failing test), report it and ask before changing anything.
+- Always ask the user before making any change: editing files, git operations (stash, reset, checkout, commit), deleting files, or other commands that modify the working tree.
+- Read-only inspection and the requested build/test commands are fine without asking.
+
 ## Build Commands
 
 ```bash
